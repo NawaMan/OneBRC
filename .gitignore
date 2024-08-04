@@ -5,3 +5,6 @@ onebrc.calculateaverage_nawaman
 measurements.txt
 nawa-result.txt
 *.log
+docs-src/.svelte-kit/
+
+docs-src/node_modules/
