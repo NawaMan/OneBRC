@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -16,30 +17,35 @@ body, html {
     font-weight: normal;
     src: local('Playfair Display Regular'), url('/fonts/PlayfairDisplay-Regular.woff') format('woff');
 }
+
 @font-face {
     font-family: 'Playfair Display Italic';
     font-style: normal;
     font-weight: normal;
     src: local('Playfair Display Italic'), url('/fonts/PlayfairDisplay-Italic.woff') format('woff');
 }
+
 @font-face {
     font-family: 'Playfair Display Bold';
     font-style: normal;
     font-weight: normal;
     src: local('Playfair Display Bold'), url('/fonts/PlayfairDisplay-Bold.woff') format('woff');
 }
+
 @font-face {
     font-family: 'Playfair Display Bold Italic';
     font-style: normal;
     font-weight: normal;
     src: local('Playfair Display Bold Italic'), url('/fonts/PlayfairDisplay-BoldItalic.woff') format('woff');
 }
+
 @font-face {
     font-family: 'Playfair Display Black';
     font-style: normal;
     font-weight: normal;
     src: local('Playfair Display Black'), url('/fonts/PlayfairDisplay-Black.woff') format('woff');
 }
+
 @font-face {
     font-family: 'Playfair Display Black Italic';
     font-style: normal;

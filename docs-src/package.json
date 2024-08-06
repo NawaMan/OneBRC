@@ -29,5 +29,10 @@
 		"typescript-eslint": "^8.0.0-alpha.20",
 		"vite": "^5.3.5"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^6.6.0",
+		"@fortawesome/free-solid-svg-icons": "^6.6.0",
+		"@fortawesome/svelte-fontawesome": "^0.2.2"
+	}
 }
