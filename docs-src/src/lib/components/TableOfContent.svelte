@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
+	import CtrlBtn from './CtrlBtn.svelte';
+	import { writable } from 'svelte/store';
 
-	let isContentVisible = false;
+	let isContentVisible = writable(false);
 
 	function toggleTableOfContent() {
-		isContentVisible = !isContentVisible;
+		isContentVisible.update(value => !value);
 	}
 	function turnOffTableOfContent() {
-		isContentVisible = false;
+		isContentVisible.update(__ => false);
 	}
 	function handleGlobalKeydown(event: KeyboardEvent) {
 		if (event.ctrlKey && event.altKey && event.key === 'T') {
@@ -42,35 +44,6 @@
 		left:0px;
 		margin:0px;
 	}
-	.toc button {
-		/* functional */
-		cursor: pointer;
-
-		/* cosmetic */
-		width: 40px;
-		height: 22px;
-		padding-left: 0.5em;
-		padding-right: 0.5em;
-		margin-left: 0.5em;
-		text-justify: center;
-		text-align: center;
-		background-color: #333;
-		color: #888;
-		font-weight: bold;
-		border: 0px;
-	}
-
-	.toc button:active {
-		/* cosmetic */
-		box-shadow: 0 2px #0056b3;
-		transform: translateY(3px);
-	}
-
-	.toc button:hover {
-		/* cosmetic */
-		color: #fff;
-		background-color: #2980b9;
-	}
 
 	.toc .content {
 		/* cosmetic */
@@ -82,23 +55,12 @@
 		color: #111;
 		background-color: #eee;
 	}
-	.toc.expanded button {
-		/* cosmetic */
-		color: #fff;
-		background-color: green;
-	}
 </style>
 
-<div class="toc" class:expanded={isContentVisible}>
-	<button
-		tabindex="-1"
-		on:click={toggleTableOfContent}
-		on:keydown={toggleTableOfContent}
-		aria-expanded={isContentVisible}
-		aria-controls="hiddenContent"
-	>ToC</button>
+<div class="toc" class:expanded={$isContentVisible}>
+	<CtrlBtn text="ToC" on:click={toggleTableOfContent} isSelected={$isContentVisible} />
 
-	{#if isContentVisible}
+	{#if $isContentVisible}
 	<div class="content">
 		<p>This is the hidden content that appears when the square is clicked.</p>
 	</div>
