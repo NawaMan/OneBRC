@@ -19,6 +19,10 @@
 		}
 	}
 
+	function playPause(event: MouseEvent) {
+		alert('playPause');
+	}
+
 	onMount(() => {
 		if (browser) {
 			window.addEventListener('keydown', handleGlobalKeydown);
@@ -37,13 +41,14 @@
 		/* functional */
 		position: absolute;
 		bottom: 0px;
-		right: 0.5em;
+		left: 0px;
 	}
 </style>
 
 <div class="nav">
 	<CtrlBtn text="FIRST" on:click={() => firstLink && (window.location.href = firstLink)} isDisabled={!firstLink} />
 	<CtrlBtn text="PREV"  on:click={() => prevLink  && (window.location.href = prevLink)}  isDisabled={!prevLink} />
+	<CtrlBtn text="PLAY"  on:click={playPause} />
 	<CtrlBtn text="NEXT"  on:click={() => nextLink  && (window.location.href = nextLink)}  isDisabled={!nextLink} />
 	<CtrlBtn text="LAST"  on:click={() => lastLink  && (window.location.href = lastLink)}  isDisabled={!lastLink}/>
 </div>

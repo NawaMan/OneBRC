@@ -40,9 +40,10 @@
 	.toc {
 		/* functional */
 		position: absolute;
-		top: 5px;
+		top: 0px;
 		left:0px;
 		margin:0px;
+		padding: 0px;
 	}
 
 	.toc .content {

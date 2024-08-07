@@ -18,13 +18,13 @@
 		margin-left: 0.5em;
 		text-justify: center;
 		text-align: center;
-		background-color: #333;
-		color: #888;
+		background-color: #eee;
+		color: #bbb;
 		font-weight: bold;
 		border: 0px;
 	}
 
-	button:hover {
+	button:hover:not(:disabled) {
 		/* cosmetic */
 		color: #fff;
 		background-color: #2980b9;
@@ -41,7 +41,7 @@
 	}
 	button:disabled {
 		/* functional */
-		color: #444;
+		color: #ccc;
 		cursor: default;
 	}
 </style>
