@@ -1,7 +1,6 @@
 <script>
 	import NavigationBar from "$lib/components/NavigationBar.svelte";
-	import PageTitle from "$lib/components/PageTitle.svelte";
-    let value = "";
+	import TitlePage from "$lib/templates/TitlePage.svelte";
 </script>
 
 <style>
@@ -9,12 +8,11 @@
 
 <div class="content">
 	<NavigationBar
-		firstLink="/"
-		lastLink="/"
+		nextLink="/introduction"
 	/>
-	<PageTitle>
+	<TitlePage>
 		<span slot="title"      >One Billion Row Challenge</span>
 		<span slot="subtitle"   >NawaMan's Java Solution</span>
 		<span slot="subsubtitle">(2-3 Seconds Without Using Unsafe or Graal VM)</span>
-	</PageTitle>
+	</TitlePage>
 </div>

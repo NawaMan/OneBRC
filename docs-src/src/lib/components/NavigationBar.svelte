@@ -3,10 +3,10 @@
 	import { browser } from '$app/environment';
 	import CtrlBtn from './CtrlBtn.svelte';
 
-	export let firstLink = '';
+	export let firstLink = '/';
 	export let prevLink = '';
 	export let nextLink = '';
-	export let lastLink = '';
+	export let lastLink = '/introduction';
 
 	function handleGlobalKeydown(event: KeyboardEvent) {
 		if (event.key === 'ArrowLeft' && prevLink) {

@@ -20,7 +20,7 @@
 		bottom: 0px;
 		right: 0px;
 		margin-right: 0.5em;
-		font-size: 1em;
+		font-size: 1.5em;
         font-weight: bold;
 		opacity: 0.7;
 
