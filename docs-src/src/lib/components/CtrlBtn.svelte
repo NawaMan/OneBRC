@@ -3,8 +3,15 @@
 	import { browser } from '$app/environment';
 
     export let text       = 'Btn';
+    export let hoverText  = '';
 	export let isSelected = false;
 	export let isDisabled = false;
+
+	onMount(() => {
+		if (!hoverText) {
+			hoverText = text;
+		}
+	});
 </script>
 
 <style>
@@ -44,11 +51,27 @@
 		color: #ccc;
 		cursor: default;
 	}
+
+	button .hover-text {
+		display: none;
+		opacity: 0;
+	}
+	button:hover .hover-text,
+	button.selected .hover-text {
+		display: inline;
+		opacity: 1;
+	}
+	button:hover .text,
+	button.selected .text {
+		display: none;
+		opacity: 0;
+	}
 </style>
 
 <button 
 	disabled={isDisabled} 
 	class:selected={isSelected} 
 	on:click>
-	{text}
+	<span class="text"      >{text}</span>
+	<span class="hover-text">{hoverText}</span>
 </button>

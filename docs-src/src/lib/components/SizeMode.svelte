@@ -20,5 +20,5 @@
 </style>
 
 <div class="mode">
-	<CtrlBtn text="MODE" on:click={toggleScale} />
+	<CtrlBtn text="M" hoverText="MODE" on:click={toggleScale} />
 </div>

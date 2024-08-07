@@ -4,7 +4,7 @@
 	import { scaleMode } from '$lib/stores/scaleMode';
 	import { onMount } from 'svelte';
 	import TableOfContent from '$lib/components/TableOfContent.svelte';
-	import FixOrExpand from '$lib/components/FixOrExpand.svelte';
+	import SizeMode from '$lib/components/SizeMode.svelte';
 	import { browser } from '$app/environment';
 
 	let container: any;
@@ -49,7 +49,7 @@
 <div class="container" class:scale-mode={isScaled} bind:this={container}>
 	<div class="content">
 		<TableOfContent />
-		<FixOrExpand />
+		<SizeMode />
 		<slot />
 	</div>
 </div>

@@ -46,9 +46,9 @@
 </style>
 
 <div class="nav">
-	<CtrlBtn text="FIRST" on:click={() => firstLink && (window.location.href = firstLink)} isDisabled={!firstLink} />
-	<CtrlBtn text="PREV"  on:click={() => prevLink  && (window.location.href = prevLink)}  isDisabled={!prevLink} />
-	<CtrlBtn text="PLAY"  on:click={playPause} />
-	<CtrlBtn text="NEXT"  on:click={() => nextLink  && (window.location.href = nextLink)}  isDisabled={!nextLink} />
-	<CtrlBtn text="LAST"  on:click={() => lastLink  && (window.location.href = lastLink)}  isDisabled={!lastLink}/>
+	<CtrlBtn text="FIRST"    on:click={() => firstLink && (window.location.href = firstLink)} isDisabled={!firstLink} />
+	<CtrlBtn text="PREV"     on:click={() => prevLink  && (window.location.href = prevLink)}  isDisabled={!prevLink} />
+	<CtrlBtn text="CONTINUE" on:click={playPause} />
+	<CtrlBtn text="NEXT"     on:click={() => nextLink  && (window.location.href = nextLink)}  isDisabled={!nextLink} />
+	<CtrlBtn text="LAST"     on:click={() => lastLink  && (window.location.href = lastLink)}  isDisabled={!lastLink}/>
 </div>
