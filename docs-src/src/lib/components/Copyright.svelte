@@ -43,5 +43,5 @@
 
 <div class="copyright">
 	<span class="text"      >© NawaNawa 2024</span>
-	<span class="hover-text">Copyright NawaNawa &lt;nawa@nawaman.net&gt; 2024</span>
+	<span class="hover-text"><a href="https://nawaman.net/contact.html">Copyright <b>NawaNawa &lt;contact@nawaman.net&gt;</b> 2024</a></span>
 </div>

@@ -39,7 +39,7 @@
 	button.selected {
 		/* cosmetic */
 		color: #fff;
-		background-color: green;
+		background-color: #00b356;
 	}
 	button:active:not(:disabled) {
 		/* cosmetic */
