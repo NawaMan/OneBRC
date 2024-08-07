@@ -54,17 +54,14 @@
 
 	button .hover-text {
 		display: none;
-		opacity: 0;
 	}
 	button:hover .hover-text,
 	button.selected .hover-text {
 		display: inline;
-		opacity: 1;
 	}
 	button:hover .text,
 	button.selected .text {
 		display: none;
-		opacity: 0;
 	}
 </style>
 

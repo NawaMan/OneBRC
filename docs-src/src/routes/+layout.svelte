@@ -6,6 +6,7 @@
 	import TableOfContent from '$lib/components/TableOfContent.svelte';
 	import SizeMode from '$lib/components/SizeMode.svelte';
 	import { browser } from '$app/environment';
+	import Copyright from '$lib/components/Copyright.svelte';
 
 	let container: any;
 
@@ -51,6 +52,7 @@
 		<TableOfContent />
 		<SizeMode />
 		<slot />
+		<Copyright />
 	</div>
 </div>
 
