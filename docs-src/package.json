@@ -25,14 +25,23 @@
 		"prettier-plugin-svelte": "^3.1.2",
 		"svelte": "^4.2.7",
 		"svelte-check": "^3.6.0",
+		"svelte-codemirror-editor": "1.4.0",
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.0.0-alpha.20",
-		"vite": "^5.3.5"
+		"vite": "^5.3.5",
+		"@codemirror/lang-javascript":"6.2.2",
+		"@codemirror/lang-java":"6.0.1",
+		"@codemirror/lang-python":"6.1.6",
+		"@codemirror/lang-bash":"6.2.2"
 	},
 	"type": "module",
 	"dependencies": {
+		"@codemirror/lang-java": "^6.0.1",
+		"@codemirror/lang-javascript": "^6.2.2",
+		"@codemirror/lang-python": "^6.1.6",
 		"@fortawesome/fontawesome-svg-core": "^6.6.0",
 		"@fortawesome/free-solid-svg-icons": "^6.6.0",
-		"@fortawesome/svelte-fontawesome": "^0.2.2"
+		"@fortawesome/svelte-fontawesome": "^0.2.2",
+		"svelte-codemirror-editor": "^1.4.0"
 	}
 }
