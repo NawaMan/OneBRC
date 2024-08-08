@@ -8,7 +8,7 @@
 
 <div class="content">
 	<NavigationBar
-		nextLink="/introduction"
+		nextLink="/introduction.html"
 	/>
 	<TitlePage>
 		<span slot="title"      >One Billion Row Challenge</span>

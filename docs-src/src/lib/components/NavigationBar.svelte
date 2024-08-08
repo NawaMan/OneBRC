@@ -6,7 +6,7 @@
 	export let firstLink = '/';
 	export let prevLink = '';
 	export let nextLink = '';
-	export let lastLink = '/introduction';
+	export let lastLink = '/introduction.html';
 
 	function handleGlobalKeydown(event: KeyboardEvent) {
 		if (event.key === 'ArrowLeft' && prevLink) {
@@ -45,7 +45,7 @@
 	}
 </style>
 
-<div class="nav">
+<div class="nav no-print">
 	<CtrlBtn text="FIRST"    on:click={() => firstLink && (window.location.href = firstLink)} isDisabled={!firstLink} />
 	<CtrlBtn text="PREV"     on:click={() => prevLink  && (window.location.href = prevLink)}  isDisabled={!prevLink} />
 	<CtrlBtn text="CONTINUE" on:click={playPause} />
