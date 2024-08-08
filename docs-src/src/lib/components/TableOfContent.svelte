@@ -58,7 +58,7 @@
 	}
 </style>
 
-<div class="toc" class:expanded={$isContentVisible}>
+<div class="toc no-print" class:expanded={$isContentVisible}>
 	<CtrlBtn text="ToC" hoverText="Table of Content" on:click={toggleTableOfContent} isSelected={$isContentVisible} />
 
 	{#if $isContentVisible}

@@ -52,3 +52,9 @@ html {
     font-weight: normal;
     src: local('Playfair Display Black Italic'), url('/fonts/PlayfairDisplay-BlackItalic.woff') format('woff');
 }
+
+@media print {
+    .no-print {
+        display: none;
+    }
+}

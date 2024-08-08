@@ -19,6 +19,6 @@
 	}
 </style>
 
-<div class="mode">
+<div class="mode no-print">
 	<CtrlBtn text="M" hoverText="MODE" on:click={toggleScale} />
 </div>
