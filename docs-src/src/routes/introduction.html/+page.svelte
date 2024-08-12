@@ -14,7 +14,8 @@
 	/>
 	<ul>
 		<li>Read a CSV file with 1 billion rows.</li>
-		<li>Sum the 3rd column.</li>
-		<li>Print the sum.</li>
+		<li>Each line weather station name and temperature</li>
+		<li>Calculate min, max and average temperatures <br/>for each station.</li>
+		<li>Print the results.</li>
 	</ul>
 </ContentPage>

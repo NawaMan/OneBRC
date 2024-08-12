@@ -48,13 +48,21 @@
 
 	.toc .content {
 		/* cosmetic */
-		margin-left: 0.5em;
-		margin-top: 0.5em;
-		padding: 5px;
+		margin: 0em;
+		padding: 1em;
 		border: 1px solid #ccc;
 		border-radius: 2px;
 		color: #111;
 		background-color: #eee;
+	}
+	.toc .content ol {
+		/* cosmetic */
+		padding-left: 1em;
+		padding-top: 0em;
+	}
+	.toc .content ol li a {
+		/* cosmetic */
+		text-decoration: none;
 	}
 </style>
 
@@ -63,7 +71,10 @@
 
 	{#if $isContentVisible}
 	<div class="content">
-		<p>This is the hidden content that appears when the square is clicked.</p>
+		<ol>
+			<li><a href="/">Title</a></li>
+			<li><a href="/introduction.html">One Billion Row Chanllenge</a></li>
+		</ol>
 	</div>
 	{/if}
 </div>

@@ -8,18 +8,35 @@
     /* cosmetic */
     width: 100%;
     height: 100%;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+.page h1 {
+    font-size: 2.5em;
+    margin-bottom: 0em;
 }
 .page .subtitle {
     /* cosmetic */
     display: block;
-    margin: 1em 0;
+    margin-left: 0em;
+    margin-top: 0.5em;
+    font-size: 1.5em;
 }
 
 .page .subtitle::after {
     content: '';
     display: block;
     margin-top: 10px; /* Adjust space after <br> */
-    border-bottom: 1px solid black; /* Add a line after <br> */
+    border-bottom: 3px solid black; /* Add a line after <br> */
+}
+.page .content {
+    /* cosmetic */
+    margin-top: 1em;
+    margin-bottom: 2em;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    text-align: justify;
+    text-justify: inter-word;
 }
 </style>
 
