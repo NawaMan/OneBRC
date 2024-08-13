@@ -15,6 +15,7 @@
 	.page .title {
 		text-align: center;
 		font-size: 5em;
+		font-family: 'Playfair Display Bold', 'Cormorant Garamond', serif;
 	}
 	.page .subtitle {
 		text-align: center;

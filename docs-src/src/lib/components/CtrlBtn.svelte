@@ -25,7 +25,7 @@
 		margin-left: 0.5em;
 		text-justify: center;
 		text-align: center;
-		background-color: #eee;
+		background-color: #061e30;
 		color: #bbb;
 		font-weight: bold;
 		border: 0px;
@@ -48,7 +48,7 @@
 	}
 	button:disabled {
 		/* functional */
-		color: #ccc;
+		color: #222;
 		cursor: default;
 	}
 

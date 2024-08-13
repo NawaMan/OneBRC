@@ -14,6 +14,7 @@
 .page h1 {
     font-size: 2.5em;
     margin-bottom: 0em;
+    font-family: 'Playfair Display Bolds', 'Cormorant Garamond', serif;
 }
 .page .subtitle {
     /* cosmetic */
@@ -27,7 +28,7 @@
     content: '';
     display: block;
     margin-top: 10px; /* Adjust space after <br> */
-    border-bottom: 3px solid black; /* Add a line after <br> */
+    border-bottom: 3px solid aliceblue; /* Add a line after <br> */
 }
 .page .content {
     /* cosmetic */

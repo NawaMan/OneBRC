@@ -80,9 +80,10 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background: #B3EBD4;
-		/* font-family: 'Playfair Display Bold', 'Cormorant Garamond', serif; */
-		font-family: 'Cormorant Garamond' Bold, serif;
+		color: #C0F1FF;
+		background: #112c63;
+		font-family: 'Noto Sans', 'Cormorant Garamond', serif;
+		/* font-family: 'Cormorant Garamond' Bold, serif; */
 		transition: all 0.3s ease; /* Smooth transition */
 	}
 </style>
