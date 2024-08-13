@@ -83,7 +83,6 @@
 		color: #C0F1FF;
 		background: #112c63;
 		font-family: 'Noto Sans', 'Cormorant Garamond', serif;
-		/* font-family: 'Cormorant Garamond' Bold, serif; */
-		transition: all 0.3s ease; /* Smooth transition */
+		transition: all 0.3s ease;
 	}
 </style>

@@ -28,12 +28,21 @@
 	.right table,
 	.right table td {
 		border-collapse: collapse;
-		border: 2px solid aliceblue;
+		border: none;
 		padding-left: 0.5em;
 		padding-right: 0.5em;
 	}
 	.right table td:first-child {
-		text-align: center;
+		text-align: right;
+	}
+	.right table td:last-child {
+		padding-left: 1em;
+		border: none;
+		font-family: 'Courier New', Courier, monospace;
+	}
+	.right table td:last-child::after {
+		content: "¶";
+		color: #777;
 	}
 	.blur {
 		color: transparent; /* Make the text itself invisible */
@@ -69,9 +78,8 @@
 		<table>
 			<tr><td>1</td><td>Ottawa;14.2</td></tr>
 			<tr><td>2</td><td>Bangkok;35.0</td></tr>
-			<tr><td>3</td><td>Sydney;2.5</td></tr>
-			<tr><td>4</td><td>New Delhi;-0.2</td></tr>
-			<tr><td>5</td><td>Abéché;89.3</td></tr>
+			<tr><td>3</td><td>Sydney;-2.5</td></tr>
+			<tr><td>4</td><td>Abéché;89.3</td></tr>
 			<tr class="blur"><td>455</td><td>New York;20.7</td></tr>
 			<tr class="blur"><td>15,466</td><td>Mars;-24.7</td></tr>
 			<tr class="blur"><td>1,546,536</td><td>Venus;84.5</td></tr>
