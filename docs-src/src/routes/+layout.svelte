@@ -56,9 +56,9 @@
 
 <div class="container" class:scale-mode={isScaled} bind:this={container}>
 	<div class="content"  bind:this={content}>
+		<slot />
 		<TableOfContent />
 		<SizeMode />
-		<slot />
 		<Copyright />
 	</div>
 </div>
@@ -87,7 +87,7 @@
 		overflow: hidden;
 		padding: 10px;
 		margin: 0px;
-		display: block;
+		display: flex;
 		justify-content: center;
 		align-items: center;
 		color: #C0F1FF;

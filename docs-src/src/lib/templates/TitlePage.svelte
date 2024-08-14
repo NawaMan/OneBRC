@@ -10,9 +10,12 @@
 	.page {
 		/* cosmetic */
 		width: 100%;
-        height: 100%;
+		padding: auto;
+		margin: auto;
 	}
 	.page .title {
+		padding: 0px;
+		margin: 0px;
 		text-align: center;
 		font-size: 5em;
 		font-family: 'Playfair Display Bold', 'Cormorant Garamond', serif;

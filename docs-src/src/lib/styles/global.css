@@ -9,6 +9,10 @@ html {
     background: #000;
 }
 
+a {
+    color: inherit;
+}
+
 /** Fonts **/
 
 @font-face {

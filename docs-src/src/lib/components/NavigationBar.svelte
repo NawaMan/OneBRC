@@ -6,7 +6,7 @@
 	export let firstLink = '/';
 	export let prevLink = '';
 	export let nextLink = '';
-	export let lastLink = '/introduction.html';
+	export let lastLink = '/the-challenge.html';
 
 	function handleGlobalKeydown(event: KeyboardEvent) {
 		if (event.key === 'ArrowLeft' && prevLink) {

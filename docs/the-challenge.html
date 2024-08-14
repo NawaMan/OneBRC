@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<link href="./_app/immutable/assets/0.BEDFvV3D.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/CtrlBtn.kY8IgVKx.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/4._6PeaBl4.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/NavigationBar.CSKsnt8Y.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/ContentPage.0wVlwmEs.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.CyvmqmpG.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/entry.CZEeGwM3.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/scheduler.DvCM5tHg.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.CQ1meeZr.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.DvlnuOep.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.BISDuTue.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/CtrlBtn.W7a7v3yA.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/4.CMa1z_Oo.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/NavigationBar.0fE2o1XS.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/ContentPage.BWcYxq9R.js">
+
+		<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+	</head>
+	<style>
+
+	</style>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">  <div class="container svelte-nwnxwv"><div class="content svelte-nwnxwv"><div class="page svelte-pixnya"><h1 class="svelte-pixnya">One Billion Row Challenge</h1> <span class="subtitle svelte-pixnya"></span> <div class="content svelte-pixnya"><div class="left svelte-1txroys" data-svelte-h="svelte-1x3jcnu"><ul class="svelte-1txroys"><li>Read a <b class="svelte-1txroys">text file</b> containing <b class="svelte-1txroys">1 billion rows</b> of measurements.</li> <li>Each line contains a weather <b class="svelte-1txroys">station name</b> and <b class="svelte-1txroys">temperature</b>:
+				<ul class="svelte-1txroys"><li>Rows are delimited by a newline character (<b class="svelte-1txroys">&#39;\n&#39;</b>).</li> <li>Station name and temperature are separated by a semicolon.</li> <li>Station name is encoded in <b class="svelte-1txroys">UTF-8</b> and is <b class="svelte-1txroys">100 bytes</b> or shorter.</li> <li>The temperature ranges from -99.9 to 99.9 (<b class="svelte-1txroys">1-2 digits before</b> the decimal point and <b class="svelte-1txroys">1 digit after</b>).</li></ul></li> <li>Calculate the <b class="svelte-1txroys">minimum</b>, <b class="svelte-1txroys">maximum</b>, and <b class="svelte-1txroys">average</b> temperatures for <b class="svelte-1txroys">each station</b>.</li> <li>Print the results in the format of Java <b class="svelte-1txroys">sorted-map `toString()`</b>.</li> <li><b class="svelte-1txroys">No external dependencies</b>.</li> <li>All source code should be in a <b class="svelte-1txroys">single file</b>.</li> <li>Benchmark on a <b class="svelte-1txroys">32-core CPU</b> with <b class="svelte-1txroys">128 GB RAM</b>.</li></ul></div> <div class="right svelte-1txroys" data-svelte-h="svelte-1h2yii"><table class="svelte-1txroys"><tr class="svelte-1txroys"><td colspan="2" style="text-align: left;" class="svelte-1txroys">&gt; measurements.txt</td></tr> <tr class="svelte-1txroys"><td class="svelte-1txroys">1</td><td class="svelte-1txroys">Ottawa;14.2</td></tr> <tr class="svelte-1txroys"><td class="svelte-1txroys">2</td><td class="svelte-1txroys">Bangkok;44.0</td></tr> <tr class="svelte-1txroys"><td class="svelte-1txroys">3</td><td class="svelte-1txroys">Sydney;-2.5</td></tr> <tr class="svelte-1txroys"><td class="svelte-1txroys">4</td><td class="svelte-1txroys">Łódź;-20.4</td></tr> <tr class="blur svelte-1txroys"><td class="svelte-1txroys">455</td><td class="svelte-1txroys">New York;20.7</td></tr> <tr class="blur svelte-1txroys"><td class="svelte-1txroys">15,466</td><td class="svelte-1txroys">Mars;-24.7</td></tr> <tr class="blur svelte-1txroys"><td class="svelte-1txroys">1,546,536</td><td class="svelte-1txroys">Venus;84.5</td></tr> <tr class="svelte-1txroys"><td class="svelte-1txroys">1,000,000,000</td><td class="svelte-1txroys">Budapest;14.9</td></tr></table></div></div></div> <div class="nav no-print svelte-1x4loak"><button  class="svelte-1qamiib"><span class="text svelte-1qamiib">FIRST</span> <span class="hover-text svelte-1qamiib"></span></button> <button  class="svelte-1qamiib"><span class="text svelte-1qamiib">PREV</span> <span class="hover-text svelte-1qamiib"></span></button> <button  class="svelte-1qamiib"><span class="text svelte-1qamiib">CONTINUE</span> <span class="hover-text svelte-1qamiib"></span></button> <button disabled class="svelte-1qamiib"><span class="text svelte-1qamiib">NEXT</span> <span class="hover-text svelte-1qamiib"></span></button> <button  class="svelte-1qamiib"><span class="text svelte-1qamiib">LAST</span> <span class="hover-text svelte-1qamiib"></span></button></div> <div class="toc no-print svelte-yuxbuk"><button  class="svelte-1qamiib"><span class="text svelte-1qamiib">ToC</span> <span class="hover-text svelte-1qamiib">Table of Content</span></button> </div> <div class="mode no-print svelte-mofkhc"><button  class="svelte-1qamiib"><span class="text svelte-1qamiib">M</span> <span class="hover-text svelte-1qamiib">MODE</span></button></div> <div class="copyright svelte-8mz42n" data-svelte-h="svelte-135mwj1"><span class="text svelte-8mz42n">© NawaNawa 2024</span> <span class="hover-text svelte-8mz42n"><a href="https://nawaman.net/contact.html">Copyright <b>NawaNawa &lt;contact@nawaman.net&gt;</b> 2024</a></span></div></div> </div> 
+			
+			<script>
+				{
+					__sveltekit_1m7b0z = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						assets: "/OneBRC"
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("./_app/immutable/entry/start.CyvmqmpG.js"),
+						import("./_app/immutable/entry/app.CQ1meeZr.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 4],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>

@@ -20,8 +20,6 @@ import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import onebrc.CalculateAverage_NawaMan_Org.Station;
-
 /**
  * One-Billion Row Challenge solution by NawaMan.
  * 
@@ -35,7 +33,7 @@ import onebrc.CalculateAverage_NawaMan_Org.Station;
  * <li>Pre-calculate hashCode when parsing (finding out start and end).</li>
  * </ol>
  */
-public class CalculateAverage_NawaMan {
+public class CalculateAverage_NawaMan_Org {
     
     /**
      * Station name -- the name of the station.
@@ -143,8 +141,6 @@ public class CalculateAverage_NawaMan {
         
         final Set<String>               sourceNames = new TreeSet<String>();
         final Map<StationName, Station> stationData;
-        
-        final boolean[] isNew = new boolean[] { false };
         
         Statistic(String name, boolean isSorted) {
             if (name != null) {
@@ -441,8 +437,8 @@ public class CalculateAverage_NawaMan {
     static Runner createRunner(String[] args) {
         var timed    = (args.length == 0) || !args[0].equals("--untimed");
         var executor = timed
-                     ? (Runner)(CalculateAverage_NawaMan::timedRun)
-                     : (Runner)(CalculateAverage_NawaMan::regularRun);
+                     ? (Runner)(CalculateAverage_NawaMan_Org::timedRun)
+                     : (Runner)(CalculateAverage_NawaMan_Org::regularRun);
         return executor;
     }
     

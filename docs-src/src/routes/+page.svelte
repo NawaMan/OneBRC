@@ -6,13 +6,11 @@
 <style>
 </style>
 
-<div class="content">
-	<NavigationBar
-		nextLink="/introduction.html"
-	/>
-	<TitlePage>
-		<span slot="title"      >One Billion Row Challenge</span>
-		<span slot="subtitle"   >NawaMan's Java Solution</span>
-		<span slot="subsubtitle">(2-3 Seconds Without Using Unsafe or Graal VM)</span>
-	</TitlePage>
-</div>
+<TitlePage>
+	<span slot="title"      >One Billion Row Challenge</span>
+	<span slot="subtitle"   >NawaMan's Java Solution</span>
+	<span slot="subsubtitle">(2-3 seconds)</span>
+</TitlePage>
+<NavigationBar
+	nextLink="/overview.html"
+/>
