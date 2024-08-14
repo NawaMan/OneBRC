@@ -161,6 +161,7 @@ public class CalculateAverage_NawaMan {
         boolean addData(StationName stationName, int value) {
             var isNew   = false;
             var station = stationData.get(stationName);
+            // Interestingly, using compute(...) is slower than the get and if-else.
             if (station == null) {
                 station = new Station(stationName);
                 stationData.put(stationName, station);
@@ -176,14 +177,13 @@ public class CalculateAverage_NawaMan {
             for (var entry : other.stationData.entrySet()) {
                 var name       = entry.getKey();
                 var newStation = entry.getValue();
-                stationData.compute(name, (__, existingStation) -> {
-                    if (existingStation == null) {
-                        return newStation;
-                    } else {
-                        existingStation.add(newStation);
-                        return existingStation;
-                    }
-                });
+                var station    = stationData.get(name);
+                // Interestingly, using compute(...) is slower than the get and if-else.
+                if (station == null) {
+                    stationData.put(name, newStation);
+                } else {
+                    station.add(newStation);
+                }
             }
             return this;
         }
