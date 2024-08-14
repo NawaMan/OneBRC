@@ -28,51 +28,45 @@
 		padding: 1em;
 		width: 30%;
 	}
-	.right table,
-	.right table td {
+	.right table {
 		border-collapse: collapse;
 		border: none;
+	}
+	.tab {
 		padding-left: 0.5em;
-		padding-right: 0.5em;
 	}
-	.right table td:first-child {
+	.linenums {
+		width: 60%;
 		text-align: right;
+		color: lightslategray;
 	}
-	.right table td:last-child {
-		padding-left: 1em;
-		border: none;
-		font-family: 'Fira Code', monospace;
+	.code {
+		width: 40%;
 	}
-	.right table tr:first-child td:last-child::after {
-		content: "";
-	}
-	.right table td:last-child::after {
+	.code div::after {
 		content: "¶";
 		color: #777;
 	}
-	.right table tr.blur td:last-child::after,
+	.code div.blur::after,
 	.blur {
-		color: transparent; /* Make the text itself invisible */
-		text-shadow: 0 0 8px rgba(240, 248, 255, 0.8); /* Apply a shadow to create the blur */
+		color: transparent;
+		text-shadow: 0 0 8px rgba(240, 248, 255, 0.8) !important;
 	}
-	/* Editor */
-	table {
+	.tab, .linenums, .code {
 		background-color: #1f1f1f;
 		border: 1px solid lightslategray !important;
 		font-family: 'Fira Code', monospace;
 	}
-	table tr:not(.blur) td:first-child {
-		color: lightslategray;
+	.linenums, .code {
+		line-height: 1.2;
 	}
-	table tr:first-child {
-		border-bottom: 1px solid lightslategray;
-	}
-	table tr td:first-child {
-		border-left: 1px solid lightslategray;
-		border-right: 1px solid lightslategray;
-	}
-	table tr td:last-child {
-		cursor: text;
+	.linenums div, .code div {
+		line-height: 1.2;
+		margin: 0;
+		padding-left: 0.5em;
+		padding-right: 0.5em;
+		padding-top: 0.0em;
+		padding-bottom: 0.0em;
 	}
 </style>
 
@@ -97,23 +91,38 @@
 		</ul>		
 	</div>
 	<div class="right">
-		<table>
-			<tr><td colspan="2" style="text-align: left;">
-				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<line x1="3" y1="4" x2="16" y2="4"/>
-					<line x1="3" y1="8" x2="11" y2="8"/>
-					<line x1="3" y1="12" x2="16" y2="12"/>
-					<line x1="3" y1="16" x2="11" y2="16"/>
-				</svg>
-			   	measurements.txt</td></tr>
-			<tr><td>1</td><td>Ottawa;14.2</td></tr>
-			<tr><td>2</td><td>Bangkok;44.0</td></tr>
-			<tr><td>3</td><td>Sydney;-2.5</td></tr>
-			<tr><td>4</td><td>Łódź;-20.4</td></tr>
-			<tr class="blur"><td>455</td><td>New York;20.7</td></tr>
-			<tr class="blur"><td>15,466</td><td>Mars;-24.7</td></tr>
-			<tr class="blur"><td>1,546,536</td><td>Venus;84.5</td></tr>
-			<tr><td>1,000,000,000</td><td>Budapest;14.9</td></tr>
+		<div class="tab">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<line x1="3" y1="4" x2="16" y2="4"/>
+				<line x1="3" y1="8" x2="11" y2="8"/>
+				<line x1="3" y1="12" x2="16" y2="12"/>
+				<line x1="3" y1="16" x2="11" y2="16"/>
+			</svg>
+			measurements.txt
+		</div>
+		<table class="editor">
+			<tr>
+			<td class="linenums">
+				<div>1</div>
+				<div>2</div>
+				<div>3</div>
+				<div>4</div>
+				<div class="blur">455</div>
+				<div class="blur">15,466</div>
+				<div class="blur">1,546,536</div>
+				<div>1,000,000,000</div>
+			</td>
+			<td class="code">
+				<div>Ottawa;14.2</div>
+				<div>Bangkok;44.0</div>
+				<div>Sydney;-2.5</div>
+				<div>Łódź;-20.4</div>
+				<div class="blur">Mercury;-50.7</div>
+				<div class="blur">Mars;-4.7</div>
+				<div class="blur">Venus;84.5</div>
+				<div>Budapest;14.9</div>
+			</td>
+			</tr>
 		</table>
 	</div>
 </ContentPage>
