@@ -41,7 +41,7 @@
 	.right table td:last-child {
 		padding-left: 1em;
 		border: none;
-		font-family: 'Courier New', Courier, monospace;
+		font-family: 'Fira Code', monospace;
 	}
 	.right table tr:first-child td:last-child::after {
 		content: "";
@@ -98,7 +98,14 @@
 	</div>
 	<div class="right">
 		<table>
-			<tr><td colspan="2" style="text-align: left;">&gt; measurements.txt</td></tr>
+			<tr><td colspan="2" style="text-align: left;">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<line x1="3" y1="4" x2="16" y2="4"/>
+					<line x1="3" y1="8" x2="11" y2="8"/>
+					<line x1="3" y1="12" x2="16" y2="12"/>
+					<line x1="3" y1="16" x2="11" y2="16"/>
+				</svg>
+			   	measurements.txt</td></tr>
 			<tr><td>1</td><td>Ottawa;14.2</td></tr>
 			<tr><td>2</td><td>Bangkok;44.0</td></tr>
 			<tr><td>3</td><td>Sydney;-2.5</td></tr>
