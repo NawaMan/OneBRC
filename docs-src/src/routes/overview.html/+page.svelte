@@ -14,7 +14,12 @@
 </style>
 
 <ContentPage title="Overview">
-	<YouTube name="1brc" youtubeId="RYjB4sGXNZI" />
+	<table>
+		<tr>
+			<td><YouTube name="1brc"             youtubeId="RYjB4sGXNZI" /></td>
+			<td><YouTube name="1brc-in-2seconds" youtubeId="9-S_nZ5gzGE" /></td>
+		</tr>
+	</table>
 	<p>
 		The One Billion Row Challenge (1BRC) <a href="https://www.morling.dev/blog/one-billion-row-challenge/">🔗</a>, 
 		  proposed by Gunnar Morling, 

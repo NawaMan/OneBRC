@@ -8,6 +8,9 @@
 	b {
 		color: burlywood;
 	}
+	.text {
+		width: 100%;
+	}
 </style>
 
 <ContentPage title="Overview">
