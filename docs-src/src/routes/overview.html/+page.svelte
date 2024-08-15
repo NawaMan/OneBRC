@@ -1,17 +1,12 @@
 <script>
 	import NavigationBar from "$lib/components/NavigationBar.svelte";
 	import ContentPage from "$lib/templates/ContentPage.svelte";
+	import YouTube from "$lib/components/YouTube.svelte";
 </script>
 
 <style>
 	a {
 		text-decoration: none;
-	}
-	img {
-		display: block;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 1em;
 	}
 	b {
 		color: burlywood;
@@ -19,9 +14,7 @@
 </style>
 
 <ContentPage title="Overview">
-	<a href="https://www.perplexity.ai/search/how-would-you-introduce-the-1b-OtPqeqE_Q4K_ftdNWThnjQ">
-		<img src="1brc.png" alt="1brc" width="500px" />
-	</a>
+	<YouTube name="1brc" youtubeId="RYjB4sGXNZI" />
 	<p>
 		The One Billion Row Challenge (1BRC) <a href="https://www.morling.dev/blog/one-billion-row-challenge/">🔗</a>, 
 		  proposed by Gunnar Morling, 
@@ -33,5 +26,5 @@
 </ContentPage>
 <NavigationBar
 	prevLink="/"
-	nextLink="/the-challenge.html"
+	nextLink="/result.html"
 />

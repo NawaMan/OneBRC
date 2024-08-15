@@ -124,8 +124,11 @@
 			</td>
 			</tr>
 		</table>
+		<p>
+			File size: <b>13GB</b>
+		</p>
 	</div>
 </ContentPage>
 <NavigationBar
-	prevLink="/overview.html"
+	prevLink="/result.html"
 />
