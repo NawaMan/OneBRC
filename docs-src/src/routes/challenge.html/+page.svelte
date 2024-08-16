@@ -130,5 +130,5 @@
 	</div>
 </ContentPage>
 <NavigationBar
-	prevLink="/result.html"
+	prevLink="/results.html"
 />

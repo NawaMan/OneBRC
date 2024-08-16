@@ -20,8 +20,6 @@ import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import onebrc.CalculateAverage_NawaMan_Org.Station;
-
 /**
  * One-Billion Row Challenge solution by NawaMan.
  * 

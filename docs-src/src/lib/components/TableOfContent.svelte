@@ -74,7 +74,7 @@
 		<ol>
 			<li><a href="/"                 >Title</a></li>
 			<li><a href="/overview.html"    >Overview</a></li>
-			<li><a href="/result.html"      >Result</a></li>
+			<li><a href="/results.html"     >Results</a></li>
 			<li><a href="/introduction.html">One Billion Row Chanllenge</a></li>
 		</ol>
 	</div>
