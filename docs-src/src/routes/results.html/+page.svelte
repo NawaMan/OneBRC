@@ -1,10 +1,15 @@
 <script lang="ts">
 	import NavigationBar from "$lib/components/NavigationBar.svelte";
-	import ImgBox from '$lib/components/ImgBox.svelte';
 	import ContentPage from "$lib/templates/ContentPage.svelte";
+    import JavaCode from "$lib/components/JavaCode.svelte";
+	import Box from "$lib/components/Box.svelte";
+  
+    // @ts-ignore
+    export let data;
 
-	let isI9Expanded = false;
-	let isM6Expanded = false;
+	let isI9Expanded   = false;
+	let isM6Expanded   = false;
+	let isCodeExpanded = false;
 
 	function toggleI9Expand() {
 		isI9Expanded = !isI9Expanded;
@@ -12,13 +17,16 @@
 	function toggleM6Expand() {
 		isM6Expanded = !isM6Expanded;
 	}
+	function toggleCodeExpand() {
+		isCodeExpanded = !isCodeExpanded;
+	}
 </script>
 
 <style>
 	b {
 		color: burlywood;
 	}
-	img {
+	.figure {
 		height: 350px;
 		margin: auto;
 		padding: auto;
@@ -26,7 +34,6 @@
 		border-radius: 5px;
 	}
 	.text {
-		width: 80%;
 		padding: 10px;
 		margin: auto;
 		border-collapse: collapse;
@@ -44,6 +51,13 @@
 	.text div {
 		text-align: center;
 	}
+	.code,
+	.result {
+		width: 500px;
+		cursor: pointer;
+		margin: auto;
+	}
+	.code:hover,
 	.result:hover {
 		background-color: #11632c;
 		border: 1px solid #f9f9f9;
@@ -51,24 +65,18 @@
 	}
 </style>
 
-<ImgBox
-	expanded={isI9Expanded}
-	imgSrc="i9-Results.png"
-	altText="i9 Results"
-	width={634}
-	height={371}
-	onClick={toggleI9Expand}
-/>
-<ImgBox
-	expanded={isM6Expanded}
-	imgSrc="m6-Results.png"
-	altText="m6 Results"
-	width={634}
-	height={371}
-	onClick={toggleM6Expand}
-/>
+<Box expanded={isI9Expanded} width={634} height={371} onClick={toggleI9Expand}>
+    <img class="result-img" src="i9-Results.png" alt="i9 Results" width="634px" height="371px"/>
+</Box>
+<Box expanded={isM6Expanded} width={634} height={371} onClick={toggleM6Expand}>
+    <img class="result-img" src="m6-Results.png" alt="m6 Results" width="634px" height="371px"/>
+</Box>
+<Box expanded={isCodeExpanded} width={1000} height={600}>
+	<JavaCode javaCode={data.text} revealLines={[[39, [371, 372, [375, [380, [1]]]]]]} width="1000px" height="600px" />
+</Box>
+
 <ContentPage title="Results">
-	<img src="smug-daniel-craig.gif" alt="So pround" />
+	<img class="figure" src="smug-daniel-craig.gif" alt="So pround" />
 	<table class="text">
 		<tr>
 			<td class="left">
@@ -89,8 +97,10 @@
 		<tr>
 			<td colspan="2">
 				<div>&nbsp;</div>
-				<div>No "Unsafe" - No GraalVM</div>
-				<div>Readable Code</div>
+				<div class="code" on:click={toggleCodeExpand} on:keydown={toggleCodeExpand} role="button" tabindex="-1">
+					<div>No "Unsafe" - No GraalVM</div>
+					<div>Readable Code!</div>
+				</div>
 			</td>
 		</tr>
 	</table>

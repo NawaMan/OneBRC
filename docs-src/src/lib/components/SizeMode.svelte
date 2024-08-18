@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import { browser } from '$app/environment';
 	import CtrlBtn from './CtrlBtn.svelte';
 	import { scaleMode } from '$lib/stores/scaleMode';
 

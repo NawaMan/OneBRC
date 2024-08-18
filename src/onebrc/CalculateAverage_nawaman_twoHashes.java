@@ -36,7 +36,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * <li>Use two hashes to avoid calling comparing the full bytes.</li>
  * </ol>
  */
-public class CalculateAverage_NawaMan3 {
+public class CalculateAverage_nawaman_twoHashes {
     
     /**
      * Station name -- the name of the station.
@@ -451,8 +451,8 @@ public class CalculateAverage_NawaMan3 {
     static Runner createRunner(String[] args) {
         var timed    = (args.length == 0) || !args[0].equals("--untimed");
         var executor = timed
-                     ? (Runner)(CalculateAverage_NawaMan3::timedRun)
-                     : (Runner)(CalculateAverage_NawaMan3::regularRun);
+                     ? (Runner)(CalculateAverage_nawaman_twoHashes::timedRun)
+                     : (Runner)(CalculateAverage_nawaman_twoHashes::regularRun);
         return executor;
     }
     
