@@ -14,7 +14,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -38,8 +37,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class CalculateAverage_nawaman {
     
-    static int cpuCount   = Runtime.getRuntime().availableProcessors();
-    static int chunkCount = cpuCount;
+    static int cpuCount = Runtime.getRuntime().availableProcessors();
     
     static ExecutorService                executor   = newFixedThreadPool(cpuCount);
     static LinkedBlockingQueue<Statistic> statistics = new LinkedBlockingQueue<Statistic>();
@@ -369,34 +367,33 @@ public class CalculateAverage_nawaman {
     //== Main ==
     
     public static void main(String[] args) throws IOException, InterruptedException {
-        createRunner(args).run(() -> {
-            var filePath = "measurements.txt";
+        var filePath   = "measurements.txt";
+        var chunkCount = cpuCount;
+        
+        for (var chunkReadTask : chunkExtractTasks(filePath, chunkCount)) {
+            executor.submit(chunkReadTask);
+        }
+        
+        var statistic = (Statistic)null;
+        while (true) {
+            statistic = statistics.take();
             
-            for (var chunkReadTask : chunkExtractTasks(filePath)) {
-                executor.submit(chunkReadTask);
-            }
+            // No more statistics to combine.
+            if ((statistics.size() == 0)
+             && (statistic.chunkNames.size() == chunkCount))
+                break;
             
-            var statistic = (Statistic)null;
-            while (true) {
-                statistic = statistics.take();
-                
-                // No more statistics to combine.
-                if ((statistics.size() == 0)
-                 && (statistic.chunkNames.size() == chunkCount))
-                    break;
-                
-                var base = statistic;
-                var other = statistics.take();
-                executor.submit(() -> statistics.add(base.include(other)));
-            }
-            
-            System.out.println(statistic.sort());
-            executor.shutdownNow();
-        });
+            var base = statistic;
+            var other = statistics.take();
+            executor.submit(() -> statistics.add(base.include(other)));
+        }
+        
+        System.out.println(statistic.sort());
+        executor.shutdownNow();
     }
     
     /** Create the tasks to extract the data from the file. */
-    private static Runnable[] chunkExtractTasks(String filePath) throws IOException {
+    private static Runnable[] chunkExtractTasks(String filePath, int chunkCount) throws IOException {
         long fileSize  = fileSize(filePath);
         long chunkSize = (fileSize / chunkCount) + 1; // Add some buffer to ensure that the entire file is covered.
                                                       // Java round integer division down so the sum of each might be
@@ -425,40 +422,4 @@ public class CalculateAverage_nawaman {
             return channel.size();
         }
     }
-    
-    //== Misc ==
-    // These set of classes helps out with the main (not related to the solution).
-    // In particular, they allows development-time timing of the solution.
-    // During the real run (run-openjdk.sh) the timing is disabled.
-    
-    static interface Run {
-        void run() throws IOException, InterruptedException;
-    }
-    
-    static interface Runner {
-        void run(Run run) throws IOException, InterruptedException;
-    }
-    
-    static void timedRun(Run run) throws IOException, InterruptedException {
-        long startTime = System.currentTimeMillis();
-        try {
-            run.run();
-        } finally {
-            long endTime = System.currentTimeMillis();
-            System.out.println("Time taken: " + (endTime - startTime) + " ms");
-        }
-    }
-    
-    static void regularRun(Run execution) throws IOException, InterruptedException {
-        execution.run();
-    }
-    
-    static Runner createRunner(String[] args) {
-        var timed    = (args.length == 0) || !args[0].equals("--untimed");
-        var executor = timed
-                     ? (Runner)(CalculateAverage_nawaman::timedRun)
-                     : (Runner)(CalculateAverage_nawaman::regularRun);
-        return executor;
-    }
-    
 }
