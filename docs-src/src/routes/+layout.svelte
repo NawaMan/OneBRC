@@ -1,42 +1,31 @@
 <script lang="ts">
 	import '$lib/styles/global.css';
-	import { page } from '$app/stores';
-	import { scaleMode } from '$lib/stores/scaleMode';
-	import { onMount } from 'svelte';
+	import { browser }    from '$app/environment';
+	import { onMount }    from 'svelte';
+	import { scaleMode }  from '$lib/stores/scaleMode';
+	import Copyright      from '$lib/components/Copyright.svelte';
 	import TableOfContent from '$lib/components/TableOfContent.svelte';
-	import SizeMode from '$lib/components/SizeMode.svelte';
-	import { browser } from '$app/environment';
-	import Copyright from '$lib/components/Copyright.svelte';
+	import SizeMode       from '$lib/components/SizeMode.svelte';
 
-	let container: any;
-	let content: any;
+	let container: HTMLElement;
+	let content: HTMLElement;
 
-	let isScaled = false;
-
-	if (browser) {
-		scaleMode.subscribe(value => {
-			isScaled = value;
-
-			if (isScaled) {
-				adjustSize();
-				window.addEventListener('resize', adjustSize);
-			} else {
-				window.removeEventListener('resize', adjustSize);
-				if (container) {
-					container.style.width  = '1280px';
-					container.style.height =  '720px';
-					content.style.transform = `scale(1)`;
-					content.style.transformOrigin = 'top left';
-				}
-			}
-		});
-	}
+	let isScaled    = $scaleMode;
+	let initialized = false;
+	const aspectRatio = 1280 / 720;
 
 	function adjustSize() {
 		if (!container)
 			return;
 
-		const aspectRatio = 1280 / 720;
+		if (!isScaled) {
+			container.style.width  = '1280px';
+			container.style.height =  '720px';
+			content.style.transform = `scale(1)`;
+			content.style.transformOrigin = 'top left';
+			return;
+		}
+
 		const windowWidth = window.innerWidth;
 		const windowHeight = window.innerHeight;
 		const windowRatio = windowWidth / windowHeight;
@@ -52,14 +41,35 @@
 		content.style.transform = `scale(${scale})`;
 		content.style.transformOrigin = 'top left';
 	}
+
+	onMount(() => {
+		if (browser) {
+			scaleMode.subscribe(value => {
+				isScaled = value;
+
+				window.removeEventListener('resize', adjustSize);
+				adjustSize();
+				if (isScaled) {
+					window.addEventListener('resize', adjustSize);
+				}
+			});
+			setTimeout(function () {
+				adjustSize();
+			}, 0);
+			initialized = true;
+		}
+	});
+	
 </script>
 
 <div class="container" class:scale-mode={isScaled} bind:this={container}>
 	<div class="content"  bind:this={content}>
+		{#if initialized}
 		<slot />
 		<TableOfContent />
-		<SizeMode />
+		<SizeMode  />
 		<Copyright />
+		{/if}
 	</div>
 </div>
 
@@ -93,6 +103,5 @@
 		color: #C0F1FF;
 		background: #112c63;
 		font-family: 'Noto Sans', 'Cormorant Garamond', serif;
-		transition: all 0.3s ease;
 	}
 </style>

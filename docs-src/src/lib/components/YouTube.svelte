@@ -9,7 +9,7 @@
     $: videoUrl     = `https://www.youtube.com/watch?v=${youtubeId}`;
 </script>
 
-<a href={videoUrl}>
+<a href={videoUrl} target="_blank">
     <div class="youtube">
         <img class="thumbnail" src={thumbnailSrc} alt={thumbnailAlt} />
         <img class="qr" src={qrSrc} alt={qrAlt} />
