@@ -1,7 +1,9 @@
 <script lang="ts">
-    export let expanded = false; // Control expansion
-    export let width;            // Image width
-    export let height;           // Image height
+    export let expanded = false;                 // Control expansion
+    export let width;                            // Image width
+    export let height;                           // Image height
+    export let linkUrl: string | null = null;    // Link
+    export let linkText = "LINK";                // Link
 	export let onClick: (() => void) | null = null;
 
     function collapse() {
@@ -13,6 +15,10 @@
     <div class="img-box" style="--full-width: {width}px; --full-height: {height}px;"  on:click={onClick} on:keydown={onClick} role="button" tabindex="-1">
         <slot />
         <div class="close" on:click={collapse} on:keydown={collapse} role="button" tabindex="-1">CLOSE</div>
+
+        {#if linkUrl}
+            <div class="link"><a href={linkUrl} target="_blank">{linkText}</a></div>
+        {/if}
     </div>
 </div>
   
@@ -98,6 +104,52 @@
             var(--box-ani-time) calc(0*var(--box-ani-time)) padding,
             var(--box-ani-time) calc(0*var(--box-ani-time)) border,
             var(--box-ani-time) calc(0*var(--box-ani-time)) box-shadow;
+    }
+
+    .parent .link a {
+        text-decoration: none;
+    }
+
+    .parent .link {
+        position: absolute;
+        overflow: hidden;
+        cursor: pointer;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        padding-left: 1em;
+        padding-right: 1em;
+        top: calc(50% - var(--full-height) / 2);
+        right: calc(100% - 6px - 0.5*var(--full-width));
+        background-color: lightblue;
+        color: black;
+        border-radius: 3px;
+        align-content: center;
+        text-align: center;
+        transition:
+            var(--box-ani-time) height;
+    }
+
+    .parent:not(.expanded) .link {
+        height: 0em;
+        transition:
+            /* Duration         Delay */
+            var(--box-ani-time) calc(0*var(--box-ani-time)) top,
+            var(--box-ani-time) calc(0*var(--box-ani-time)) height,
+            var(--box-ani-time) calc(0*var(--box-ani-time)) padding;
+    }
+
+    .parent.expanded .link {
+        top: calc(50% - 1.5em - 3px - var(--full-height) / 2);
+        height: 1.5em;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        padding-left: 1em;
+        padding-right: 1em;
+        transition:
+            /* Duration         Delay */
+            var(--box-ani-time) calc(1*var(--box-ani-time)) top,
+            var(--box-ani-time) calc(1*var(--box-ani-time)) height,
+            var(--box-ani-time) calc(1*var(--box-ani-time)) padding;
     }
   </style>
   
