@@ -2,13 +2,11 @@ package onebrc;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import static java.nio.channels.FileChannel.MapMode.READ_ONLY;
 import static java.nio.file.StandardOpenOption.READ;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -215,7 +213,7 @@ public class CalculateAverage_nawaman {
                 var lastPosition = channel.size();
                 var endPosition  = min(start + sizeToRead, lastPosition);
                 var mapSize      = endPosition - startPosition;
-                var buffer       = channel.map(READ_ONLY, startPosition, mapSize);
+                var buffer       = channel.map(FileChannel.MapMode.READ_ONLY, startPosition, mapSize);
                 var skippedBytes = seekToStart(startPosition, buffer);
                 var boundarySize = size - skippedBytes;
                 return new StatisticExtractor(name, buffer, boundarySize);
