@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 
 /**
  * One-Billion Row Challenge solution by NawaMan.
@@ -36,11 +36,6 @@ import java.util.concurrent.LinkedBlockingQueue;
  * </ol>
  */
 public class CalculateAverage_nawaman {
-    
-    static int cpuCount = Runtime.getRuntime().availableProcessors();
-    
-    static ExecutorService                executor   = newFixedThreadPool(cpuCount);
-    static LinkedBlockingQueue<Statistic> statistics = new LinkedBlockingQueue<Statistic>();
     
     /**
      * Station name
@@ -98,13 +93,13 @@ public class CalculateAverage_nawaman {
         
         @Override
         public int compareTo(StationName o) {
-            // Avoid handling sorting of UTF-8 characters so convert it to string.
+            // Avoid handling sorting of UTF-8 characters myself so convert it to string.
             return this.toString().compareTo(o.toString());
         }
     }
     
-    /** Station statistic -- This contains statistic from a single station. */
     static class StationStatistic {
+        
         StationName stationName;
         long        min   = Long.MAX_VALUE;
         long        max   = Long.MIN_VALUE;
@@ -119,15 +114,13 @@ public class CalculateAverage_nawaman {
             this.stationName = stationName;
         }
         
-        /** Add the measurement to the statistic. */
-        void add(int measurement) {
-            min = min(min, measurement);
-            max = max(max, measurement);
-            sum += measurement;
+        void add(int temperatureTimesTen) {
+            min = min(min, temperatureTimesTen);
+            max = max(max, temperatureTimesTen);
+            sum += temperatureTimesTen;
             count++;
         }
         
-        /** Include and combine the data from the given station statistic into this one. */
         void include(StationStatistic stationStatistic) {
             min    = min(min, stationStatistic.min);
             max    = max(max, stationStatistic.max);
@@ -144,7 +137,6 @@ public class CalculateAverage_nawaman {
         }
     }
     
-    /** Statistic of multiple station -- This contains data from multiple stations and multiple chunk. */
     static class Statistic {
         
         // The max station name is 10,000 but we can start smaller as each extractor only do part of it.
@@ -152,43 +144,35 @@ public class CalculateAverage_nawaman {
         static final int STATISTIC_MAP_SIZE = 1024;
         
         final Set<String>                        chunkNames = new TreeSet<String>();
-        final Map<StationName, StationStatistic> stationData;
+        final Map<StationName, StationStatistic> stationStatistics;
         
         Statistic(String name, boolean isSorted) {
             if (name != null) {
                 chunkNames.add(name);
             }
             
-            stationData
-                    = isSorted
-                    ? new TreeMap<StationName, StationStatistic>()
-                    : new HashMap<StationName, StationStatistic>(STATISTIC_MAP_SIZE);
+            stationStatistics = isSorted
+                        ? new TreeMap<StationName, StationStatistic>()
+                        : new HashMap<StationName, StationStatistic>(STATISTIC_MAP_SIZE);
         }
         
-        /** Add value to the station of the same name and return if the station is newly-added. */
-        boolean addMeasurement(StationName stationName, int measurement) {
-            var isNew   = false;
-            var station = stationData.get(stationName);
-            // Interestingly, using compute(...) is slower than the get and if-else.
-            if (station == null) {
-                station = new StationStatistic(stationName);
-                stationData.put(stationName, station);
-                isNew = true;
-            }
-            station.add(measurement);
-            return isNew;
+        StationStatistic getStationStatistic(StationName stationName) {
+            return stationStatistics.get(stationName);
         }
         
-        /** Include and absorb all data from the given statistic */
-        Statistic include(Statistic other) {
+        void setStationStatistic(StationStatistic stationStatistic) {
+            stationStatistics.put(stationStatistic.stationName, stationStatistic);
+        }
+        
+        Statistic absorb(Statistic other) {
             chunkNames.addAll(other.chunkNames);
-            for (var entry : other.stationData.entrySet()) {
+            for (var entry : other.stationStatistics.entrySet()) {
                 var name       = entry.getKey();
                 var newStation = entry.getValue();
-                var station    = stationData.get(name);
+                var station    = stationStatistics.get(name);
                 // Interestingly, using compute(...) is slower than the get and if-else.
                 if (station == null) {
-                    stationData.put(name, newStation);
+                    stationStatistics.put(name, newStation);
                 } else {
                     station.include(newStation);
                 }
@@ -196,43 +180,37 @@ public class CalculateAverage_nawaman {
             return this;
         }
         
-        /** Returns the statistic with sorted data. */
-        Statistic sort() {
-            if (stationData instanceof TreeMap)
-                return this;
-            
-            return new Statistic(null, true).include(this);
+        Statistic sorted() {
+            return (stationStatistics instanceof TreeMap)
+                    ? this
+                    : new Statistic(null, true).absorb(this);
         }
         
         @Override
         public String toString() {
-            return stationData.toString();
+            return stationStatistics.toString();
         }
         
     }
     
-    /** Extractor to extract data from the buffer.*/
-    static record ChunkExtractor(
+    static record StatisticExtractor(
             String     extractorName,
             ByteBuffer buffer,
             long       boundarySize) {
         
         static final int NAME_BUFFER_SIZE = 128;
         
-        private static int toDigit(byte nextCh) {
+        static int toDigit(byte nextCh) {
             return nextCh - '0';
         }
         
-        /**
-         * Create an extractor that can read the file from the start to the end.
-         * It skip the part of line that should be processed by the previous extractor.
-         **/
-        static ChunkExtractor create(String name, String filePath, long start, long size) throws IOException {
+        static StatisticExtractor create(String name, String filePath, long start, long size) throws IOException {
             try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
                 // Read a bit longer on the end to ensure that the last line is included.
                 // Since the name of the station is at most 100 bytes, 300 extra bytes are read.
                 // This because, there can be up to 100+ from the previous and 100+ extended into the next part.
-                long sizeToRead = size + 300;
+                var tailMargin = 300L;
+                var sizeToRead = size + tailMargin;
                 
                 // Calculate the start position.
                 // Get one more byte in the front to check if the newline char is at the beginning of a line.
@@ -242,20 +220,13 @@ public class CalculateAverage_nawaman {
                 // If the first char is not a newline, we know that it was a tail of the previous extract. 
                 long startPosition = max(start - 1, 0);
                 
-                // Calculate the end position.
-                long lastPosition = channel.size();
-                long endPosition  = min(start + sizeToRead, lastPosition);
-                
-                // Read the chunk of the file to the buffer.
-                long mapSize = endPosition - startPosition;
-                var buffer = channel.map(READ_ONLY, startPosition, mapSize);
-                
-                // Adjust the start of the buffer by skipping to the next line if not at the start.
-                long skippedBytes = seekToStart(startPosition, buffer);
-                
-                // The boundary size shrinks because the starting point is adjusted.
-                long boundarySize = size - skippedBytes;
-                return new ChunkExtractor(name, buffer, boundarySize);
+                var lastPosition = channel.size();
+                var endPosition  = min(start + sizeToRead, lastPosition);
+                var mapSize      = endPosition - startPosition;
+                var buffer       = channel.map(READ_ONLY, startPosition, mapSize);
+                var skippedBytes = seekToStart(startPosition, buffer);
+                var boundarySize = size - skippedBytes;
+                return new StatisticExtractor(name, buffer, boundarySize);
             }
         }
         
@@ -272,128 +243,125 @@ public class CalculateAverage_nawaman {
             return skippedBytes;
         }
         
-        /** This class help with the extraction as Java does not support multiple-value return. */
-        static class StationNameData {
+        static class StationNameBuffer {
             byte[] bytes = new byte[NAME_BUFFER_SIZE];
             int    length;
             int    hash;
-        }
-        
-        /** Extract the data from the buffer into statistic -- stations with statistic data. */
-        Statistic extract() throws IOException {
-            var histogram = new Statistic(extractorName, false);
             
-            // Reusable station-name data for speed -- by reduce object creation.
-            var stationNameData = new StationNameData();
-            
-            var startPos = buffer.position();
-            var stopPos  = startPos + boundarySize;
-            while (buffer.hasRemaining() && (buffer.position() <= stopPos)) {
-                readStationName(stationNameData);
-                var value = readTemperature();
+            void readFrom(ByteBuffer buffer) {
+                var bytes     = this.bytes;
+                int nameIndex = 0;
+                int nameHash  = 1;
                 
-                var stationName = new StationName(stationNameData.bytes, stationNameData.length, stationNameData.hash);
-                var isNew       = histogram.addMeasurement(stationName, value);
-                if (isNew) {
-                    // The station name is found to be a new one(for this chunk) so it is now used in the map.
-                    // Since the object are now used, we cannot reuse it.
-                    // Therefore, we need to create a new one.
-                    stationNameData = new StationNameData();
+                nameIndex = 0;
+                while (buffer.hasRemaining()) {
+                    byte b = buffer.get();
+                    if (b == ';')
+                        break;
+                    bytes[nameIndex++] = b;
+                    nameHash = (nameHash << 5) - nameHash + b;  // nameHash*31 + b
                 }
-            }
-            return histogram;
-        }
-        
-        void readStationName(StationNameData nameData) {
-            var nameBytes = nameData.bytes;
-            int nameIndex = 0;
-            int nameHash  = 1;
-            
-            nameIndex = 0;
-            while (buffer.hasRemaining()) {
-                byte b = buffer.get();
-                if (b == ';')
-                    break;
-                nameBytes[nameIndex++] = b;
-                nameHash = (nameHash << 5) - nameHash + b;  // nameHash*31 + b
-            }
-            nameData.length = nameIndex;
-            nameData.hash   = nameHash;
-        }
-        
-        // Read temperature from the buffer but read it as times-10 integer representation.
-        // Possible values: -99.0 to 99.9 will now become -990 to 999.
-        int readTemperature() {
-            var sign        = 1;
-            var temperature = 0;
-            // Attempt to read the first digit and sign
-            var firstChar = buffer.get();
-            if (firstChar == '-') {
-                // Found negative sign
-                sign = -1;
                 
-                // Read the next one for the hundredth digit.
-                temperature = toDigit(buffer.get());
-            } else {
-                temperature = toDigit(firstChar);
+                this.bytes  = bytes;
+                this.length = nameIndex;
+                this.hash   = nameHash;
             }
+        }
+        
+        static class TemperatureBuffer {
+            int temperatureTimesTen;
             
-            // If the decimal point is found the first digit becomes the tenth digit.
-            // Otherwise, the first digit the hundredth digit and the second is the tenth digit.
-            var secondCh = buffer.get();
-            if (secondCh == '.') {
+            void readFrom(ByteBuffer buffer) {
+                var sign        = 1;
+                var temperature = 0;
+                
+                var firstChar = buffer.get();
+                if (firstChar == '-') {
+                    sign = -1;  // Found negative sign
+                    temperature = toDigit(buffer.get());
+                } else {
+                    temperature = toDigit(firstChar);
+                }
+                
+                var secondCh = buffer.get();
+                if (secondCh != '.') {
+                    temperature = temperature * 10 + toDigit(secondCh);
+                    buffer.get(); // Read and throw away the decimal point ('.')
+                }
+                
                 temperature = temperature * 10;
-            } else {
-                var digit = toDigit(secondCh);
-                temperature = (temperature * 10 + digit)*10;
                 
-                buffer.get(); // Read and throw away the decimal point ('.')
+                // Getting the digit after the decimal point.
+                temperature += toDigit(buffer.get());
+                
+                buffer.get();   // Read and throw away the new line ('\n').
+                
+                this.temperatureTimesTen = sign * temperature;
             }
-            
-            // Getting the digit after the decimal point.
-            int thirdDigit = toDigit(buffer.get());
-            temperature += thirdDigit;
-            
-            // Apply the sign.
-            temperature *= sign;
-            
-            // Read and throw away the new line ('\n').
-            buffer.get();
-            
-            return temperature;
+        }
+        
+        Statistic extract() throws IOException {
+            var statistic         = new Statistic(extractorName, false);
+            var stationNameBuffer = new StationNameBuffer();
+            var temperatureBuffer = new TemperatureBuffer();
+            var startPosition     = buffer.position();
+            var stopPosition      = startPosition + boundarySize;
+            while (buffer.hasRemaining() && (buffer.position() <= stopPosition)) {
+                stationNameBuffer.readFrom(buffer);
+                temperatureBuffer.readFrom(buffer);
+                
+                var stationName      = new StationName(stationNameBuffer.bytes, stationNameBuffer.length, stationNameBuffer.hash);
+                var stationStatistic = statistic.getStationStatistic(stationName);
+                if (stationStatistic == null) {
+                    stationStatistic = new StationStatistic(stationName);
+                    statistic.setStationStatistic(stationStatistic);
+                    
+                    // The buffer is used in the station name, so we cannot reuse it. Hence, we need to create a new one.
+                    stationNameBuffer = new StationNameBuffer();
+                }
+                
+                stationStatistic.add(temperatureBuffer.temperatureTimesTen);
+            }
+            return statistic;
         }
     }
     
     //== Main ==
     
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         var filePath   = "measurements.txt";
+        var cpuCount   = Runtime.getRuntime().availableProcessors();
         var chunkCount = cpuCount;
         
-        for (var chunkReadTask : chunkExtractTasks(filePath, chunkCount)) {
-            executor.submit(chunkReadTask);
+        var executor   = newFixedThreadPool(cpuCount);
+        var statistics = new LinkedBlockingQueue<Statistic>();
+        
+        for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> statistics.add(statistic))) {
+            executor.submit(extractionTask);
         }
         
         var statistic = (Statistic)null;
         while (true) {
             statistic = statistics.take();
             
-            // No more statistics to combine.
-            if ((statistics.size() == 0)
-             && (statistic.chunkNames.size() == chunkCount))
+            var lastInQueue      = statistics.size() == 0;
+            var includeAllChunks = statistic.chunkNames.size() == chunkCount;
+            var isLastStatistic  =  lastInQueue && includeAllChunks;
+            if (isLastStatistic) {
                 break;
+            }
             
-            var base = statistic;
-            var other = statistics.take();
-            executor.submit(() -> statistics.add(base.include(other)));
+            var baseStatistic  = statistic;
+            var otherStatistic = statistics.take();
+            executor.submit(() -> statistics.add(baseStatistic.absorb(otherStatistic)));
         }
+        executor.shutdownNow();
         
-        System.out.println(statistic.sort());
+        System.out.println(statistic.sorted());
         executor.shutdownNow();
     }
     
-    /** Create the tasks to extract the data from the file. */
-    private static Runnable[] chunkExtractTasks(String filePath, int chunkCount) throws IOException {
+    static Runnable[] extractionTasks(String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
         long fileSize  = fileSize(filePath);
         long chunkSize = (fileSize / chunkCount) + 1; // Add some buffer to ensure that the entire file is covered.
                                                       // Java round integer division down so the sum of each might be
@@ -401,25 +369,32 @@ public class CalculateAverage_nawaman {
         var runnables = new Runnable[chunkCount];
         for (int i = 0; i < chunkCount; i++) {
             int cpuIndex  = i;
-            var chunkName = "Chunk-" + i;
-            runnables[i] = (() -> {
-                try {
-                    long pos = cpuIndex*chunkSize;
-                    var extractor = ChunkExtractor.create(chunkName, filePath, pos, chunkSize);
-                    var statistic = extractor.extract();
-                    statistics.add(statistic);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+            runnables[i] = (() -> extractionTask(filePath, cpuIndex, chunkSize, resultAccepter));
         }
         return runnables;
     }
     
-    /** Get the size of the file so that we can partition the file for each the extractor. */
-    static long fileSize(String filePath) throws IOException {
+    static void extractionTask(String filePath, int chunkIndex, long chunkSize, Consumer<Statistic> accepter) {
+        var position  = chunkIndex*chunkSize;
+        var chunkName = "Chunk-" + chunkIndex;
+        try {
+            var extractor = StatisticExtractor.create(chunkName, filePath, position, chunkSize);
+            var statistic = extractor.extract();
+            accepter.accept(statistic);
+        } catch (IOException e) {
+            e.printStackTrace();
+            var message
+                    = "Panic: Failed to read file chunk! filePath=%s, chunkIndex=%d, chunkSize=%d, position=%d"
+                    .formatted(filePath, chunkIndex, chunkSize, position);
+            throw new Error(message, e);
+        }
+    }
+    
+    static long fileSize(String filePath) {
         try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
             return channel.size();
+        } catch (IOException e) {
+            throw new Error("Panic: Failed to get file size! filePath=" + filePath, e);
         }
     }
 }
