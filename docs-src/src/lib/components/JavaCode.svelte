@@ -136,7 +136,7 @@
 						editor.setSelection({
 							startLineNumber: lineNumber,
 							startColumn: 1,
-							endLineNumber: lineNumber,
+							endLineNumber: lineNumber + 1,
 							endColumn: 1
 						});
 						// @ts-ignore

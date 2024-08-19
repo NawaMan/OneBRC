@@ -140,7 +140,6 @@ public class CalculateAverage_nawaman {
     static class Statistic {
         
         // The max station name is 10,000 but we can start smaller as each extractor only do part of it.
-        // We can afford to have it grow as needed.
         static final int STATISTIC_MAP_SIZE = 1024;
         
         final Set<String>                        chunkNames = new TreeSet<String>();
@@ -198,12 +197,6 @@ public class CalculateAverage_nawaman {
             ByteBuffer buffer,
             long       boundarySize) {
         
-        static final int NAME_BUFFER_SIZE = 128;
-        
-        static int toDigit(byte nextCh) {
-            return nextCh - '0';
-        }
-        
         static StatisticExtractor create(String name, String filePath, long start, long size) throws IOException {
             try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
                 // Read a bit longer on the end to ensure that the last line is included.
@@ -212,7 +205,6 @@ public class CalculateAverage_nawaman {
                 var tailMargin = 300L;
                 var sizeToRead = size + tailMargin;
                 
-                // Calculate the start position.
                 // Get one more byte in the front to check if the newline char is at the beginning of a line.
                 // Without this, we do not know if the first read bytes are part of the previous extract
                 //    or a beginning of this extractor.
@@ -230,7 +222,7 @@ public class CalculateAverage_nawaman {
             }
         }
         
-        private static long seekToStart(long startPosition, MappedByteBuffer buffer) {
+        static long seekToStart(long startPosition, ByteBuffer buffer) {
             long skippedBytes = 0;
             if (startPosition != 0) {
                 while (buffer.hasRemaining()) {
@@ -243,63 +235,6 @@ public class CalculateAverage_nawaman {
             return skippedBytes;
         }
         
-        static class StationNameBuffer {
-            byte[] bytes = new byte[NAME_BUFFER_SIZE];
-            int    length;
-            int    hash;
-            
-            void readFrom(ByteBuffer buffer) {
-                var bytes     = this.bytes;
-                int nameIndex = 0;
-                int nameHash  = 1;
-                
-                nameIndex = 0;
-                while (buffer.hasRemaining()) {
-                    byte b = buffer.get();
-                    if (b == ';')
-                        break;
-                    bytes[nameIndex++] = b;
-                    nameHash = (nameHash << 5) - nameHash + b;  // nameHash*31 + b
-                }
-                
-                this.bytes  = bytes;
-                this.length = nameIndex;
-                this.hash   = nameHash;
-            }
-        }
-        
-        static class TemperatureBuffer {
-            int temperatureTimesTen;
-            
-            void readFrom(ByteBuffer buffer) {
-                var sign        = 1;
-                var temperature = 0;
-                
-                var firstChar = buffer.get();
-                if (firstChar == '-') {
-                    sign = -1;  // Found negative sign
-                    temperature = toDigit(buffer.get());
-                } else {
-                    temperature = toDigit(firstChar);
-                }
-                
-                var secondCh = buffer.get();
-                if (secondCh != '.') {
-                    temperature = temperature * 10 + toDigit(secondCh);
-                    buffer.get(); // Read and throw away the decimal point ('.')
-                }
-                
-                temperature = temperature * 10;
-                
-                // Getting the digit after the decimal point.
-                temperature += toDigit(buffer.get());
-                
-                buffer.get();   // Read and throw away the new line ('\n').
-                
-                this.temperatureTimesTen = sign * temperature;
-            }
-        }
-        
         Statistic extract() throws IOException {
             var statistic         = new Statistic(extractorName, false);
             var stationNameBuffer = new StationNameBuffer();
@@ -310,7 +245,9 @@ public class CalculateAverage_nawaman {
                 stationNameBuffer.readFrom(buffer);
                 temperatureBuffer.readFrom(buffer);
                 
-                var stationName      = new StationName(stationNameBuffer.bytes, stationNameBuffer.length, stationNameBuffer.hash);
+                var stationName = new StationName(stationNameBuffer.bytes, stationNameBuffer.length, stationNameBuffer.hash);
+                
+                // Interestingly, using compute(...) is slower than the get and if-else.
                 var stationStatistic = statistic.getStationStatistic(stationName);
                 if (stationStatistic == null) {
                     stationStatistic = new StationStatistic(stationName);
@@ -326,7 +263,69 @@ public class CalculateAverage_nawaman {
         }
     }
     
-    //== Main ==
+    static class StationNameBuffer {
+        
+        static final int NAME_BUFFER_SIZE = 128;
+        
+        byte[] bytes = new byte[NAME_BUFFER_SIZE];
+        int    length;
+        int    hash;
+        
+        void readFrom(ByteBuffer buffer) {
+            var bytes     = this.bytes;
+            int nameIndex = 0;
+            int nameHash  = 1;
+            
+            nameIndex = 0;
+            while (buffer.hasRemaining()) {
+                byte b = buffer.get();
+                if (b == ';')
+                    break;
+                bytes[nameIndex++] = b;
+                nameHash = (nameHash << 5) - nameHash + b;  // nameHash*31 + b
+            }
+            
+            this.bytes  = bytes;
+            this.length = nameIndex;
+            this.hash   = nameHash;
+        }
+    }
+    
+    static class TemperatureBuffer {
+        int temperatureTimesTen;
+        
+        static int toDigit(byte nextCh) {
+            return nextCh - '0';
+        }
+        
+        void readFrom(ByteBuffer buffer) {
+            var sign        = 1;
+            var temperature = 0;
+            
+            var firstChar = buffer.get();
+            if (firstChar == '-') {
+                sign = -1;  // Found negative sign
+                temperature = toDigit(buffer.get());
+            } else {
+                temperature = toDigit(firstChar);
+            }
+            
+            var secondCh = buffer.get();
+            if (secondCh != '.') {
+                temperature = temperature * 10 + toDigit(secondCh);
+                buffer.get(); // Read and throw away the decimal point ('.')
+            }
+            
+            temperature = temperature * 10;
+            
+            // Getting the digit after the decimal point.
+            temperature += toDigit(buffer.get());
+            
+            buffer.get();   // Read and throw away the new line ('\n').
+            
+            this.temperatureTimesTen = sign * temperature;
+        }
+    }
     
     public static void main(String[] args) throws InterruptedException {
         var filePath   = "measurements.txt";
@@ -382,7 +381,6 @@ public class CalculateAverage_nawaman {
             var statistic = extractor.extract();
             accepter.accept(statistic);
         } catch (IOException e) {
-            e.printStackTrace();
             var message
                     = "Panic: Failed to read file chunk! filePath=%s, chunkIndex=%d, chunkSize=%d, position=%d"
                     .formatted(filePath, chunkIndex, chunkSize, position);
@@ -394,7 +392,8 @@ public class CalculateAverage_nawaman {
         try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
             return channel.size();
         } catch (IOException e) {
-            throw new Error("Panic: Failed to get file size! filePath=" + filePath, e);
+            var message = "Panic: Failed to get file size! filePath=%d".formatted(filePath);
+            throw new Error(message, e);
         }
     }
 }
