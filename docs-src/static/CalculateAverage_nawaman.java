@@ -190,10 +190,7 @@ public class CalculateAverage_nawaman {
         
     }
     
-    static record StatisticExtractor(
-            String     extractorName,
-            ByteBuffer buffer,
-            long       boundarySize) {
+    static record StatisticExtractor(String extractorName, ByteBuffer buffer, long boundarySize) {
         
         static StatisticExtractor create(String name, String filePath, long start, long size) throws IOException {
             try (var channel = FileChannel.open(Paths.get(filePath), READ)) {

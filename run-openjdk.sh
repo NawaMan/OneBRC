@@ -9,9 +9,7 @@ java  -version
 
 rm -Rf bin
 
-javac -d bin  src/onebrc/CalculateAverage_NawaMan.java src/module-info.java
+javac -d bin  src/onebrc/CalculateAverage_nawaman.java src/module-info.java
 
-time \
-java  -cp bin  onebrc.CalculateAverage_NawaMan --untimed
-
-rm -Rf bin
+time -p \
+java  -cp bin  onebrc.CalculateAverage_nawaman

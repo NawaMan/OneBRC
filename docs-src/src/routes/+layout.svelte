@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '$lib/styles/global.css';
+	import '$lib/styles/tooltip.css';
 	import { browser }    from '$app/environment';
 	import { onMount }    from 'svelte';
 	import { scaleMode }  from '$lib/stores/scaleMode';

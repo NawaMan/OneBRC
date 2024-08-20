@@ -6,6 +6,6 @@ jenv local $OPENJDK
 
 sudo jbang \
     --javaagent=ap-loader@jvm-profiling-tools/ap-loader=start,event=cpu,file=profile.html \
-    src/onebrc/CalculateAverage_NawaMan.java
+    src/onebrc/CalculateAverage_nawaman.java
 
 sudo rm -Rf bin

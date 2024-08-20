@@ -21,7 +21,9 @@
 		</tr>
 	</table>
 	<p>
-		The One Billion Row Challenge (1BRC) <a href="https://www.morling.dev/blog/one-billion-row-challenge/">🔗</a>, 
+		The One Billion Row Challenge (1BRC) 
+			<a href="https://x.com/gunnarmorling/status/1741839724933751238" data-tooltip="Annoucement on X" data-placement="top" target="_blank">🔗</a>
+			<a href="https://www.morling.dev/blog/one-billion-row-challenge/" data-tooltip="1BRC detail page" data-placement="top" target="_blank">🔗</a>, 
 		  proposed by Gunnar Morling, 
 		  is a coding challenge designed to test the limits of <b>Java</b>'s performance capabilities. 
 		Launched on <b>January 1, 2024</b>, 

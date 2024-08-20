@@ -73,7 +73,7 @@
     <img class="result-img" src="m6-Results.png" alt="m6 Results" width="634px" height="371px"/>
 </Box>
 <Box expanded={isCodeExpanded} width={1000} height={600} linkText="View on GitHub" linkUrl="https://github.com/NawaMan/OneBRC/blob/main/src/onebrc/CalculateAverage_nawaman.java">
-	<JavaCode javaCode={data.text} revealLines={[[39, [331, [338, 344, 350]]]]} width="1000px" height="600px" />
+	<JavaCode javaCode={data.text} revealLines={[[36, [328, [332, 333, 334, 338, 344, [394]]]]]} width="1000px" height="600px" />
 </Box>
 
 <ContentPage title="Results">
