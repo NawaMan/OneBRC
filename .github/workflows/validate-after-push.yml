@@ -19,15 +19,15 @@ jobs:
     - name: Install jenv
       run: |
         git clone https://github.com/jenv/jenv.git ~/.jenv
-        echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> $GITHUB_ENV
-        echo 'eval "$(jenv init -)"' >> $GITHUB_ENV
-        source ~/.bashrc
+        export PATH="$HOME/.jenv/bin:$PATH"
+        eval "$(jenv init -)"
         jenv doctor
       shell: bash
 
     - name: Add JDK 21 to jenv
       run: |
-        source ~/.bashrc
+        export PATH="$HOME/.jenv/bin:$PATH"
+        eval "$(jenv init -)"
         jenv add /usr/lib/jvm/java-21-openjdk-amd64
         jenv global 21
         jenv versions
