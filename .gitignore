@@ -8,3 +8,7 @@ nawa-result.txt
 docs-src/.svelte-kit/
 
 docs-src/node_modules/
+
+result-baseline.txt
+
+result-nawaman.txt

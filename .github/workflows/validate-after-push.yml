@@ -22,11 +22,16 @@ jobs:
 
     - name: Install jenv
       run: |
-        export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
         git clone https://github.com/jenv/jenv.git ~/.jenv
-        export PATH="$HOME/.jenv/bin:$PATH"
-        eval "$(jenv init -)"
+        echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.bashrc
+        echo 'eval "$(jenv init -)"' >> ~/.bashrc
+        source ~/.bashrc
         jenv doctor
+        export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+        jenv add $JAVA_HOME
+        jenv global 21
+        jenv versions
+        java -version
       shell: bash
 
     - name: Add JDK 21 to jenv
@@ -49,7 +54,4 @@ jobs:
       shell: bash
 
     - name: Compare result with baseline
-      run: |
-        ls -la
-        df -h
-        ./compare.sh
+      run: ./compare.sh 1000000

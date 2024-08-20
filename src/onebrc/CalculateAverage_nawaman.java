@@ -71,7 +71,7 @@ public class CalculateAverage_nawaman {
             var other = (StationName) obj;
             if (nameLength != other.nameLength)
                 return false;
-            if (hashCode() != other.hashCode())
+            if (hashCode != other.hashCode)
                 return false;
             
             return Arrays.equals(nameArray, 0, nameLength, other.nameArray, 0, nameLength);
