@@ -17,7 +17,7 @@
 
 OPENJDK=21    # This is the openjdk on my machine.
 
-jenv local $OPENJDK
+jenv local $OPENJDK || true
 
 javac -version
 java  -version
