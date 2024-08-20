@@ -19,10 +19,11 @@ jobs:
     - name: Install jenv
       run: |
         git clone https://github.com/jenv/jenv.git ~/.jenv
-        echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.bashrc
-        echo 'eval "$(jenv init -)"' >> ~/.bashrc
+        echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> $GITHUB_ENV
+        echo 'eval "$(jenv init -)"' >> $GITHUB_ENV
         source ~/.bashrc
         jenv doctor
+      shell: bash
 
     - name: Add JDK 21 to jenv
       run: |
@@ -31,6 +32,7 @@ jobs:
         jenv global 21
         jenv versions
         java -version
+      shell: bash
 
     - name: Install Python 3.12
       run: |
@@ -39,8 +41,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y python3.12 python3.12-venv python3.12-dev
         python3.12 --version
+      shell: bash
 
     - name: Compare result with baseline
       run: |
         ls -la
-        
