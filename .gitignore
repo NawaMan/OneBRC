@@ -12,3 +12,7 @@ docs-src/node_modules/
 result-baseline.txt
 
 result-nawaman.txt
+
+docs-src/elm/src/Cape.elm
+
+docs-src/elm/src/Person.elm
