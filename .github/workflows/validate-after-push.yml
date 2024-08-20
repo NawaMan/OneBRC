@@ -22,6 +22,7 @@ jobs:
 
     - name: Install jenv
       run: |
+        export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
         git clone https://github.com/jenv/jenv.git ~/.jenv
         export PATH="$HOME/.jenv/bin:$PATH"
         eval "$(jenv init -)"
