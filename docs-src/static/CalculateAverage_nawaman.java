@@ -291,9 +291,7 @@ public class CalculateAverage_nawaman {
                 stationNameBuffer.readFrom(buffer);
                 temperatureBuffer.readFrom(buffer);
                 
-                var station = statistic.computeIfAbsent(stationNameBuffer, (name) -> {
-                    return new StationStatistic(name);
-                });
+                var station = statistic.computeIfAbsent(stationNameBuffer, StationStatistic::new);
                 station.add(temperatureBuffer.temperatureTimesTen);
                 
                 if (station.stationName == stationNameBuffer) {

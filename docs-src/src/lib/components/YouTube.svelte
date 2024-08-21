@@ -1,5 +1,6 @@
 <script>
     export let name;
+    export let width = "600px";
     export let youtubeId;
 
     $: thumbnailSrc = `${name}.png`;
@@ -9,7 +10,7 @@
     $: videoUrl     = `https://www.youtube.com/watch?v=${youtubeId}`;
 </script>
 
-<a href={videoUrl} target="_blank">
+<a href={videoUrl} target="_blank" style="--width: {width}">
     <div class="youtube">
         <img class="thumbnail" src={thumbnailSrc} alt={thumbnailAlt} />
         <img class="qr" src={qrSrc} alt={qrAlt} />
@@ -26,7 +27,7 @@ img {
 .youtube {
     position: relative;
     margin: auto;
-    width: 600px;
+    width: var(--width);
 }
 .thumbnail {
     width: 100%;
