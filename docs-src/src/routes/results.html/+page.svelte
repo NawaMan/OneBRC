@@ -104,6 +104,6 @@
 	</table>
 </ContentPage>
 <NavigationBar
-	prevLink="/overview.html"
+	prevLink="/overview-2.html"
 	nextLink="/challenge.html"
 />

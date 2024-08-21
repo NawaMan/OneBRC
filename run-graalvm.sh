@@ -12,7 +12,7 @@ rm -Rf graalvm-bin
 javac        -d  graalvm-bin src/onebrc/CalculateAverage_nawaman.java src/module-info.java
 native-image -cp graalvm-bin onebrc.CalculateAverage_nawaman
 
-time \
+time -p \
 ./onebrc.calculateaverage_nawaman
 
 rm -Rf graalvm-bin

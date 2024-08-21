@@ -32,11 +32,11 @@ import java.util.function.Consumer;
  * <li>Pre-calculate hashCode when parsing (finding out start and end).</li>
  * </ol>
  */
-public class CalculateAverage_nawaman {
+public class CalculateAverage_nawaman_customHashMap {
     
     static class CustomHashMap {
         
-        private static final int CAPACITY_BITS = 20;
+        private static final int CAPACITY_BITS = 28;
         
         private StationName[]      keys       = new StationName[(int)Math.pow(2, CAPACITY_BITS)];
         private StationStatistic[] statistics = new StationStatistic[keys.length];

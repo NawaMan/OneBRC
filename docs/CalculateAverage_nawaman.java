@@ -15,8 +15,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * One-Billion Row Challenge solution by NawaMan.
@@ -35,29 +37,38 @@ import java.util.function.Consumer;
  */
 public class CalculateAverage_nawaman {
     
-    /**
-     * Station name
-     * <ol>
-     *   <li>store name as bytes with cached hashCode for used as a map key.</li>
-     *   <li>convert to string (cached) when needed proper UTF-8 sorting.</li>
-     * </ol>
-     **/
     static class StationName implements Comparable<StationName> {
-        final byte[] nameArray;
-        final int    nameLength;
-        final int    hashCode;
+        
+        static final int NAME_BUFFER_SIZE = 128;
+        
+        private byte[] bytes = new byte[NAME_BUFFER_SIZE];
+        private int    length;
+        private int    hash;
         
         private volatile String toString = null;
         
-        StationName(byte[] nameArray, int nameLength, int nameHash) {
-            this.nameArray  = nameArray;
-            this.nameLength = nameLength;
-            this.hashCode   = nameHash;
+        void readFrom(ByteBuffer buffer) {
+            var bytes     = this.bytes;
+            int nameIndex = 0;
+            int nameHash  = 1;
+            
+            nameIndex = 0;
+            while (buffer.hasRemaining()) {
+                byte b = buffer.get();
+                if (b == ';')
+                    break;
+                bytes[nameIndex++] = b;
+                nameHash = (nameHash << 5) - nameHash + b;  // nameHash*31 + b
+            }
+            
+            this.bytes  = bytes;
+            this.length = nameIndex;
+            this.hash   = nameHash;
         }
         
         @Override
         public int hashCode() {
-            return hashCode;
+            return hash;
         }
         
         @Override
@@ -69,12 +80,12 @@ public class CalculateAverage_nawaman {
 //                return false;
             
             var other = (StationName) obj;
-            if (nameLength != other.nameLength)
+            if (length != other.length)
                 return false;
-            if (hashCode() != other.hashCode())
+            if (hash != other.hash)
                 return false;
             
-            return Arrays.equals(nameArray, 0, nameLength, other.nameArray, 0, nameLength);
+            return Arrays.equals(bytes, 0, length, other.bytes, 0, length);
         }
         
         @Override
@@ -82,7 +93,7 @@ public class CalculateAverage_nawaman {
             if (toString == null) {
                 synchronized (this) {
                     if (toString == null) {
-                        toString = new String(nameArray, 0, nameLength);
+                        toString = new String(bytes, 0, length);
                     }
                 }
             }
@@ -93,6 +104,42 @@ public class CalculateAverage_nawaman {
         public int compareTo(StationName o) {
             // Avoid handling sorting of UTF-8 characters myself so convert it to string.
             return this.toString().compareTo(o.toString());
+        }
+    }
+    
+    static class TemperatureBuffer {
+        int temperatureTimesTen;
+        
+        static int toDigit(byte nextCh) {
+            return nextCh - '0';
+        }
+        
+        void readFrom(ByteBuffer buffer) {
+            var sign        = 1;
+            var temperature = 0;
+            
+            var firstChar = buffer.get();
+            if (firstChar == '-') {
+                sign = -1;  // Found negative sign
+                temperature = toDigit(buffer.get());
+            } else {
+                temperature = toDigit(firstChar);
+            }
+            
+            var secondCh = buffer.get();
+            if (secondCh != '.') {
+                temperature = temperature * 10 + toDigit(secondCh);
+                buffer.get(); // Read and throw away the decimal point ('.')
+            }
+            
+            temperature = temperature * 10;
+            
+            // Getting the digit after the decimal point.
+            temperature += toDigit(buffer.get());
+            
+            buffer.get();   // Read and throw away the new line ('\n').
+            
+            this.temperatureTimesTen = sign * temperature;
         }
     }
     
@@ -150,7 +197,11 @@ public class CalculateAverage_nawaman {
             
             stationStatistics = isSorted
                         ? new TreeMap<StationName, StationStatistic>()
-                        : new HashMap<StationName, StationStatistic>(STATISTIC_MAP_SIZE);
+                        : new ConcurrentHashMap<StationName, StationStatistic>(STATISTIC_MAP_SIZE);
+        }
+        
+        StationStatistic computeIfAbsent(StationName stationName, Function<StationName, StationStatistic> mappingFunction) {
+            return stationStatistics.computeIfAbsent(stationName, mappingFunction);
         }
         
         StationStatistic getStationStatistic(StationName stationName) {
@@ -232,7 +283,7 @@ public class CalculateAverage_nawaman {
         
         Statistic extract() throws IOException {
             var statistic         = new Statistic(extractorName, false);
-            var stationNameBuffer = new StationNameBuffer();
+            var stationNameBuffer = new StationName();
             var temperatureBuffer = new TemperatureBuffer();
             var startPosition     = buffer.position();
             var stopPosition      = startPosition + boundarySize;
@@ -240,89 +291,22 @@ public class CalculateAverage_nawaman {
                 stationNameBuffer.readFrom(buffer);
                 temperatureBuffer.readFrom(buffer);
                 
-                var stationName = new StationName(stationNameBuffer.bytes, stationNameBuffer.length, stationNameBuffer.hash);
+                var station = statistic.computeIfAbsent(stationNameBuffer, (name) -> {
+                    return new StationStatistic(name);
+                });
+                station.add(temperatureBuffer.temperatureTimesTen);
                 
-                // Interestingly, using compute(...) is slower than the get and if-else.
-                var stationStatistic = statistic.getStationStatistic(stationName);
-                if (stationStatistic == null) {
-                    stationStatistic = new StationStatistic(stationName);
-                    statistic.setStationStatistic(stationStatistic);
-                    
-                    // The buffer is used in the station name, so we cannot reuse it. Hence, we need to create a new one.
-                    stationNameBuffer = new StationNameBuffer();
+                if (station.stationName == stationNameBuffer) {
+                    stationNameBuffer = new StationName();
                 }
-                
-                stationStatistic.add(temperatureBuffer.temperatureTimesTen);
             }
             return statistic;
         }
     }
     
-    static class StationNameBuffer {
-        
-        static final int NAME_BUFFER_SIZE = 128;
-        
-        byte[] bytes = new byte[NAME_BUFFER_SIZE];
-        int    length;
-        int    hash;
-        
-        void readFrom(ByteBuffer buffer) {
-            var bytes     = this.bytes;
-            int nameIndex = 0;
-            int nameHash  = 1;
-            
-            nameIndex = 0;
-            while (buffer.hasRemaining()) {
-                byte b = buffer.get();
-                if (b == ';')
-                    break;
-                bytes[nameIndex++] = b;
-                nameHash = (nameHash << 5) - nameHash + b;  // nameHash*31 + b
-            }
-            
-            this.bytes  = bytes;
-            this.length = nameIndex;
-            this.hash   = nameHash;
-        }
-    }
-    
-    static class TemperatureBuffer {
-        int temperatureTimesTen;
-        
-        static int toDigit(byte nextCh) {
-            return nextCh - '0';
-        }
-        
-        void readFrom(ByteBuffer buffer) {
-            var sign        = 1;
-            var temperature = 0;
-            
-            var firstChar = buffer.get();
-            if (firstChar == '-') {
-                sign = -1;  // Found negative sign
-                temperature = toDigit(buffer.get());
-            } else {
-                temperature = toDigit(firstChar);
-            }
-            
-            var secondCh = buffer.get();
-            if (secondCh != '.') {
-                temperature = temperature * 10 + toDigit(secondCh);
-                buffer.get(); // Read and throw away the decimal point ('.')
-            }
-            
-            temperature = temperature * 10;
-            
-            // Getting the digit after the decimal point.
-            temperature += toDigit(buffer.get());
-            
-            buffer.get();   // Read and throw away the new line ('\n').
-            
-            this.temperatureTimesTen = sign * temperature;
-        }
-    }
-    
     public static void main(String[] args) throws InterruptedException {
+        var startTime = System.currentTimeMillis();
+        
         var filePath   = "measurements.txt";
         var cpuCount   = Runtime.getRuntime().availableProcessors();
         var chunkCount = cpuCount;
@@ -353,6 +337,9 @@ public class CalculateAverage_nawaman {
         
         System.out.println(statistic.sorted());
         executor.shutdownNow();
+        
+        var endTime = System.currentTimeMillis();
+        System.out.println("Time: " + (endTime - startTime) + "ms");
     }
     
     static Runnable[] extractionTasks(String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
