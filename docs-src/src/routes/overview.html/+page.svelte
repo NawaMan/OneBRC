@@ -21,8 +21,10 @@
 	.drake {
 		width: 200px;
 		float: right;
-		border-radius: 3px;
 		text-align: center;
+	}
+	img {
+		border-radius: 3px;
 	}
 </style>
 
@@ -46,7 +48,7 @@
 				</div>
 			</td>
 			<td>
-				<a href="https://x.com/gunnarmorling/status/1741839724933751238" data-tooltip="Annoucement on X" data-placement="top" target="_blank">
+				<a href="https://x.com/gunnarmorling/status/1741839724933751238" target="_blank">
 					<img src="1brc-on-X.png" alt="1BRC" height="550px" />
 				</a>
 			</td>

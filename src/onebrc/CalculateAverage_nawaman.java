@@ -10,7 +10,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -217,13 +216,13 @@ public class CalculateAverage_nawaman {
             for (var entry : other.stationStatistics.entrySet()) {
                 var name       = entry.getKey();
                 var newStation = entry.getValue();
-                var station    = stationStatistics.get(name);
-                // Interestingly, using compute(...) is slower than the get and if-else.
-                if (station == null) {
-                    stationStatistics.put(name, newStation);
-                } else {
+                stationStatistics.compute(name, (k, station) -> {
+                    if (station == null) {
+                        return newStation;
+                    }
                     station.include(newStation);
-                }
+                    return station;
+                });
             }
             return this;
         }
@@ -294,6 +293,7 @@ public class CalculateAverage_nawaman {
                 var station = statistic.computeIfAbsent(stationNameBuffer, StationStatistic::new);
                 station.add(temperatureBuffer.temperatureTimesTen);
                 
+                // The buffer is not reusable once it is used in the map, so we need to create a new one.
                 if (station.stationName == stationNameBuffer) {
                     stationNameBuffer = new StationName();
                 }
