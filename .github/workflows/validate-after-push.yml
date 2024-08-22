@@ -29,5 +29,5 @@ jobs:
         python3.12 --version
       shell: bash
 
-    - name: Validate NawaMan results with baseline
+    - name: Validate NawaMan results with baseline result
       run: ./validation.sh 1000000
