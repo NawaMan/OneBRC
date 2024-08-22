@@ -87,6 +87,6 @@ if [[ "$1" == "--keep-instance" ]]; then
 else
     echo ""
     echo "Deleting the stack"
-    aws cloudformation delete-stack --stack-name \"$STACKNAME\"
+    aws cloudformation delete-stack --stack-name "$STACKNAME"
 fi
 
