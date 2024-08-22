@@ -50,22 +50,43 @@ while ! ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "test -f 
     REMAINING=$((REMAINING - INTERVAL))
 done
 
+
+function tail-stop() {
+    LOG_FILE="$1"
+    PATTERN="$2"
+    
+    TAIL=""
+    TAIL="$TAIL tail -n 200 -f \"$LOG_FILE\""
+    TAIL="$TAIL | while read line; do echo \"\$line\"; "
+    TAIL="$TAIL       if echo \"\$line\" | grep -qE \"$PATTERN\"; then "
+    TAIL="$TAIL           exit 0; "
+    TAIL="$TAIL       fi; "
+    TAIL="$TAIL   done"
+    echo $TAIL
+}
+
 sleep 10
 
 echo ""
-echo "Validation result: "
-ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "stdbuf -oL timeout 600 tail -n 200 -f /home/ubuntu/validation.log" | sed -E '/(All match|Differences found)/q'
+TAIL_VALIDATION=$(tail-stop "/home/ubuntu/validation.log" '(All match|Differences found)')
+ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "bash -c '$TAIL_VALIDATION'"
 echo ""
 
 sleep 10
 
 echo ""
-echo "Performance result: "
-ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "stdbuf -oL timeout 600 tail -n 200 -f /home/ubuntu/benchmark.log" | sed -E '/All Done/q'
+TAIL_BENCHMARK=$(tail-stop "/home/ubuntu/benchmark.log" 'All Done')
+ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "bash -c '$TAIL_BENCHMARK'"
 echo ""
 
-echo ""
-echo "What to go from here?"
-echo "To run another performance check: 'ssh -i \"$PEMFILE\" \"ubuntu@$IPADDR\" \"/home/ubuntu/\"'"
-echo "To delete the stack:              'aws cloudformation delete-stack --stack-name \"$STACKNAME\"'"
+if [[ "$1" == "--keep-instance" ]]; then
+    echo ""
+    echo "What to go from here?"
+    echo "To run another performance check: 'ssh -i \"$PEMFILE\" \"ubuntu@$IPADDR\" \"/home/ubuntu/\"'"
+    echo "To delete the stack:              'aws cloudformation delete-stack --stack-name \"$STACKNAME\"'"
+else
+    echo ""
+    echo "Deleting the stack"
+    aws cloudformation delete-stack --stack-name \"$STACKNAME\"'
+fi
 
