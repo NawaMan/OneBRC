@@ -27,7 +27,7 @@ java  -cp bin  onebrc.CalculateAverage_baseline | sed 's/\([0-9]\), /\1\
 /g' | sed 's/[{}]//g' | grep -vE "Time: [0-9]+" | tee result-baseline.txt
 
 echo ""
-echo "Comparing the results"
+echo "Validating the results"
 diff -u result-baseline.txt result-nawaman.txt
 if [ $? -eq 0 ]; then
     echo ""

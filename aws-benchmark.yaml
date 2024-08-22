@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "EC2 instance setup with JDK 21, jenv, and Python 3.12"
+Description: "OneBillionRowChallenge Validation and Benchmarking Stack"
 
 Resources:
   MyEC2Instance:
@@ -40,13 +40,13 @@ Resources:
             
             export PS1="\[\e[32m\]❯ \[\e[m\]"
             
-            # Download and run the compare script
+            # Checkout the NawaMan's OneBRC repository
             apt-get install -y git
             git clone https://github.com/NawaMan/OneBRC.git /home/ubuntu/OneBRC
             cd /home/ubuntu/OneBRC
             
-            # Run the compare script
-            ./compare.sh 1000000000 > /home/ubuntu/compare.log
+            # Run the validation script
+            ./validation.sh 1000000000 > /home/ubuntu/validation.log
             
             # Run the performance check script
             ./benchmark-locally.sh | tee /home/ubuntu/benchmark.log

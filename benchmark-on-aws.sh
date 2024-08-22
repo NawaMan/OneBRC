@@ -37,15 +37,15 @@ echo "Instance IP address: $IPADDR"
 sleep 10
 
 echo ""
-echo "Waiting for all the needed software to installed and the comparison to start."
+echo "Waiting for all the needed software to installed and the validation to start."
 REMAINING=$TIMEOUT
-while ! ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "test -f /home/ubuntu/compare.log"; do
+while ! ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "test -f /home/ubuntu/validation.log"; do
     if [ $REMAINING -le 0 ]; then
-        echo "Timeout reached: compare.log was not found within 10 minutes."
+        echo "Timeout reached: validation.log was not found within 10 minutes."
         exit 1
     fi
     
-    echo "Waiting for software installation and comparison to start... Time remaining: $REMAINING seconds"
+    echo "Waiting for software installation and validation to start... Time remaining: $REMAINING seconds"
     sleep $INTERVAL
     REMAINING=$((REMAINING - INTERVAL))
 done
@@ -53,15 +53,15 @@ done
 sleep 10
 
 echo ""
-echo "Compare result: "
-ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "tail -n 200 -f /home/ubuntu/compare.log | sed '/All match.|Differences found./q'"
+echo "Validation result: "
+ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "stdbuf -oL timeout 600 tail -n 200 -f /home/ubuntu/validation.log" | sed -E '/(All match|Differences found)/q'
 echo ""
 
 sleep 10
 
 echo ""
 echo "Performance result: "
-ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "tail -n 200 -f /home/ubuntu/benchmark.log | sed '/All Done./q'"
+ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "stdbuf -oL timeout 600 tail -n 200 -f /home/ubuntu/benchmark.log" | sed -E '/All Done/q'
 echo ""
 
 echo ""

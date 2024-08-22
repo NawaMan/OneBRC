@@ -29,5 +29,5 @@ jobs:
         python3.12 --version
       shell: bash
 
-    - name: Compare result with baseline
-      run: ./compare.sh 1000000
+    - name: Validate NawaMan results with baseline
+      run: ./validation.sh 1000000
