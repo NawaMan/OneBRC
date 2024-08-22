@@ -66,11 +66,11 @@
 	}
 </style>
 
-<Box expanded={isI9Expanded} width={634} height={371} onClick={toggleI9Expand}>
-    <img class="result-img" src="i9-Results.png" alt="i9 Results" width="634px" height="371px"/>
+<Box expanded={isI9Expanded} width={315} height={319} onClick={toggleI9Expand}>
+    <img class="result-img" src="i9-Results.png" alt="i9 Results" width="315px" height="319px"/>
 </Box>
-<Box expanded={isM6Expanded} width={634} height={371} onClick={toggleM6Expand}>
-    <img class="result-img" src="m6-Results.png" alt="m6 Results" width="634px" height="371px"/>
+<Box expanded={isM6Expanded} width={315} height={319} onClick={toggleM6Expand}>
+    <img class="result-img" src="m6-Results.png" alt="m6 Results" width="315px" height="319px"/>
 </Box>
 <Box expanded={isCodeExpanded} width={1000} height={600} linkText="View on GitHub" linkUrl="https://github.com/NawaMan/OneBRC/blob/main/src/onebrc/CalculateAverage_nawaman.java">
 	<JavaCode javaCode={data.text} revealLines={[[36, [328, [315, [305]]]]]} width="1000px" height="600px" />

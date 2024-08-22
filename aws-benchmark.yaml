@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "EC2 instance setup with JDK 21, jenv, and Python 3.12"
+
+Resources:
+  MyEC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: "m6gd.8xlarge"  # Change to your desired instance type
+      KeyName: "OneBillionRowChallenge"  # Replace with your key pair name
+      ImageId: "ami-096ea6a12ea24a797"  # Replace with the AMI ID you want to use
+      SecurityGroups:
+        - "default"  # Adjust your security group settings
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sda1"  # Adjust based on your AMI, usually /dev/sda1 or /dev/xvda
+          Ebs:
+            VolumeSize: 128  # Size in GB
+            VolumeType: gp3  # gp3 for SSD, you can also use gp2
+            DeleteOnTermination: true  # Delete the volume when the instance is terminated
+      UserData:
+        Fn::Base64: 
+          !Sub |
+            #!/bin/bash
+            # Update the system
+            apt-get update
+            
+            # Install JDK 21
+            apt-get install -y openjdk-21-jdk
+            update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-21-openjdk-amd64/bin/java 1
+            update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-21-openjdk-amd64/bin/javac 1
+            update-alternatives --set java /usr/lib/jvm/java-21-openjdk-amd64/bin/java
+            update-alternatives --set javac /usr/lib/jvm/java-21-openjdk-amd64/bin/javac
+            java -version
+            
+            # Install Python 3.12
+            apt-get install -y software-properties-common
+            add-apt-repository ppa:deadsnakes/ppa -y
+            apt-get update
+            apt-get install -y python3.12 python3.12-venv python3.12-dev
+            python3.12 --version
+            
+            export PS1="\[\e[32m\]❯ \[\e[m\]"
+            
+            # Download and run the compare script
+            apt-get install -y git
+            git clone https://github.com/NawaMan/OneBRC.git /home/ubuntu/OneBRC
+            cd /home/ubuntu/OneBRC
+            
+            # Run the compare script
+            ./compare.sh 1000000000 > /home/ubuntu/compare.log
+            
+            # Run the performance check script
+            ./benchmark-locally.sh | tee /home/ubuntu/benchmark.log
+            
+
+Outputs:
+  InstanceId:
+    Description: "The EC2 Instance ID"
+    Value: !Ref MyEC2Instance
