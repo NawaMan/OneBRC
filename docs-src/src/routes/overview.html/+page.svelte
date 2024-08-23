@@ -23,6 +23,25 @@
 		float: right;
 		text-align: center;
 	}
+	.text-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.text-left {
+		width: 70%;
+		text-align: center;
+	}
+	.text-right {
+		width: 30%;
+		text-align: right;
+	}
+	.bound {
+		color: tomato;
+		font-weight: bold;
+		font-size: 2.5em;
+		font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+	}
 	img {
 		border-radius: 3px;
 	}
@@ -42,9 +61,12 @@
 					the challenge invites participants to create the fastest Java program for processing 
 					a text file containing <b>one billion rows</b> of temperature measurements.
 				</p>
-				<div class="drake" >
-					<img class="drake" src="drake-no.png" alt="Drake say 'NO'." />
-					January 2024.
+				<div class="text-container">
+					<div class="text-left"><span class="bound">I/O BOUND</span></div>
+					<div class="text-right">
+						<img class="drake" src="drake-no.png" alt="Drake say 'NO'." />
+						January 2024.
+					</div>
 				</div>
 			</td>
 			<td>
