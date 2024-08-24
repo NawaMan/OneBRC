@@ -1,20 +1,15 @@
 bin
-docs-src/node-modules
-profile.html
 onebrc.calculateaverage_nawaman
-measurements.txt
-nawa-result.txt
-*.log
-docs-src/.svelte-kit/
 
+docs-src/.svelte-kit
+docs-src/.svelte-kit/
+docs-src/node-modules
 docs-src/node_modules/
 
-result-baseline.txt
+measurements*.txt
+result-*.txt
 
-result-nawaman.txt
-
-docs-src/elm/src/Cape.elm
-
-docs-src/elm/src/Person.elm
-
+*.log
 *.jfr
+profile.html
+
