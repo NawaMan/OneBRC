@@ -1,5 +1,3 @@
-package onebrc;
-
 #!/bin/sh
 #
 #  Copyright 2023 The original authors
@@ -28,7 +26,7 @@ rm -Rf bin
 
 javac -d bin  src/onebrc/CreateMeasurements3.java src/module-info.java
 
-rm measurements.txt
+rm -f measurements.txt
 java  -cp bin  onebrc.CreateMeasurements3 $1
 mv measurements3.txt measurements.txt
 
