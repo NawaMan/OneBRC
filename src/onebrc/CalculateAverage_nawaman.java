@@ -306,7 +306,7 @@ public class CalculateAverage_nawaman {
         var startTime = System.currentTimeMillis();
         
         var filePath   = "measurements.txt";
-        var cpuCount   = Runtime.getRuntime().availableProcessors();
+        var cpuCount   = 8;//Runtime.getRuntime().availableProcessors();
         var chunkCount = cpuCount;
         
         var executor   = newFixedThreadPool(cpuCount);
@@ -338,6 +338,7 @@ public class CalculateAverage_nawaman {
         
         var endTime = System.currentTimeMillis();
         System.out.println("Time: " + (endTime - startTime) + "ms");
+        System.out.println("CPU Count: " + cpuCount);
     }
     
     static Runnable[] extractionTasks(String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
