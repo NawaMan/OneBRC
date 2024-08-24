@@ -9,7 +9,7 @@ java  -version
 
 rm -Rf bin
 
-javac -d bin  src/onebrc/*.java src/module-info.java
+javac --enable-preview --release 21 -d bin src/module-info.java src/onebrc/*.java
 
 rows=${1:-1000000000}
 
