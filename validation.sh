@@ -14,7 +14,7 @@ javac -d bin  src/onebrc/*.java src/module-info.java
 rows=${1:-1000000000}
 
 echo "Creating the measurements.txt."
-java  -cp bin  onebrc.CreateMeasurements $rows
+java  -cp bin  onebrc.CreateMeasurements3 $rows
 
 echo ""
 echo "Starting NawaMan's calculation."
