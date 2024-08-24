@@ -24,7 +24,7 @@ java  -version
 
 rm -Rf bin
 
-javac -d bin  src/onebrc/CalculateAverage_baseline.java src/module-info.java
+javac --enable-preview --release 21 -d bin src/module-info.java src/onebrc/*.java
 
 time -p \
 java  -cp bin  onebrc.CalculateAverage_baseline

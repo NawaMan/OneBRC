@@ -9,7 +9,7 @@ native-image --version
 
 rm -Rf graalvm-bin
 
-javac        -d  graalvm-bin src/onebrc/CalculateAverage_nawaman.java src/module-info.java
+javac --enable-preview --release 21 -d bin src/module-info.java src/onebrc/*.java
 native-image -cp graalvm-bin onebrc.CalculateAverage_nawaman
 
 time -p \
