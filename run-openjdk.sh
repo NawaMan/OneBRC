@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OPENJDK=21    # This is the openjdk on my machine.
+OPENJDK=22    # This is the openjdk on my machine.
 
 jenv local $OPENJDK
 
