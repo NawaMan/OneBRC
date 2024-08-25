@@ -364,7 +364,7 @@ public class CalculateAverage_nawaman {
         
         var endTime = System.currentTimeMillis();
         System.out.println("Time: " + (endTime - startTime) + "ms");
-        System.out.println("CPU: " + cpuCount);
+//        System.out.println("CPU: " + cpuCount);
     }
     
     static Runnable[] extractionTasks(String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {

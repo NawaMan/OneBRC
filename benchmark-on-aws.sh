@@ -20,7 +20,7 @@ echo "Waiting for the Cloudformation Stack to be created."
 while true ; do
     CFSTATUS=`aws cloudformation describe-stacks --stack-name "$STACKNAME" --query "Stacks[0].StackStatus" --output text`
     echo "$CFSTATUS"
-    if [ "$CFSTATUS" == *"_COMPLETE" ]; then break; fi
+    if [ "$CFSTATUS" == "CREATE_COMPLETE" ]; then break; fi
     sleep 1
 done
 
