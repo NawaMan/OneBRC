@@ -399,7 +399,7 @@ public class CalculateAverage_nawaman {
         try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
             return channel.size();
         } catch (IOException e) {
-            var message = "Panic: Failed to get file size! filePath=%d".formatted(filePath);
+            var message = "Panic: Failed to get file size! filePath=%s".formatted(filePath);
             throw new Error(message, e);
         }
     }
