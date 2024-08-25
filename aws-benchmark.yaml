@@ -47,7 +47,7 @@ Resources:
             cd /home/ubuntu/OneBRC
             
             echo "Creating the measurements.txt."
-            ./create_measurements3.sh
+            ./create_measurements3.sh | tee /home/ubuntu/create.log
             echo ""
             
             # Run the performance check script

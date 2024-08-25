@@ -39,9 +39,9 @@ sleep 10
 echo ""
 echo "Waiting for all the needed software to installed and the measurements.txt creation to start."
 REMAINING=$TIMEOUT
-while ! ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "test -f /home/ubuntu/measurements.txt"; do
+while ! ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "test -f /home/ubuntu/create.log"; do
     if [ $REMAINING -le 0 ]; then
-        echo "Timeout reached: measurements.txt was not found within 10 minutes."
+        echo "Timeout reached: create.log was not found within 10 minutes."
         exit 1
     fi
     
@@ -68,7 +68,7 @@ function tail-stop() {
 sleep 10
 
 echo ""
-TAIL_VALIDATION=$(tail-stop "/home/ubuntu/measurements.txt" '(All match|Differences found)')
+TAIL_VALIDATION=$(tail-stop "/home/ubuntu/create.log" '(All match|Differences found)')
 ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "bash -c '$TAIL_VALIDATION'"
 echo ""
 
