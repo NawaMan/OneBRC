@@ -68,7 +68,7 @@ function tail-stop() {
 sleep 10
 
 echo ""
-TAIL_VALIDATION=$(tail-stop "/home/ubuntu/create.log" '(All match|Differences found)')
+TAIL_VALIDATION=$(tail-stop "/home/ubuntu/create.log" '1,000,000,000')
 ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "bash -c '$TAIL_VALIDATION'"
 echo ""
 
