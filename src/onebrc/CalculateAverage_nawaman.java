@@ -11,11 +11,13 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -36,6 +38,10 @@ import java.util.function.Function;
  */
 public class CalculateAverage_nawaman {
     
+    private static final Random                                  random           = new Random();
+    private static final ConcurrentHashMap<StationName, Integer> stationNameIds   = new ConcurrentHashMap<>();
+    private static final LinkedBlockingQueue<StationName>        stationNameQueue = new LinkedBlockingQueue<>();
+    
     static class StationName implements Comparable<StationName> {
         
         static final int NAME_BUFFER_SIZE = 128;
@@ -43,6 +49,7 @@ public class CalculateAverage_nawaman {
         private byte[] bytes = new byte[NAME_BUFFER_SIZE];
         private int    length;
         private int    hash;
+        private int    id = -1;
         
         private volatile String toString = null;
         
@@ -83,6 +90,9 @@ public class CalculateAverage_nawaman {
                 return false;
             if (hash != other.hash)
                 return false;
+            
+            if (id != -1 && other.id != -1)
+                return id == other.id;
             
             return Arrays.equals(bytes, 0, length, other.bytes, 0, length);
         }
@@ -295,6 +305,7 @@ public class CalculateAverage_nawaman {
                 
                 // The buffer is not reusable once it is used in the map, so we need to create a new one.
                 if (station.stationName == stationNameBuffer) {
+                    stationNameQueue.add(station.stationName);
                     stationNameBuffer = new StationName();
                 }
             }
@@ -311,6 +322,20 @@ public class CalculateAverage_nawaman {
         
         var executor   = newFixedThreadPool(cpuCount);
         var statistics = new LinkedBlockingQueue<Statistic>();
+        
+        var thread = new Thread(() -> {
+            while(true) {
+                try {
+                    var stationName = stationNameQueue.take();
+                    stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
+                        return random.nextInt(0, Integer.MAX_VALUE);
+                    });
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        });
+        thread.start();
         
         for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> statistics.add(statistic))) {
             executor.submit(extractionTask);
@@ -331,13 +356,15 @@ public class CalculateAverage_nawaman {
             var otherStatistic = statistics.take();
             executor.submit(() -> statistics.add(baseStatistic.absorb(otherStatistic)));
         }
+        
+        thread.interrupt();
         executor.shutdownNow();
         
         System.out.println(statistic.sorted());
-        executor.shutdownNow();
         
         var endTime = System.currentTimeMillis();
         System.out.println("Time: " + (endTime - startTime) + "ms");
+        System.out.println("CPU: " + cpuCount);
     }
     
     static Runnable[] extractionTasks(String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
