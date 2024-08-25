@@ -50,7 +50,7 @@ import java.util.*;
 
  */
 @SuppressWarnings("unchecked")
-public class CalculateAverage_ricardopieper_mt7925 {
+public class CalculateAverage_ricardopieper {
 
     private static final String FILE = "./measurements.txt";
 
@@ -79,7 +79,7 @@ public class CalculateAverage_ricardopieper_mt7925 {
             var avg = String.format("%.1f", ((double) this.sum / (double) this.count) / 10.0);
             var max = String.format("%.1f", (double) this.max / 10.0);
 
-            return min + "/" + avg + "/" + max;
+            return STR."\{min}/\{avg}/\{max}";
         }
     }
 

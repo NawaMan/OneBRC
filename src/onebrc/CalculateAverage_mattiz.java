@@ -26,14 +26,14 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 import static java.nio.channels.FileChannel.MapMode.READ_ONLY;
 
-public class CalculateAverage_mattiz_mt8255 {
+public class CalculateAverage_mattiz {
     private static final int TWO_BYTE_TO_INT = 480 + 48; // 48 is the ASCII code for '0'
     private static final int THREE_BYTE_TO_INT = 4800 + 480 + 48;
     private static final String FILE = "./measurements.txt";
     public static final int PARTS = 8;
 
     public static void main(String[] args) throws Exception {
-        var result = new CalculateAverage_mattiz_mt8255().calculate(FILE, PARTS);
+        var result = new CalculateAverage_mattiz().calculate(FILE, PARTS);
         System.out.println(result);
     }
 

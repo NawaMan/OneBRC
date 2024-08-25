@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Subtask;
 
-public class CalculateAverage_tonivade_mt7894 {
+public class CalculateAverage_tonivade {
 
     private static final String FILE = "./measurements.txt";
 

@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class CalculateAverage_gnabyl_mt8489 {
+public class CalculateAverage_gnabyl {
 
     private static final String FILE = "./measurements.txt";
 
@@ -257,7 +257,7 @@ public class CalculateAverage_gnabyl_mt8489 {
     }
 
     private static ChunkResult processAllChunks(List<Chunk> chunks) throws InterruptedException, ExecutionException {
-        return chunks.parallelStream().map(CalculateAverage_gnabyl_mt8489::processChunk).collect(ChunkResult::new,
+        return chunks.parallelStream().map(CalculateAverage_gnabyl::processChunk).collect(ChunkResult::new,
                 ChunkResult::mergeWith, ChunkResult::mergeWith);
     }
 
