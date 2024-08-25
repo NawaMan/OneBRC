@@ -37,15 +37,15 @@ echo "Instance IP address: $IPADDR"
 sleep 10
 
 echo ""
-echo "Waiting for all the needed software to installed and the validation to start."
+echo "Waiting for all the needed software to installed and the measurements.txt creation to start."
 REMAINING=$TIMEOUT
-while ! ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "test -f /home/ubuntu/validation.log"; do
+while ! ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "test -f /home/ubuntu/measurements.txt"; do
     if [ $REMAINING -le 0 ]; then
-        echo "Timeout reached: validation.log was not found within 10 minutes."
+        echo "Timeout reached: measurements.txt was not found within 10 minutes."
         exit 1
     fi
     
-    echo "Waiting for software installation and validation to start... Time remaining: $REMAINING seconds"
+    echo "Waiting for software installation and measurements.txt creation to start... Time remaining: $REMAINING seconds"
     sleep $INTERVAL
     REMAINING=$((REMAINING - INTERVAL))
 done
@@ -68,7 +68,7 @@ function tail-stop() {
 sleep 10
 
 echo ""
-TAIL_VALIDATION=$(tail-stop "/home/ubuntu/validation.log" '(All match|Differences found)')
+TAIL_VALIDATION=$(tail-stop "/home/ubuntu/measurements.txt" '(All match|Differences found)')
 ssh -i "$PEMFILE" "ubuntu@$IPADDR" -o StrictHostKeyChecking=no "bash -c '$TAIL_VALIDATION'"
 echo ""
 
