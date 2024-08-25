@@ -28,5 +28,4 @@ javac -d bin  src/onebrc/CreateMeasurements3.java src/module-info.java
 
 rm -f measurements.txt
 java  -cp bin  onebrc.CreateMeasurements3 $1
-mv measurements3.txt measurements.txt
 

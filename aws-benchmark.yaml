@@ -24,12 +24,15 @@ Resources:
             apt-get update
             
             # Install JDK 22
-            apt-get update
-            apt-get install -y openjdk-22-jdk
-            update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-22-openjdk-amd64/bin/java 1
-            update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-22-openjdk-amd64/bin/javac 1
-            update-alternatives --set java /usr/lib/jvm/java-22-openjdk-amd64/bin/java
-            update-alternatives --set javac /usr/lib/jvm/java-22-openjdk-amd64/bin/javac
+            cd /tmp
+            wget https://download.oracle.com/java/22/latest/jdk-22_linux-aarch64_bin.tar.gz
+            mkdir -p /usr/lib/jvm
+            tar -xvf jdk-22_linux-aarch64_bin.tar.gz -C /usr/lib/jvm
+            update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-22.0.2/bin/java 1
+            update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk-22.0.2/bin/javac 1
+            update-alternatives --set java /usr/lib/jvm/jdk-22.0.2/bin/java
+            update-alternatives --set javac /usr/lib/jvm/jdk-22.0.2/bin/javac
+            export JAVA_HOME=/usr/lib/jvm/jdk-22.0.2
             java -version
             
             # Install Python 3.12
@@ -47,7 +50,7 @@ Resources:
             cd /home/ubuntu/OneBRC
             
             echo "Creating the measurements.txt."
-            ./create_measurements3.sh | tee /home/ubuntu/create.log
+            ./create_measurements3.sh 1000000000 | tee /home/ubuntu/create.log
             echo ""
             
             # Run the performance check script
