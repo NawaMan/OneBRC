@@ -1,36 +1,25 @@
-name: Setup JDK 21, jenv, and Python 3.12
+name: Validate the calculations after push
 
 on: [push]
 
 jobs:
-  setup-environment:
+  Validate-Caculations:
     runs-on: ubuntu-latest
     
     steps:
     - name: Check out the code
       uses: actions/checkout@v3
     
-    - name: Install JDK 22
-      run: |
-          cd /tmp
-          wget https://download.oracle.com/java/22/latest/jdk-22_linux-aarch64_bin.tar.gz
-          mkdir -p /usr/lib/jvm
-          tar -xvf jdk-22_linux-aarch64_bin.tar.gz -C /usr/lib/jvm
-          sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-22.0.2/bin/java 1
-          sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk-22.0.2/bin/javac 1
-          sudo update-alternatives --set java /usr/lib/jvm/jdk-22.0.2/bin/java
-          sudo update-alternatives --set javac /usr/lib/jvm/jdk-22.0.2/bin/javac
-          export JAVA_HOME=/usr/lib/jvm/jdk-22.0.2
-          java -version
+    - name: Set up JDK 22
+      uses: actions/setup-java@v4
+      with:
+          distribution: 'temurin'
+          java-version: '22'
     
-    - name: Install Python 3.12
-      run: |
-        sudo apt-get install -y software-properties-common
-        sudo add-apt-repository ppa:deadsnakes/ppa -y
-        sudo apt-get update
-        sudo apt-get install -y python3.12 python3.12-venv python3.12-dev
-        python3.12 --version
-      shell: bash
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+         python-version: '3.12'
     
     - name: Validate NawaMan results with baseline result
       run: ./validation.sh 1000000
