@@ -13,9 +13,9 @@ rm -Rf bin
 javac --enable-preview --release 22 -d bin src/module-info.java src/onebrc/*.java
 
 function run() {
+    timeout 120s \
     time -p \
     java --enable-preview -p bin -m "OneBRC/onebrc.$1"
-
 }
 
 for CLZZ in $(find bin/onebrc -iname "CalculateAverage_*.class" | sed 's/bin\/onebrc\///g' | sed 's/\.class//g' | grep -v '\$'); do
