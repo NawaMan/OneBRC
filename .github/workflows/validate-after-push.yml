@@ -16,10 +16,10 @@ jobs:
           wget https://download.oracle.com/java/22/latest/jdk-22_linux-aarch64_bin.tar.gz
           mkdir -p /usr/lib/jvm
           tar -xvf jdk-22_linux-aarch64_bin.tar.gz -C /usr/lib/jvm
-          update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-22.0.2/bin/java 1
-          update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk-22.0.2/bin/javac 1
-          update-alternatives --set java /usr/lib/jvm/jdk-22.0.2/bin/java
-          update-alternatives --set javac /usr/lib/jvm/jdk-22.0.2/bin/javac
+          sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-22.0.2/bin/java 1
+          sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk-22.0.2/bin/javac 1
+          sudo update-alternatives --set java /usr/lib/jvm/jdk-22.0.2/bin/java
+          sudo update-alternatives --set javac /usr/lib/jvm/jdk-22.0.2/bin/javac
           export JAVA_HOME=/usr/lib/jvm/jdk-22.0.2
           java -version
     
