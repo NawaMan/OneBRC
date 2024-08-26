@@ -200,10 +200,6 @@ public class CalculateAverage_nawaman {
         @Override
         public String toString() {
             return stationStatisticToString.apply(this);
-            // This is copied from the baseline so that the rounding is the same.
-//            return round(min                / 10.0) + "/"
-//                 + round((round(sum)/count) / 10.0) + "/"
-//                 + round(max                / 10.0);
         }
     }
     
