@@ -18,7 +18,7 @@ java  -cp bin  onebrc.CreateMeasurements3 $rows
 
 echo ""
 echo "Starting NawaMan's calculation."
-java --enable-preview -p bin -m OneBRC/onebrc.CalculateAverage_nawaman | sed 's/\([0-9]\), /\1\
+java --enable-preview -p bin -m OneBRC/onebrc.CalculateAverage_nawaman --validate | sed 's/\([0-9]\), /\1\
 /g' | sed 's/[{}]//g' | grep -vE "Time: [0-9]+" | tee result-nawaman.txt
 
 echo ""

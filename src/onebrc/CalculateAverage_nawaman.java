@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * One-Billion Row Challenge solution by NawaMan.
@@ -36,6 +37,25 @@ import java.util.function.Function;
  * </ol>
  */
 public class CalculateAverage_nawaman {
+    
+    static double round(double value) {
+        return Math.round(value * 10.0) / 10.0;
+    }
+    
+    static Function<StationStatistic, String> defaultToString = statisic -> {
+        return round(statisic.min                            / 10.0) + "/"
+                + round((round(statisic.sum)/statisic.count) / 10.0) + "/"
+                + round(statisic.max                         / 10.0);
+    };
+    
+    static Function<StationStatistic, String> validateToString = statisic -> {
+        return round(statisic.min   / 10.0) + "/"
+             + round(statisic.sum   / 10.0) + "/"
+             + round(statisic.count /  1.0) + "/"
+             + round(statisic.max   / 10.0);
+    };
+    
+    static Function<StationStatistic, String> stationStatisticToString = defaultToString;
     
     private static final Random                                  random           = new Random();
     private static final ConcurrentHashMap<StationName, Integer> stationNameIds   = new ConcurrentHashMap<>();
@@ -159,10 +179,6 @@ public class CalculateAverage_nawaman {
         long        sum   = 0;
         long        count = 0;
         
-        static double round(double value) {
-            return Math.round(value * 10.0) / 10.0;
-        }
-        
         StationStatistic(StationName stationName) {
             this.stationName = stationName;
         }
@@ -183,10 +199,11 @@ public class CalculateAverage_nawaman {
         
         @Override
         public String toString() {
+            return stationStatisticToString.apply(this);
             // This is copied from the baseline so that the rounding is the same.
-            return round(min                / 10.0) + "/"
-                 + round((round(sum)/count) / 10.0) + "/"
-                 + round(max                / 10.0);
+//            return round(min                / 10.0) + "/"
+//                 + round((round(sum)/count) / 10.0) + "/"
+//                 + round(max                / 10.0);
         }
     }
     
@@ -313,6 +330,8 @@ public class CalculateAverage_nawaman {
     }
     
     public static void main(String[] args) throws InterruptedException {
+        useValidateToStringIfSpecified(args);
+        
         var startTime = System.currentTimeMillis();
         
         var filePath   = "measurements.txt";
@@ -366,6 +385,16 @@ public class CalculateAverage_nawaman {
 //        System.out.println("CPU: " + cpuCount);
     }
     
+    private static void useValidateToStringIfSpecified(String[] args) {
+        if (args.length > 0) {
+            Stream.of(args).forEach(arg -> {
+                if (arg.equals("--validate")) {
+                    stationStatisticToString = validateToString;
+                }
+            });
+        }
+    }
+    
     static Runnable[] extractionTasks(String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
         long fileSize  = fileSize(filePath);
         long chunkSize = (fileSize / chunkCount) + 1; // Add some buffer to ensure that the entire file is covered.
@@ -402,4 +431,5 @@ public class CalculateAverage_nawaman {
             throw new Error(message, e);
         }
     }
+    
 }

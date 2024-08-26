@@ -34,10 +34,10 @@ public class CalculateAverage_baseline {
         }
     }
 
-    private static record ResultRow(double min, double mean, double max) {
+    private static record ResultRow(double min, double sum, double count, double max) {
 
         public String toString() {
-            return round(min) + "/" + round(mean) + "/" + round(max);
+            return round(min) + "/" + round(sum) + "/" + round(count) + "/" + round(max);
         }
 
         private double round(double value) {
@@ -80,7 +80,7 @@ public class CalculateAverage_baseline {
                     return res;
                 },
                 agg -> {
-                    return new ResultRow(agg.min, (Math.round(agg.sum * 10.0) / 10.0) / agg.count, agg.max);
+                    return new ResultRow(agg.min, agg.sum, agg.count, agg.max);
                 });
 
         Map<String, ResultRow> measurements = new TreeMap<>(Files.lines(Paths.get(FILE))
