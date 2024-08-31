@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -37,7 +36,7 @@ import java.util.stream.Stream;
  * <li>Pre-calculate hashCode when parsing (finding out start and end).</li>
  * </ol>
  */
-public class CalculateAverage_nawaman {
+public class CalculateAverage_nawaman3 {
     
     static double round(double value) {
         return Math.round(value * 10.0) / 10.0;
@@ -60,7 +59,7 @@ public class CalculateAverage_nawaman {
     
     private static final Random                                  random           = new Random();
     private static final ConcurrentHashMap<StationName, Integer> stationNameIds   = new ConcurrentHashMap<>();
-    private static final ConcurrentLinkedQueue<StationName>      stationNameQueue = new ConcurrentLinkedQueue<>();
+    private static final LinkedBlockingQueue<StationName>        stationNameQueue = new LinkedBlockingQueue<>();
     
     static class StationName implements Comparable<StationName> {
         
@@ -333,7 +332,7 @@ public class CalculateAverage_nawaman {
         
         var filePath   = "measurements.txt";
         var cpuCount   = Runtime.getRuntime().availableProcessors();
-        var chunkCount = 16 * cpuCount;
+        var chunkCount = 32*cpuCount;
         
         var executor   = newFixedThreadPool(cpuCount);
         var statistics = new LinkedBlockingQueue<Statistic>();
@@ -341,12 +340,7 @@ public class CalculateAverage_nawaman {
         var thread = new Thread(() -> {
             while(true) {
                 try {
-                    var stationName = stationNameQueue.poll();
-                    if (stationName == null) {
-                        Thread.sleep(1);
-                        continue;
-                    }
-                    
+                    var stationName = stationNameQueue.take();
                     stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
                         return random.nextInt(0, Integer.MAX_VALUE);
                     });

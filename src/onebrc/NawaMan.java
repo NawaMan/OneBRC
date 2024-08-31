@@ -3,41 +3,30 @@ package onebrc;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.nio.file.StandardOpenOption.READ;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-/**
- * One-Billion Row Challenge solution by NawaMan.
- * 
- * Key Points:
- * <ol>
- * <li>Mapped file to memory for ask IO access.</li>
- * <li>Parallel process of data in chunks.</li>
- * <li>Chunk separation with minimum overlaps.</li>
- * <li>Store name in a fix length byte array 
- *         so we don't need to find out the length before create the array.</li>
- * <li>Parse the temperature into integer (x10) rather than float/double.</li>
- * <li>Reuse name array if one already exists in the collection.</li>
- * <li>Pre-calculate hashCode when parsing (finding out start and end).</li>
- * </ol>
- */
-public class CalculateAverage_nawaman {
+public class NawaMan {
+    
+    static LongAdder totalCount = new LongAdder();
     
     static double round(double value) {
         return Math.round(value * 10.0) / 10.0;
@@ -57,10 +46,6 @@ public class CalculateAverage_nawaman {
     };
     
     static Function<StationStatistic, String> stationStatisticToString = defaultToString;
-    
-    private static final Random                                  random           = new Random();
-    private static final ConcurrentHashMap<StationName, Integer> stationNameIds   = new ConcurrentHashMap<>();
-    private static final ConcurrentLinkedQueue<StationName>      stationNameQueue = new ConcurrentLinkedQueue<>();
     
     static class StationName implements Comparable<StationName> {
         
@@ -304,24 +289,83 @@ public class CalculateAverage_nawaman {
         }
         
         Statistic extract() throws IOException {
-            var statistic         = new Statistic(extractorName, false);
-            var stationNameBuffer = new StationName();
-            var temperatureBuffer = new TemperatureBuffer();
-            var startPosition     = buffer.position();
-            var stopPosition      = startPosition + boundarySize;
-            while (buffer.hasRemaining() && (buffer.position() <= stopPosition)) {
-                stationNameBuffer.readFrom(buffer);
-                temperatureBuffer.readFrom(buffer);
+            var statistic          = new Statistic(extractorName, false);
+            var stationNameBuffer  = new StationName();
+            var temperatureBuffer  = new TemperatureBuffer();
+            
+            var chunkStartPosition = buffer.position();
+            if (buffer.get() != '\n') {
+                buffer.position(chunkStartPosition);
+            }
+            
+            
+            var stopPosition       = chunkStartPosition + boundarySize;
+            var bufferLength       = 1024;
+            var bytes              = new byte[bufferLength];
+            var loop = 0;
+            var entryCount = 0;
+            var valueCount = 0;
+            var byteStartPosition = chunkStartPosition;
+//            var isLast = false;
+            while (buffer.hasRemaining() && ((byteStartPosition = buffer.position()) <= stopPosition)) {
+////                buffer.get(bytes, 0, bufferLength = min(bufferLength, buffer.remaining()));
+//                try {
+//                    buffer.get(bytes);
+//                } catch (BufferUnderflowException e) {
+//                    bufferLength = buffer.remaining();
+//                    buffer.get(bytes, 0, bufferLength);
+//                    bytes[bufferLength] = '\n';
+////                    System.out.println("BufferUnderflow Exception");
+////                    isLast = true;
+//                }
+////                
+////                if (loop++ < 10) {
+////                    System.out.println("Offset: " + byteStartPosition + ": " + new String(bytes, 0, bytes.length).replaceAll("\n", "\\\\n"));
+////                }
+////                
+//                int i = 0;
+//                for (; i < bufferLength; i++) {
+//                    var b = bytes[i];
+//                    if (b == ';') {
+//                        valueCount++;
+//                    } else if (b == '\n') {
+//                        entryCount++;
+////                        if (entryCount != valueCount) {
+////                            System.out.println("eh? extractorName=" + extractorName + ", loop: " + loop + ", i=" + i + ", byteStartPosition=" + byteStartPosition + ", bytes[0]: " + (char)bytes[0] + " entryCount: " + entryCount + ", valueCount: " + valueCount);
+////                        }
+////                        
+//                        if ((i + byteStartPosition) > stopPosition) {
+//                            break;
+//                        }
+//                    }
+//                }
+//                try {
+//                    buffer.position(byteStartPosition + i);
+//                } catch (IllegalArgumentException e) {
+//                    // This is ok.
+//                }
+//                
+////                if (buffer.get() == '\n') {
+////                    count++;
+////                    if (buffer.position() > stopPosition)
+////                        break;
+////                }
                 
-                var station = statistic.computeIfAbsent(stationNameBuffer, StationStatistic::new);
-                station.add(temperatureBuffer.temperatureTimesTen);
-                
-                // The buffer is not reusable once it is used in the map, so we need to create a new one.
-                if (station.stationName == stationNameBuffer) {
-                    stationNameQueue.add(station.stationName);
-                    stationNameBuffer = new StationName();
+                // 843ms
+                byte b;
+                while (true) {
+                    b = buffer.get();
+                    if (b == ';') {
+                        valueCount++;
+                        temperatureBuffer.readFrom(buffer);
+                        // temperatureBuffer.temperatureTimesTen
+                        break;
+                    }
                 }
             }
+//            System.out.println("Start: " + startPosition + ", Stop: " + buffer.position());
+//            System.out.println("Count: " + count);
+            totalCount.add(valueCount);
             return statistic;
         }
     }
@@ -332,59 +376,36 @@ public class CalculateAverage_nawaman {
         var startTime = System.currentTimeMillis();
         
         var filePath   = "measurements.txt";
-        var cpuCount   = Runtime.getRuntime().availableProcessors();
-        var chunkCount = 16 * cpuCount;
+        var cpuCount   = 8; //Runtime.getRuntime().availableProcessors();
+//        var chunkCount = 32*cpuCount;
+        var chunkCount = 32*cpuCount;
         
-        var executor   = newFixedThreadPool(cpuCount);
+//        var inLoopCount = 0;
+//        for (int loop = 0; loop < chunkCount; loop++) {
+//        
+        var executor   = newVirtualThreadPerTaskExecutor();
         var statistics = new LinkedBlockingQueue<Statistic>();
         
-        var thread = new Thread(() -> {
-            while(true) {
-                try {
-                    var stationName = stationNameQueue.poll();
-                    if (stationName == null) {
-                        Thread.sleep(1);
-                        continue;
-                    }
-                    
-                    stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
-                        return random.nextInt(0, Integer.MAX_VALUE);
-                    });
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-        });
-        thread.start();
-        
+        int chunkIndex = 0;
         for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> statistics.add(statistic))) {
+//            if (chunkIndex++ != loop)
+//                continue;
             executor.submit(extractionTask);
         }
+        executor.shutdown();
+        executor.awaitTermination(10, TimeUnit.MINUTES);
         
-        var statistic = (Statistic)null;
-        while (true) {
-            statistic = statistics.take();
-            
-            var lastInQueue      = statistics.size() == 0;
-            var includeAllChunks = statistic.chunkNames.size() == chunkCount;
-            var isLastStatistic  =  lastInQueue && includeAllChunks;
-            if (isLastStatistic) {
-                break;
-            }
-            
-            var baseStatistic  = statistic;
-            var otherStatistic = statistics.take();
-            executor.submit(() -> statistics.add(baseStatistic.absorb(otherStatistic)));
-        }
-        
-        thread.interrupt();
-        executor.shutdownNow();
-        
-        System.out.println(statistic.sorted());
-        
-        var endTime = System.currentTimeMillis();
-        System.out.println("Time: " + (endTime - startTime) + "ms");
-//        System.out.println("CPU: " + cpuCount);
+//        System.out.println("Loop: " + loop);
+        System.out.println("Time: " + (System.currentTimeMillis() - startTime) + "ms");
+//        if ((entryTotal.intValue() - inLoopCount) != 3903244) {
+//            System.out.println("Total Entry: " + (entryTotal.intValue() - inLoopCount));
+//        }
+//        if (entryTotal.intValue() != valueTotal.intValue()) {
+            System.out.println("Total Count: " + totalCount);
+//        }
+//        inLoopCount = entryTotal.intValue();
+        System.out.println();
+//        }
     }
     
     private static void useValidateToStringIfSpecified(String[] args) {
@@ -417,7 +438,8 @@ public class CalculateAverage_nawaman {
             var extractor = StatisticExtractor.create(chunkName, filePath, position, chunkSize);
             var statistic = extractor.extract();
             accepter.accept(statistic);
-        } catch (IOException e) {
+        } catch (Throwable e) {
+            e.printStackTrace();
             var message
                     = "Panic: Failed to read file chunk! filePath=%s, chunkIndex=%d, chunkSize=%d, position=%d"
                     .formatted(filePath, chunkIndex, chunkSize, position);

@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -37,7 +36,7 @@ import java.util.stream.Stream;
  * <li>Pre-calculate hashCode when parsing (finding out start and end).</li>
  * </ol>
  */
-public class CalculateAverage_nawaman {
+public class CalculateAverage_nawaman2 {
     
     static double round(double value) {
         return Math.round(value * 10.0) / 10.0;
@@ -60,7 +59,7 @@ public class CalculateAverage_nawaman {
     
     private static final Random                                  random           = new Random();
     private static final ConcurrentHashMap<StationName, Integer> stationNameIds   = new ConcurrentHashMap<>();
-    private static final ConcurrentLinkedQueue<StationName>      stationNameQueue = new ConcurrentLinkedQueue<>();
+    private static final LinkedBlockingQueue<StationName>        stationNameQueue = new LinkedBlockingQueue<>();
     
     static class StationName implements Comparable<StationName> {
         
@@ -99,11 +98,10 @@ public class CalculateAverage_nawaman {
         
         @Override
         public boolean equals(Object obj) {
-            // Not needed as we are the only one using this class.
-//            if (this == obj)
-//                return true;
-//            if (!(obj instanceof StationName))
-//                return false;
+            if (this == obj)
+                return true;
+            if (!(obj instanceof StationName))
+                return false;
             
             var other = (StationName) obj;
             if (length != other.length)
@@ -333,7 +331,7 @@ public class CalculateAverage_nawaman {
         
         var filePath   = "measurements.txt";
         var cpuCount   = Runtime.getRuntime().availableProcessors();
-        var chunkCount = 16 * cpuCount;
+        var chunkCount = 32*cpuCount;
         
         var executor   = newFixedThreadPool(cpuCount);
         var statistics = new LinkedBlockingQueue<Statistic>();
@@ -341,12 +339,7 @@ public class CalculateAverage_nawaman {
         var thread = new Thread(() -> {
             while(true) {
                 try {
-                    var stationName = stationNameQueue.poll();
-                    if (stationName == null) {
-                        Thread.sleep(1);
-                        continue;
-                    }
-                    
+                    var stationName = stationNameQueue.take();
                     stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
                         return random.nextInt(0, Integer.MAX_VALUE);
                     });
@@ -358,7 +351,7 @@ public class CalculateAverage_nawaman {
         thread.start();
         
         for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> statistics.add(statistic))) {
-            executor.submit(extractionTask);
+            executor.submit(() -> extractionTask.run());
         }
         
         var statistic = (Statistic)null;
@@ -382,9 +375,7 @@ public class CalculateAverage_nawaman {
         
         System.out.println(statistic.sorted());
         
-        var endTime = System.currentTimeMillis();
-        System.out.println("Time: " + (endTime - startTime) + "ms");
-//        System.out.println("CPU: " + cpuCount);
+        System.out.println("Time: " + (System.currentTimeMillis() - startTime) + "ms");
     }
     
     private static void useValidateToStringIfSpecified(String[] args) {
