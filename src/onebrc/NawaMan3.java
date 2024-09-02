@@ -3,40 +3,26 @@
 //import static java.lang.Math.max;
 //import static java.lang.Math.min;
 //import static java.nio.file.StandardOpenOption.READ;
-//import static java.util.concurrent.Executors.newFixedThreadPool;
+//import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 //
 //import java.io.IOException;
 //import java.nio.ByteBuffer;
 //import java.nio.channels.FileChannel;
+//import java.nio.charset.StandardCharsets;
 //import java.nio.file.Paths;
-//import java.util.Arrays;
+//import java.util.ArrayList;
 //import java.util.Map;
-//import java.util.Random;
 //import java.util.Set;
 //import java.util.TreeMap;
 //import java.util.TreeSet;
 //import java.util.concurrent.ConcurrentHashMap;
 //import java.util.concurrent.LinkedBlockingQueue;
+//import java.util.concurrent.TimeUnit;
 //import java.util.function.Consumer;
 //import java.util.function.Function;
 //import java.util.stream.Stream;
 //
-///**
-// * One-Billion Row Challenge solution by NawaMan.
-// * 
-// * Key Points:
-// * <ol>
-// * <li>Mapped file to memory for ask IO access.</li>
-// * <li>Parallel process of data in chunks.</li>
-// * <li>Chunk separation with minimum overlaps.</li>
-// * <li>Store name in a fix length byte array 
-// *         so we don't need to find out the length before create the array.</li>
-// * <li>Parse the temperature into integer (x10) rather than float/double.</li>
-// * <li>Reuse name array if one already exists in the collection.</li>
-// * <li>Pre-calculate hashCode when parsing (finding out start and end).</li>
-// * </ol>
-// */
-//public class CalculateAverage_nawaman3 {
+//public class NawaMan3 {
 //    
 //    static double round(double value) {
 //        return Math.round(value * 10.0) / 10.0;
@@ -57,38 +43,35 @@
 //    
 //    static Function<StationStatistic, String> stationStatisticToString = defaultToString;
 //    
-//    private static final Random                                  random           = new Random();
-//    private static final ConcurrentHashMap<StationName, Integer> stationNameIds   = new ConcurrentHashMap<>();
-//    private static final LinkedBlockingQueue<StationName>        stationNameQueue = new LinkedBlockingQueue<>();
+//    static class Buffer{
+//        ByteBuffer data;
+//        ByteBuffer slice1;
+//        ByteBuffer slice2;
+//        
+//        Buffer(ByteBuffer data) {
+//            this.data   = data;
+//            this.slice1 = data.slice();
+//            this.slice2 = data.slice();
+//        }
+//    }
 //    
 //    static class StationName implements Comparable<StationName> {
 //        
 //        static final int NAME_BUFFER_SIZE = 128;
 //        
-//        private byte[] bytes = new byte[NAME_BUFFER_SIZE];
+//        private Buffer buffer;
+//        private int    position;
 //        private int    length;
 //        private int    hash;
 //        private int    id = -1;
 //        
 //        private volatile String toString = null;
 //        
-//        void readFrom(ByteBuffer buffer) {
-//            var bytes     = this.bytes;
-//            int nameIndex = 0;
-//            int nameHash  = 1;
-//            
-//            nameIndex = 0;
-//            while (buffer.hasRemaining()) {
-//                byte b = buffer.get();
-//                if (b == ';')
-//                    break;
-//                bytes[nameIndex++] = b;
-//                nameHash = (nameHash << 6) - nameHash + b;  // nameHash*31 + b
-//            }
-//            
-//            this.bytes  = bytes;
-//            this.length = nameIndex;
-//            this.hash   = nameHash;
+//        StationName(Buffer buffer, int position, int length, int hash) {
+//            this.buffer   = buffer;
+//            this.position = position;
+//            this.length   = length;
+//            this.hash     = hash;
 //        }
 //        
 //        @Override
@@ -104,16 +87,37 @@
 ////            if (!(obj instanceof StationName))
 ////                return false;
 //            
-//            var other = (StationName) obj;
-//            if (length != other.length)
+//            var that = (StationName) obj;
+//            if (length != that.length)
 //                return false;
-//            if (hash != other.hash)
+//            if (hash != that.hash)
 //                return false;
 //            
-//            if (id != -1 && other.id != -1)
-//                return id == other.id;
+//            if (id != -1 && that.id != -1)
+//                return id == that.id;
 //            
-//            return Arrays.equals(bytes, 0, length, other.bytes, 0, length);
+//            if (toString != null && that.toString != null)
+//                return toString.equals(that.toString);
+//            
+//            prepareBuffers(that);
+//            
+//            boolean equals = bufferEquals(that);
+//            if (!equals) {
+//                System.out.println(this.toString() + " != " + that.toString());
+//            }
+//            return equals;
+//        }
+//        
+//        private void prepareBuffers(StationName that) {
+//            this.buffer.slice1.limit   (this.position + this.length);
+//            this.buffer.slice1.position(this.position);
+//            
+//            that.buffer.slice2.limit   (that.position + that.length);
+//            that.buffer.slice2.position(that.position);
+//        }
+//        
+//        private boolean bufferEquals(StationName that) {
+//            return this.buffer.slice1.equals(that.buffer.slice2);
 //        }
 //        
 //        @Override
@@ -121,7 +125,11 @@
 //            if (toString == null) {
 //                synchronized (this) {
 //                    if (toString == null) {
-//                        toString = new String(bytes, 0, length);
+//                        synchronized (buffer) {
+//                            buffer.slice1.limit   (this.position + this.length);
+//                            buffer.slice1.position(this.position);
+//                            toString = StandardCharsets.UTF_8.decode(buffer.slice1).toString();
+//                        }
 //                    }
 //                }
 //            }
@@ -262,15 +270,15 @@
 //        
 //    }
 //    
-//    static record StatisticExtractor(String extractorName, ByteBuffer buffer, long boundarySize) {
+//    static record StatisticExtractor(String extractorName, ByteBuffer buffer) {
 //        
-//        static StatisticExtractor create(String name, String filePath, long start, long size) throws IOException {
+//        static StatisticExtractor create(String name, String filePath, long start, long estimatedSize) throws IOException {
 //            try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
 //                // Read a bit longer on the end to ensure that the last line is included.
 //                // Since the name of the station is at most 100 bytes, 300 extra bytes are read.
 //                // This because, there can be up to 100+ from the previous and 100+ extended into the next part.
 //                var tailMargin = 300L;
-//                var sizeToRead = size + tailMargin;
+//                var sizeToRead = estimatedSize + tailMargin;
 //                
 //                // Get one more byte in the front to check if the newline char is at the beginning of a line.
 //                // Without this, we do not know if the first read bytes are part of the previous extract
@@ -282,46 +290,82 @@
 //                var lastPosition = channel.size();
 //                var endPosition  = min(start + sizeToRead, lastPosition);
 //                var mapSize      = endPosition - startPosition;
-//                var buffer       = channel.map(FileChannel.MapMode.READ_ONLY, startPosition, mapSize);
-//                var skippedBytes = seekToStart(startPosition, buffer);
-//                var boundarySize = size - skippedBytes;
-//                return new StatisticExtractor(name, buffer, boundarySize);
+//                var mappedBuffer = channel.map(FileChannel.MapMode.READ_ONLY, startPosition, mapSize);
+//                
+//                var chunkStart = seekStartPosition(mappedBuffer, startPosition);
+//                var chunkEnd   = seekEndPosition(mappedBuffer, estimatedSize);
+//                
+//                mappedBuffer.position((int)chunkStart);
+//                mappedBuffer.limit   ((int)chunkEnd);
+//                var slicedBuffer = mappedBuffer.slice();
+//                slicedBuffer.position(0);
+//                
+//                return new StatisticExtractor(name, slicedBuffer);
+//            } catch (Throwable e) {
+//                e.printStackTrace();
+//                var message = "Panic: Failed to read file chunk! filePath=%s, start=%d, estimatedSize=%d"
+//                        .formatted(filePath, start, estimatedSize);
+//                throw new Error(message, e);
 //            }
 //        }
 //        
-//        static long seekToStart(long startPosition, ByteBuffer buffer) {
-//            long skippedBytes = 0;
-//            if (startPosition != 0) {
-//                while (buffer.hasRemaining()) {
-//                    byte b = buffer.get();
-//                    skippedBytes++;
-//                    if (b == '\n')
-//                        break;
-//                }
+//        static long seekStartPosition(ByteBuffer buffer, long startPosition) {
+//            if (startPosition == 0)
+//                return 0;
+//            
+//            var start = buffer.position();
+//            findNewLine(buffer);
+//            
+//            return buffer.position() - start;
+//        }
+//        
+//        static int seekEndPosition(ByteBuffer buffer, long boundarySize) {
+//            if (boundarySize > buffer.limit())
+//                return buffer.limit();
+//            
+//            buffer.position((int)boundarySize);
+//            findNewLine(buffer);
+//            
+//            return buffer.position();
+//        }
+//        
+//        static void findNewLine(ByteBuffer buffer) {
+//            while (buffer.hasRemaining()) {
+//                if (buffer.get() == '\n')
+//                    return;
 //            }
-//            return skippedBytes;
 //        }
 //        
 //        Statistic extract() throws IOException {
-//            var statistic         = new Statistic(extractorName, false);
-//            var stationNameBuffer = new StationName();
-//            var temperatureBuffer = new TemperatureBuffer();
-//            var startPosition     = buffer.position();
-//            var stopPosition      = startPosition + boundarySize;
-//            while (buffer.hasRemaining() && (buffer.position() <= stopPosition)) {
-//                stationNameBuffer.readFrom(buffer);
-//                temperatureBuffer.readFrom(buffer);
-//                
-//                var station = statistic.computeIfAbsent(stationNameBuffer, StationStatistic::new);
-//                station.add(temperatureBuffer.temperatureTimesTen);
-//                
-//                // The buffer is not reusable once it is used in the map, so we need to create a new one.
-//                if (station.stationName == stationNameBuffer) {
-//                    stationNameQueue.add(station.stationName);
-//                    stationNameBuffer = new StationName();
+//            var statistic          = new Statistic(extractorName, false);
+//            var chunkBuffer        = new Buffer(buffer);
+//            var temperatureBuffer  = new TemperatureBuffer();
+//            
+//            while (buffer.hasRemaining()) {
+//                int namePosition = buffer.position();
+//                var nameHash     = 1;
+//                while (true) {
+//                    var b = buffer.get();
+//                    if (b == ';') {
+//                        var nameLength  = buffer.position() - namePosition - 1;
+//                        
+//                        temperatureBuffer.readFrom(buffer);
+//                        
+//                        var stationName = new StationName(chunkBuffer, namePosition, nameLength, nameHash);
+//                        var station     = statistic.computeIfAbsent(stationName, StationStatistic::new);
+//                        station.add(temperatureBuffer.temperatureTimesTen);
+//                        
+//                        namePosition = buffer.position();
+//                        nameHash     = 1;
+//                        break;
+//                    }
+//                    nameHash = (nameHash << 7) - nameHash + b;  // nameHash*127 + b
 //                }
 //            }
-//            return statistic;
+//            
+////            nameCount.add(statistic.stationStatistics.size());
+////            return statistic;
+//            return null;
 //        }
 //    }
 //    
@@ -331,54 +375,23 @@
 //        var startTime = System.currentTimeMillis();
 //        
 //        var filePath   = "measurements.txt";
-//        var cpuCount   = Runtime.getRuntime().availableProcessors();
-//        var chunkCount = 32*cpuCount;
+//        var cpuCount   = 8; //Runtime.getRuntime().availableProcessors();
+////        var chunkCount = 32*cpuCount;
+//        var chunkCount = 4*cpuCount;
 //        
-//        var executor   = newFixedThreadPool(cpuCount);
+////        var inLoopCount = 0;
+////        for (int loop = 0; loop < chunkCount; loop++) {
+////        
+//        var executor   = newVirtualThreadPerTaskExecutor();
 //        var statistics = new LinkedBlockingQueue<Statistic>();
 //        
-//        var thread = new Thread(() -> {
-//            while(true) {
-//                try {
-//                    var stationName = stationNameQueue.take();
-//                    stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
-//                        return random.nextInt(0, Integer.MAX_VALUE);
-//                    });
-//                } catch (InterruptedException e) {
-//                    break;
-//                }
-//            }
-//        });
-//        thread.start();
-//        
-//        for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> statistics.add(statistic))) {
+//        for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> {}/* statistics.add(statistic)*/ )) {
 //            executor.submit(extractionTask);
 //        }
+//        executor.shutdown();
+//        executor.awaitTermination(10, TimeUnit.MINUTES);
 //        
-//        var statistic = (Statistic)null;
-//        while (true) {
-//            statistic = statistics.take();
-//            
-//            var lastInQueue      = statistics.size() == 0;
-//            var includeAllChunks = statistic.chunkNames.size() == chunkCount;
-//            var isLastStatistic  =  lastInQueue && includeAllChunks;
-//            if (isLastStatistic) {
-//                break;
-//            }
-//            
-//            var baseStatistic  = statistic;
-//            var otherStatistic = statistics.take();
-//            executor.submit(() -> statistics.add(baseStatistic.absorb(otherStatistic)));
-//        }
-//        
-//        thread.interrupt();
-//        executor.shutdownNow();
-//        
-//        System.out.println(statistic.sorted());
-//        
-//        var endTime = System.currentTimeMillis();
-//        System.out.println("Time: " + (endTime - startTime) + "ms");
-////        System.out.println("CPU: " + cpuCount);
+//        System.out.println("Time: " + (System.currentTimeMillis() - startTime) + "ms");
 //    }
 //    
 //    private static void useValidateToStringIfSpecified(String[] args) {
@@ -406,12 +419,13 @@
 //    
 //    static void extractionTask(String filePath, int chunkIndex, long chunkSize, Consumer<Statistic> accepter) {
 //        var position  = chunkIndex*chunkSize;
-//        var chunkName = "Chunk-" + chunkIndex;
+//        var chunkName = "Chunk-%03d".formatted(chunkIndex);
 //        try {
 //            var extractor = StatisticExtractor.create(chunkName, filePath, position, chunkSize);
 //            var statistic = extractor.extract();
 //            accepter.accept(statistic);
-//        } catch (IOException e) {
+//        } catch (Throwable e) {
+//            e.printStackTrace();
 //            var message
 //                    = "Panic: Failed to read file chunk! filePath=%s, chunkIndex=%d, chunkSize=%d, position=%d"
 //                    .formatted(filePath, chunkIndex, chunkSize, position);
