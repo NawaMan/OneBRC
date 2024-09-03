@@ -4,6 +4,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.nio.file.StandardOpenOption.READ;
 import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
@@ -354,7 +355,8 @@ public class CalculateAverage_nawaman {
                     int nameOffset  = offset;
                     var nameHash    = 1;
                     var currentByte = bytes[offset++];  // Name is at lease one character. 
-                    for (int i = 0; offset < bytes.length; ) {
+                    stationName.bytes[0] = currentByte;
+                    for (int i = 1; offset < bytes.length; ) {
                         currentByte = bytes[offset++];
 //                        System.out.println("offset-n: " + (offset - 1) + ", currentByte: " + (char)currentByte);
                         stationName.bytes[i++] = currentByte;
@@ -464,7 +466,8 @@ public class CalculateAverage_nawaman {
         var cpuCount   = Runtime.getRuntime().availableProcessors();
         var chunkCount = 16 * cpuCount;
         
-        var executor   = newFixedThreadPool(cpuCount);
+//        var executor   = newFixedThreadPool(cpuCount);
+        var executor   = newVirtualThreadPerTaskExecutor();
         var statistics = new LinkedBlockingQueue<Statistic>();
         
         var thread = new Thread(() -> {
