@@ -356,6 +356,7 @@ public class CalculateAverage_nawaman {
                     var nameHash    = 1;
                     var currentByte = bytes[offset++];  // Name is at lease one character. 
                     stationName.bytes[0] = currentByte;
+                    nameHash = (nameHash << 6) - nameHash + currentByte;  // nameHash*127 + b
                     for (int i = 1; offset < bytes.length; ) {
                         currentByte = bytes[offset++];
 //                        System.out.println("offset-n: " + (offset - 1) + ", currentByte: " + (char)currentByte);
