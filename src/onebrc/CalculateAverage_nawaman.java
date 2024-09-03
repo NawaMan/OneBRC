@@ -6,6 +6,7 @@ import static java.nio.file.StandardOpenOption.READ;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
 import java.io.IOException;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
@@ -57,6 +58,10 @@ public class CalculateAverage_nawaman {
     };
     
     static Function<StationStatistic, String> stationStatisticToString = defaultToString;
+    
+    static int toDigit(byte nextCh) {
+        return nextCh - '0';
+    }
     
     private static final Random                                  random           = new Random();
     private static final ConcurrentHashMap<StationName, Integer> stationNameIds   = new ConcurrentHashMap<>();
@@ -138,10 +143,6 @@ public class CalculateAverage_nawaman {
     
     static class TemperatureBuffer {
         int temperatureTimesTen;
-        
-        static int toDigit(byte nextCh) {
-            return nextCh - '0';
-        }
         
         void readFrom(ByteBuffer buffer) {
             var sign        = 1;
@@ -263,15 +264,15 @@ public class CalculateAverage_nawaman {
         
     }
     
-    static record StatisticExtractor(String extractorName, ByteBuffer buffer, long boundarySize) {
-        
-        static StatisticExtractor create(String name, String filePath, long start, long size) throws IOException {
+    static record StatisticExtractor(String extractorName, ByteBuffer buffer) {
+
+        static StatisticExtractor create(String name, String filePath, long start, long estimatedSize) throws IOException {
             try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
                 // Read a bit longer on the end to ensure that the last line is included.
                 // Since the name of the station is at most 100 bytes, 300 extra bytes are read.
                 // This because, there can be up to 100+ from the previous and 100+ extended into the next part.
                 var tailMargin = 300L;
-                var sizeToRead = size + tailMargin;
+                var sizeToRead = estimatedSize + tailMargin;
                 
                 // Get one more byte in the front to check if the newline char is at the beginning of a line.
                 // Without this, we do not know if the first read bytes are part of the previous extract
@@ -283,47 +284,173 @@ public class CalculateAverage_nawaman {
                 var lastPosition = channel.size();
                 var endPosition  = min(start + sizeToRead, lastPosition);
                 var mapSize      = endPosition - startPosition;
-                var buffer       = channel.map(FileChannel.MapMode.READ_ONLY, startPosition, mapSize);
-                var skippedBytes = seekToStart(startPosition, buffer);
-                var boundarySize = size - skippedBytes;
-                return new StatisticExtractor(name, buffer, boundarySize);
+                var mappedBuffer = channel.map(FileChannel.MapMode.READ_ONLY, startPosition, mapSize);
+                
+                var chunkStart = seekStartPosition(mappedBuffer, startPosition);
+                var chunkEnd   = seekEndPosition(mappedBuffer, estimatedSize);
+                
+                mappedBuffer.position((int)chunkStart);
+                mappedBuffer.limit   ((int)chunkEnd);
+                var slicedBuffer = mappedBuffer.slice();
+                slicedBuffer.position(0);
+                
+                return new StatisticExtractor(name, slicedBuffer);
+            } catch (Throwable e) {
+                e.printStackTrace();
+                var message = "Panic: Failed to read file chunk! filePath=%s, start=%d, estimatedSize=%d"
+                        .formatted(filePath, start, estimatedSize);
+                throw new Error(message, e);
             }
         }
         
-        static long seekToStart(long startPosition, ByteBuffer buffer) {
-            long skippedBytes = 0;
-            if (startPosition != 0) {
-                while (buffer.hasRemaining()) {
-                    byte b = buffer.get();
-                    skippedBytes++;
-                    if (b == '\n')
-                        break;
-                }
+        static long seekStartPosition(ByteBuffer buffer, long startPosition) {
+            if (startPosition == 0)
+                return 0;
+            
+            var start = buffer.position();
+            findNewLine(buffer);
+            
+            return buffer.position() - start;
+        }
+        
+        static int seekEndPosition(ByteBuffer buffer, long boundarySize) {
+            if (boundarySize > buffer.limit())
+                return buffer.limit();
+            
+            buffer.position((int)boundarySize);
+            findNewLine(buffer);
+            
+            return buffer.position();
+        }
+        
+        static void findNewLine(ByteBuffer buffer) {
+            while (buffer.hasRemaining()) {
+                if (buffer.get() == '\n')
+                    return;
             }
-            return skippedBytes;
         }
         
         Statistic extract() throws IOException {
-            var statistic         = new Statistic(extractorName, false);
-            var stationNameBuffer = new StationName();
-            var temperatureBuffer = new TemperatureBuffer();
-            var startPosition     = buffer.position();
-            var stopPosition      = startPosition + boundarySize;
-            while (buffer.hasRemaining() && (buffer.position() <= stopPosition)) {
-                stationNameBuffer.readFrom(buffer);
-                temperatureBuffer.readFrom(buffer);
+            var statistic          = new Statistic(extractorName, false);
+//            var chunkBuffer        = new Buffer(buffer);
+//            var temperatureBuffer  = new TemperatureBuffer();
+            
+            var stationName = new StationName();
+            
+            var bytes = new byte[1024];
+//            var count = 0;
+            
+            while (buffer.hasRemaining()) {
+                var startPosition = buffer.position();
+                try {
+                    buffer.get(bytes);
+                } catch (BufferUnderflowException e) {
+                    bytes = new byte[buffer.remaining()];
+                    buffer.get(bytes);
+                }
                 
-                var station = statistic.computeIfAbsent(stationNameBuffer, StationStatistic::new);
-                station.add(temperatureBuffer.temperatureTimesTen);
-                
-                if (station.stationName == stationNameBuffer) {
-                    // Add to station queue so that we can assign ID to it to make the merge much faster.
-                    stationNameQueue.add(station.stationName);
+                var offset = 0;
+                while (offset < bytes.length) {
+                    int nameOffset  = offset;
+                    var nameHash    = 1;
+                    var currentByte = bytes[offset++];  // Name is at lease one character. 
+                    for (int i = 0; offset < bytes.length; ) {
+                        currentByte = bytes[offset++];
+//                        System.out.println("offset-n: " + (offset - 1) + ", currentByte: " + (char)currentByte);
+                        stationName.bytes[i++] = currentByte;
+                        nameHash = (nameHash << 6) - nameHash + currentByte;  // nameHash*127 + b
+                        if (currentByte == ';') {
+                            break;
+                        }
+                    }
+                    if (bytes[offset - 1] != ';') {   // Done before finding ';'.
+                        buffer.position(startPosition + nameOffset);
+                        break;
+                    }
+                    if (offset >= bytes.length) {   // Done before finding next.
+                        buffer.position(startPosition + nameOffset);
+                        break;
+                    }
+                    int nameLength = offset - nameOffset - 1;
                     
-                    // The buffer is not reusable once it is used in the map, so we need to create a new one.
-                    stationNameBuffer = new StationName();
+                    currentByte = bytes[offset++];
+//                    System.out.println("offset-v: " + (offset - 1) + ", currentByte: " + (char)currentByte);
+                    int sign        = (currentByte == '-') ? -1 : 1;
+                    int valueOffset = (currentByte == '-') ? offset : offset - 1;
+                    
+                    for (; offset < bytes.length; ) {
+                        currentByte = bytes[offset++];
+//                        System.out.println("offset-v: " + (offset - 1) + ", currentByte: " + (char)currentByte);
+                        if (currentByte == '\n') {
+                            break;
+                        }
+                    }
+                    if (bytes[offset - 1] != '\n') {   // Done before finding '\n'.
+                        buffer.position(startPosition + nameOffset);
+                        break;
+                    }
+                    
+//                    var name  = new String(bytes, nameOffset, nameLength, StandardCharsets.UTF_8);
+//                    int namePosition = startPosition + nameOffset;
+                    
+                    var valueLength = offset - valueOffset;
+                    int value = (100 * toDigit(bytes[valueOffset]) * (valueLength - 4)
+                                + 10 * toDigit(bytes[offset - 4])
+                                +  1 * toDigit(bytes[offset - 2])) * sign;
+//                    if (!name.equals(stationName.toString())) {
+//                        System.out.println("name: " + name + ", stationName: " + stationName.toString() + ", value: " + value);
+//                    }
+//                    var station = statistic.computeIfAbsent(stationName, StationStatistic::new);
+//                    station.add(temperatureBuffer.temperatureTimesTen);
+                    
+                    stationName.length = nameLength;
+                    stationName.hash   = nameHash;
+                    
+                    var station = statistic.computeIfAbsent(stationName, StationStatistic::new);
+                    station.add(value);
+                    
+                    if (station.stationName == stationName) {
+                        // Add to station queue so that we can assign ID to it to make the merge much faster.
+                        stationNameQueue.add(station.stationName);
+                        
+                        // The buffer is not reusable once it is used in the map, so we need to create a new one.
+                        stationName = new StationName();
+                    }
+                    
+//                    count++;
                 }
             }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+//            var statistic         = new Statistic(extractorName, false);
+//            var stationNameBuffer = new StationName();
+//            var temperatureBuffer = new TemperatureBuffer();
+//            var startPosition     = buffer.position();
+//            var stopPosition      = startPosition + boundarySize;
+//            while (buffer.hasRemaining() && (buffer.position() <= stopPosition)) {
+//                stationNameBuffer.readFrom(buffer);
+//                temperatureBuffer.readFrom(buffer);
+//                
+//                var station = statistic.computeIfAbsent(stationNameBuffer, StationStatistic::new);
+//                station.add(temperatureBuffer.temperatureTimesTen);
+//                
+//                if (station.stationName == stationNameBuffer) {
+//                    // Add to station queue so that we can assign ID to it to make the merge much faster.
+//                    stationNameQueue.add(station.stationName);
+//                    
+//                    // The buffer is not reusable once it is used in the map, so we need to create a new one.
+//                    stationNameBuffer = new StationName();
+//                }
+//            }
             return statistic;
         }
     }
@@ -360,6 +487,8 @@ public class CalculateAverage_nawaman {
         thread.start();
         
         for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> statistics.add(statistic))) {
+//            if (extractionTask == null)
+//                continue;
             executor.submit(extractionTask);
         }
         
@@ -407,6 +536,9 @@ public class CalculateAverage_nawaman {
         var runnables = new Runnable[chunkCount];
         for (int i = 0; i < chunkCount; i++) {
             int cpuIndex  = i;
+//            if (cpuIndex != 0) {
+//                continue;
+//            }
             runnables[i] = (() -> extractionTask(filePath, cpuIndex, chunkSize, resultAccepter));
         }
         return runnables;
