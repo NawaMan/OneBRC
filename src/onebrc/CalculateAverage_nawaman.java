@@ -316,9 +316,11 @@ public class CalculateAverage_nawaman {
                 var station = statistic.computeIfAbsent(stationNameBuffer, StationStatistic::new);
                 station.add(temperatureBuffer.temperatureTimesTen);
                 
-                // The buffer is not reusable once it is used in the map, so we need to create a new one.
                 if (station.stationName == stationNameBuffer) {
+                    // Add to station queue so that we can assign ID to it to make the merge much faster.
                     stationNameQueue.add(station.stationName);
+                    
+                    // The buffer is not reusable once it is used in the map, so we need to create a new one.
                     stationNameBuffer = new StationName();
                 }
             }

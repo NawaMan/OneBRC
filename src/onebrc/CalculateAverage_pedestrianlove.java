@@ -17,14 +17,14 @@ package onebrc;
 
 import static java.util.stream.Collectors.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collector;
 
-public class CalculateAverage_baseline {
+public class CalculateAverage_pedestrianlove {
 
     private static final String FILE = "./measurements.txt";
 
@@ -34,10 +34,9 @@ public class CalculateAverage_baseline {
         }
     }
 
-    private static record ResultRow(double min, double sum, double count, double max) {
-
+    private static record ResultRow(double min, double mean, double max) {
         public String toString() {
-            return round(min) + "/" + round(sum / count) + "/" + round(max);
+            return round(min) + "/" + round(mean) + "/" + round(max);
         }
 
         private double round(double value) {
@@ -53,14 +52,6 @@ public class CalculateAverage_baseline {
     }
 
     public static void main(String[] args) throws IOException {
-        // Map<String, Double> measurements1 = Files.lines(Paths.get(FILE))
-        // .map(l -> l.split(";"))
-        // .collect(groupingBy(m -> m[0], averagingDouble(m -> Double.parseDouble(m[1]))));
-        //
-        // measurements1 = new TreeMap<>(measurements1.entrySet()
-        // .stream()
-        // .collect(toMap(e -> e.getKey(), e -> Math.round(e.getValue() * 10.0) / 10.0)));
-        // System.out.println(measurements1);
 
         Collector<Measurement, MeasurementAggregator, ResultRow> collector = Collector.of(
                 MeasurementAggregator::new,
@@ -80,12 +71,17 @@ public class CalculateAverage_baseline {
                     return res;
                 },
                 agg -> {
-                    return new ResultRow(agg.min, agg.sum, agg.count, agg.max);
+                    return new ResultRow(agg.min, agg.sum / agg.count, agg.max);
                 });
 
-        Map<String, ResultRow> measurements = new TreeMap<>(Files.lines(Paths.get(FILE))
-                .map(l -> new Measurement(l.split(";")))
-                .collect(groupingBy(m -> m.station(), collector)));
+        BufferedReader br = new BufferedReader(new FileReader(FILE));
+
+        Map<String, ResultRow> measurements = new ConcurrentSkipListMap<>(
+                br.lines().parallel()
+                        .map(l -> new Measurement(l.split(";")))
+                        .collect(groupingBy(m -> m.station(), collector)));
+
+        br.close();
 
         System.out.println(measurements);
     }
