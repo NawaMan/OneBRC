@@ -17,6 +17,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -376,41 +377,48 @@ public class CalculateAverage_nawaman {
             }
         });
         thread.start();
+    ;   
+        var countDown = new CountDownLatch(chunkCount);
         
-        for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> statistics.add(statistic))) {
-            executor.submit(extractionTask);
-        }
-        
-        var leftOver = new ConcurrentLinkedQueue<Map.Entry<StationName, StationStatistic>>();
-        
-        for (; chunkCount--> 0;) {
-            try {
-                var statistic = (Statistic)null;
-                while ((statistic = statistics.poll()) == null) {
-                    Thread.sleep(1);
-                    continue;
-                }
+        for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> {
+            //statistics.add(statistic);
+            executor.submit(() -> {
                 for (var entry : statistic.stationStatistics.entrySet()) {
                     var name    = entry.getKey();
                     var station = entry.getValue();
                     if (name.station == null) {
-                        leftOver.add(entry);
-//                        System.out.println("Station is null: " + name);
+                        stationStatistics.get(name).include(station);
                     } else {
                         name.station.include(station);
                     }
                 }
-//                System.out.println();
-            } catch (InterruptedException e) {
-                break;
-            }
+                countDown.countDown();
+                System.out.println("CountDown: " + countDown.getCount());
+            });
+        })) {
+            executor.submit(extractionTask);
         }
-        for (var entry : leftOver) {
-            var name = entry.getKey();
-            var station = entry.getValue();
-            
-            stationStatistics.get(name).include(station);
-        }
+//        
+//        for (; chunkCount--> 0;) {
+//            try {
+//                var statistic = (Statistic)null;
+//                while ((statistic = statistics.poll()) == null) {
+//                    Thread.sleep(1);
+//                    continue;
+//                }
+//                for (var entry : statistic.stationStatistics.entrySet()) {
+//                    var name    = entry.getKey();
+//                    var station = entry.getValue();
+//                    if (name.station == null) {
+//                        stationStatistics.get(name).include(station);
+//                    } else {
+//                        name.station.include(station);
+//                    }
+//                }
+//            } catch (InterruptedException e) {
+//                break;
+//            }
+//        }
         
 //        var statistic = (Statistic)null;
 //        while (true) {
@@ -429,6 +437,7 @@ public class CalculateAverage_nawaman {
 //        }
         
         executor.shutdown();
+        countDown.await();
         thread.interrupt();
         
         System.out.println(stationStatistics);
