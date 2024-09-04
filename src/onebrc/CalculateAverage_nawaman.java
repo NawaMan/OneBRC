@@ -61,6 +61,7 @@ public class CalculateAverage_nawaman {
     private static final Random                                  random           = new Random();
     private static final ConcurrentHashMap<StationName, Integer> stationNameIds   = new ConcurrentHashMap<>();
     private static final ConcurrentLinkedQueue<StationName>      stationNameQueue = new ConcurrentLinkedQueue<>();
+    private static final TreeMap<StationName, StationStatistic>  stationStatistics = new TreeMap<>();
     
     static class StationName implements Comparable<StationName> {
         
@@ -70,6 +71,7 @@ public class CalculateAverage_nawaman {
         private int    length;
         private int    hash;
         private int    id = -1;
+        private StationStatistic station;
         
         private volatile String toString = null;
         
@@ -137,6 +139,7 @@ public class CalculateAverage_nawaman {
     }
     
     static class TemperatureBuffer {
+        byte[] bytes = new byte[10];
         int temperatureTimesTen;
         
         static int toDigit(byte nextCh) {
@@ -313,13 +316,15 @@ public class CalculateAverage_nawaman {
                 stationNameBuffer.readFrom(buffer);
                 temperatureBuffer.readFrom(buffer);
                 
-                var station = statistic.computeIfAbsent(stationNameBuffer, StationStatistic::new);
+                var station = statistic.computeIfAbsent(stationNameBuffer, name -> {
+                    // Add to station queue so that we can assign ID to it to make the merge much faster.
+                    stationNameQueue.add(name);
+                    
+                    return new StationStatistic(name);
+                });
                 station.add(temperatureBuffer.temperatureTimesTen);
                 
                 if (station.stationName == stationNameBuffer) {
-                    // Add to station queue so that we can assign ID to it to make the merge much faster.
-                    stationNameQueue.add(station.stationName);
-                    
                     // The buffer is not reusable once it is used in the map, so we need to create a new one.
                     stationNameBuffer = new StationName();
                 }
@@ -329,6 +334,7 @@ public class CalculateAverage_nawaman {
     }
     
     public static void main(String[] args) throws InterruptedException {
+        try {
         useValidateToStringIfSpecified(args);
         
         var startTime = System.currentTimeMillis();
@@ -341,6 +347,7 @@ public class CalculateAverage_nawaman {
         var statistics = new LinkedBlockingQueue<Statistic>();
         
         var thread = new Thread(() -> {
+            try {
             while(true) {
                 try {
                     var stationName = stationNameQueue.poll();
@@ -349,12 +356,23 @@ public class CalculateAverage_nawaman {
                         continue;
                     }
                     
-                    stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
-                        return random.nextInt(0, Integer.MAX_VALUE);
+//                    stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
+//                        return random.nextInt(0, Integer.MAX_VALUE);
+//                    });
+                    
+                    stationName.station = stationStatistics.compute(stationName, (__, station) -> {
+                        if (station == null) {
+                            return new StationStatistic(stationName);
+                        }
+                        return station;
                     });
+                    
                 } catch (InterruptedException e) {
                     break;
                 }
+            }
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
         });
         thread.start();
@@ -363,30 +381,67 @@ public class CalculateAverage_nawaman {
             executor.submit(extractionTask);
         }
         
-        var statistic = (Statistic)null;
-        while (true) {
-            statistic = statistics.take();
-            
-            var lastInQueue      = statistics.size() == 0;
-            var includeAllChunks = statistic.chunkNames.size() == chunkCount;
-            var isLastStatistic  =  lastInQueue && includeAllChunks;
-            if (isLastStatistic) {
+        var leftOver = new ConcurrentLinkedQueue<Map.Entry<StationName, StationStatistic>>();
+        
+        for (; chunkCount--> 0;) {
+            try {
+                var statistic = (Statistic)null;
+                while ((statistic = statistics.poll()) == null) {
+                    Thread.sleep(1);
+                    continue;
+                }
+                for (var entry : statistic.stationStatistics.entrySet()) {
+                    var name    = entry.getKey();
+                    var station = entry.getValue();
+                    if (name.station == null) {
+                        leftOver.add(entry);
+//                        System.out.println("Station is null: " + name);
+                    } else {
+                        name.station.include(station);
+                    }
+                }
+//                System.out.println();
+            } catch (InterruptedException e) {
                 break;
             }
+        }
+        for (var entry : leftOver) {
+            var name = entry.getKey();
+            var station = entry.getValue();
             
-            var baseStatistic  = statistic;
-            var otherStatistic = statistics.take();
-            executor.submit(() -> statistics.add(baseStatistic.absorb(otherStatistic)));
+            stationStatistics.get(name).include(station);
         }
         
-        thread.interrupt();
-        executor.shutdownNow();
+//        var statistic = (Statistic)null;
+//        while (true) {
+//            statistic = statistics.take();
+//            
+//            var lastInQueue      = statistics.size() == 0;
+//            var includeAllChunks = statistic.chunkNames.size() == chunkCount;
+//            var isLastStatistic  =  lastInQueue && includeAllChunks;
+//            if (isLastStatistic) {
+//                break;
+//            }
+//            
+//            var baseStatistic  = statistic;
+//            var otherStatistic = statistics.take();
+//            executor.submit(() -> statistics.add(baseStatistic.absorb(otherStatistic)));
+//        }
         
-        System.out.println(statistic.sorted());
+        executor.shutdown();
+        thread.interrupt();
+        
+        System.out.println(stationStatistics);
         
         var endTime = System.currentTimeMillis();
         System.out.println("Time: " + (endTime - startTime) + "ms");
+        executor.shutdownNow();
+//        System.out.println("Stations: " + stationStatistics.size());
+//        System.exit(0);
 //        System.out.println("CPU: " + cpuCount);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
     
     private static void useValidateToStringIfSpecified(String[] args) {

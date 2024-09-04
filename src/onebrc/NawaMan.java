@@ -381,8 +381,10 @@ public class NawaMan {
                     
                     currentByte = bytes[offset++];
 //                    System.out.println("offset-v: " + (offset - 1) + ", currentByte: " + (char)currentByte);
-                    int sign        = (currentByte == '-') ? -1 : 1;
-                    int valueOffset = (currentByte == '-') ? offset : offset - 1;
+                    int sign        = (0 - ((currentByte & 0b0001000) >>> 3)) | 1; //
+//                    int sign        = (currentByte == '-') ? -1 : 1;
+                    int valueOffset = offset + ((currentByte & 0b0001000) >>> 3) - 1;
+//                    int valueOffset = (currentByte == '-') ? offset : offset - 1;
                     
                     for (; offset < bytes.length; ) {
                         currentByte = bytes[offset++];
