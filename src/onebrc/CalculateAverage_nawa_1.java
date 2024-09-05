@@ -172,12 +172,14 @@ public class CalculateAverage_nawa_1 {
                             var value = (100 * toDigit(loopBytes[valueOffset]) * (valueLength - 4)
                                         + 10 * toDigit(loopBytes[loopBytesIndex - 4])
                                         +  1 * toDigit(loopBytes[loopBytesIndex - 2])) * valueSign;
-//                            var name  = new String(loopBytes, nameStartIndex, nameLength, StandardCharsets.UTF_8);
+                            var name  = new String(loopBytes, nameStartIndex, nameLength, StandardCharsets.UTF_8);
 //                            System.out.println("name: " + name + ", value: " + value);
                             
                             // Move the processing bytes to the next line.
-                            bytesStartPosition += (nameStartIndex - loopBytesIndex);
-                            nameStartIndex     =  loopBytesIndex;
+                            bytesStartPosition += (loopBytesIndex - nameStartIndex);
+                            nameStartIndex      =  loopBytesIndex;
+                            nameByteIndex       = 0;
+                            nameHash            = 1;
                             totalEntries.increment();
                             break;
                         }
