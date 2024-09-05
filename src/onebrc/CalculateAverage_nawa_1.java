@@ -130,7 +130,7 @@ public class CalculateAverage_nawa_1 {
 //            System.out.println(extractorName + ": " + buffer.limit());
 //            totalBytes.add(buffer.limit());
             
-            var loopBytes = new byte[4096];
+            var loopBytes = new byte[2048];
             var nameBytes = new byte[128];
             
             // Main loop
@@ -148,7 +148,7 @@ public class CalculateAverage_nawa_1 {
                 int nameHash       = 1;
                 
                 // 5 is the minimum length of value from ';' to newline.
-                while (loopBytesIndex < (loopBytes.length - 5)) {
+                while (loopBytesIndex < (loopBytes.length - 4)) {
                     byte currentByte = loopBytes[loopBytesIndex++];
                     if (currentByte != ';') {
                         nameBytes[nameByteIndex++] = currentByte;
@@ -169,7 +169,7 @@ public class CalculateAverage_nawa_1 {
                         currentByte = loopBytes[loopBytesIndex++];
                         if (currentByte == '\n') {
                             var valueLength = loopBytesIndex - valueOffset;
-                            var value = (100 * toDigit(loopBytes[valueOffset]) * (valueLength - 4)
+                            var value = (100 * toDigit(loopBytes[valueOffset       ])  * (valueLength - 4)
                                         + 10 * toDigit(loopBytes[loopBytesIndex - 4])
                                         +  1 * toDigit(loopBytes[loopBytesIndex - 2])) * valueSign;
                             var name  = new String(loopBytes, nameStartIndex, nameLength, StandardCharsets.UTF_8);

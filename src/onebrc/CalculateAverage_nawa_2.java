@@ -266,7 +266,7 @@ public class CalculateAverage_nawa_2 {
     }
     
     static record StatisticExtractor(String extractorName, ByteBuffer buffer) {
-
+        
         static StatisticExtractor create(String name, String filePath, long start, long estimatedSize) throws IOException {
             try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
                 // Read a bit longer on the end to ensure that the last line is included.
