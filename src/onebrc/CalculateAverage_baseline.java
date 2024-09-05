@@ -37,7 +37,7 @@ public class CalculateAverage_baseline {
     private static record ResultRow(double min, double sum, double count, double max) {
 
         public String toString() {
-            return round(min) + "/" + round(sum / count) + "/" + round(max);
+            return round(min) + "/" + round(sum) + "/" + round(count) + "/" + round(max);
         }
 
         private double round(double value) {
