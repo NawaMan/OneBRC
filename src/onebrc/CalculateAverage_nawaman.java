@@ -4,6 +4,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.nio.file.StandardOpenOption.READ;
 import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -17,6 +18,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -185,8 +187,8 @@ public class CalculateAverage_nawaman {
         }
         
         void add(int temperatureTimesTen) {
-            min = min(min, temperatureTimesTen);
-            max = max(max, temperatureTimesTen);
+            min  = min(min, temperatureTimesTen);
+            max  = max(max, temperatureTimesTen);
             sum += temperatureTimesTen;
             count++;
         }
@@ -335,28 +337,12 @@ public class CalculateAverage_nawaman {
         
         var filePath   = "measurements.txt";
         var cpuCount   = Runtime.getRuntime().availableProcessors();
-        var chunkCount = 16 * cpuCount;
+        var chunkCount = 8 * cpuCount;
         
-        var executor   = newFixedThreadPool(cpuCount);
+        var executor   = newVirtualThreadPerTaskExecutor();
         var statistics = new LinkedBlockingQueue<Statistic>();
         
-        var thread = new Thread(() -> {
-            while(true) {
-                try {
-                    var stationName = stationNameQueue.poll();
-                    if (stationName == null) {
-                        Thread.sleep(1);
-                        continue;
-                    }
-                    
-                    stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
-                        return random.nextInt(0, Integer.MAX_VALUE);
-                    });
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-        });
+        var thread = new Thread(() -> assignStationNameId());
         thread.start();
         
         for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> statistics.add(statistic))) {
@@ -384,9 +370,24 @@ public class CalculateAverage_nawaman {
         
         System.out.println(statistic.sorted());
         
-        var endTime = System.currentTimeMillis();
-        System.out.println("Time: " + (endTime - startTime) + "ms");
-//        System.out.println("CPU: " + cpuCount);
+        System.out.println("Time: " + (System.currentTimeMillis() - startTime) + "ms");
+    }
+    
+    private static void assignStationNameId() {
+        try {
+            while(true) {
+                var stationName = stationNameQueue.poll();
+                if (stationName == null) {
+                    Thread.sleep(1);
+                    continue;
+                }
+                
+                stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
+                    return random.nextInt(0, Integer.MAX_VALUE);
+                });
+            }
+        } catch (InterruptedException e) {
+        }
     }
     
     private static void useValidateToStringIfSpecified(String[] args) {
