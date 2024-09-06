@@ -54,7 +54,7 @@ Resources:
             echo ""
             
             # Run the performance check script
-            ./benchmark-locally-all.sh | tee /home/ubuntu/benchmark.log
+            ./benchmark-locally.sh | tee /home/ubuntu/benchmark.log
             echo ""
             
 
