@@ -3,7 +3,6 @@ package onebrc;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.nio.file.StandardOpenOption.READ;
-import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 
 import java.io.IOException;
@@ -13,12 +12,9 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -211,14 +207,11 @@ public class CalculateAverage_nawaman {
         // The max station name is 10,000 but we can start smaller as each extractor only do part of it.
         static final int STATISTIC_MAP_SIZE = 1024;
         
-        final Set<String>                        chunkNames = new TreeSet<String>();
+        int chunkCount = 0;
         final Map<StationName, StationStatistic> stationStatistics;
         
-        Statistic(String name, boolean isSorted) {
-            if (name != null) {
-                chunkNames.add(name);
-            }
-            
+        Statistic(int chunkCount, boolean isSorted) {
+            this.chunkCount = chunkCount;
             stationStatistics = isSorted
                         ? new TreeMap<StationName, StationStatistic>()
                         : new ConcurrentHashMap<StationName, StationStatistic>(STATISTIC_MAP_SIZE);
@@ -228,34 +221,22 @@ public class CalculateAverage_nawaman {
             return stationStatistics.computeIfAbsent(stationName, mappingFunction);
         }
         
-        StationStatistic getStationStatistic(StationName stationName) {
-            return stationStatistics.get(stationName);
-        }
-        
-        void setStationStatistic(StationStatistic stationStatistic) {
-            stationStatistics.put(stationStatistic.stationName, stationStatistic);
-        }
-        
         Statistic absorb(Statistic other) {
-            chunkNames.addAll(other.chunkNames);
-            for (var entry : other.stationStatistics.entrySet()) {
-                var name       = entry.getKey();
-                var newStation = entry.getValue();
+            chunkCount += other.chunkCount;
+            other.stationStatistics.forEach((name, otherStation) -> {
                 stationStatistics.compute(name, (k, station) -> {
                     if (station == null) {
-                        return newStation;
+                        return otherStation;
                     }
-                    station.include(newStation);
+                    station.include(otherStation);
                     return station;
                 });
-            }
+            });
             return this;
         }
         
         Statistic sorted() {
-            return (stationStatistics instanceof TreeMap)
-                    ? this
-                    : new Statistic(null, true).absorb(this);
+            return new Statistic(0, true).absorb(this);
         }
         
         @Override
@@ -265,15 +246,15 @@ public class CalculateAverage_nawaman {
         
     }
     
-    static record StatisticExtractor(String extractorName, ByteBuffer buffer, long boundarySize) {
+    static record StatisticExtractor(ByteBuffer buffer) {
         
-        static StatisticExtractor create(String name, String filePath, long start, long size) throws IOException {
+        static StatisticExtractor create(String filePath, long start, long estimatedSize) throws IOException {
             try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
                 // Read a bit longer on the end to ensure that the last line is included.
                 // Since the name of the station is at most 100 bytes, 300 extra bytes are read.
                 // This because, there can be up to 100+ from the previous and 100+ extended into the next part.
                 var tailMargin = 300L;
-                var sizeToRead = size + tailMargin;
+                var sizeToRead = estimatedSize + tailMargin;
                 
                 // Get one more byte in the front to check if the newline char is at the beginning of a line.
                 // Without this, we do not know if the first read bytes are part of the previous extract
@@ -285,45 +266,65 @@ public class CalculateAverage_nawaman {
                 var lastPosition = channel.size();
                 var endPosition  = min(start + sizeToRead, lastPosition);
                 var mapSize      = endPosition - startPosition;
-                var buffer       = channel.map(FileChannel.MapMode.READ_ONLY, startPosition, mapSize);
-                var skippedBytes = seekToStart(startPosition, buffer);
-                var boundarySize = size - skippedBytes;
-                return new StatisticExtractor(name, buffer, boundarySize);
+                var mappedBuffer = channel.map(FileChannel.MapMode.READ_ONLY, startPosition, mapSize);
+                
+                var chunkStart = seekStartPosition(mappedBuffer, startPosition);
+                var chunkEnd   = seekEndPosition(mappedBuffer, estimatedSize);
+                
+                mappedBuffer.position((int)chunkStart);
+                mappedBuffer.limit   ((int)chunkEnd);
+                var slicedBuffer = mappedBuffer.slice();
+                slicedBuffer.position(0);
+                
+                return new StatisticExtractor(slicedBuffer);
             }
         }
         
-        static long seekToStart(long startPosition, ByteBuffer buffer) {
-            long skippedBytes = 0;
-            if (startPosition != 0) {
-                while (buffer.hasRemaining()) {
-                    byte b = buffer.get();
-                    skippedBytes++;
-                    if (b == '\n')
-                        break;
-                }
+        static long seekStartPosition(ByteBuffer buffer, long startPosition) {
+            if (startPosition == 0)
+                return 0;
+            
+            var start = buffer.position();
+            findNewLine(buffer);
+            
+            return buffer.position() - start;
+        }
+        
+        static int seekEndPosition(ByteBuffer buffer, long boundarySize) {
+            if (boundarySize > buffer.limit())
+                return buffer.limit();
+            
+            buffer.position((int)boundarySize);
+            findNewLine(buffer);
+            
+            return buffer.position();
+        }
+        
+        private static final void findNewLine(ByteBuffer buffer) {
+            while (buffer.hasRemaining()) {
+                if (buffer.get() == '\n')
+                    return;
             }
-            return skippedBytes;
         }
         
         Statistic extract() throws IOException {
-            var statistic         = new Statistic(extractorName, false);
-            var stationNameBuffer = new StationName();
-            var temperatureBuffer = new TemperatureBuffer();
-            var startPosition     = buffer.position();
-            var stopPosition      = startPosition + boundarySize;
-            while (buffer.hasRemaining() && (buffer.position() <= stopPosition)) {
-                stationNameBuffer.readFrom(buffer);
-                temperatureBuffer.readFrom(buffer);
+            var statistic   = new Statistic(1, false);
+            var stationName = new StationName();
+            var temperature = new TemperatureBuffer();
+            while (buffer.hasRemaining()) {
+                stationName.readFrom(buffer);
+                temperature.readFrom(buffer);
                 
-                var station = statistic.computeIfAbsent(stationNameBuffer, StationStatistic::new);
-                station.add(temperatureBuffer.temperatureTimesTen);
+                var station = statistic.computeIfAbsent(stationName, StationStatistic::new);
+                station.add(temperature.temperatureTimesTen);
                 
-                if (station.stationName == stationNameBuffer) {
+                var isFirstOfKind = station.stationName == stationName;
+                if (isFirstOfKind) {
                     // Add to station queue so that we can assign ID to it to make the merge much faster.
                     stationNameQueue.add(station.stationName);
                     
                     // The buffer is not reusable once it is used in the map, so we need to create a new one.
-                    stationNameBuffer = new StationName();
+                    stationName = new StationName();
                 }
             }
             return statistic;
@@ -337,7 +338,7 @@ public class CalculateAverage_nawaman {
         
         var filePath   = "measurements.txt";
         var cpuCount   = Runtime.getRuntime().availableProcessors();
-        var chunkCount = 8 * cpuCount;
+        var chunkCount = 32 * cpuCount;
         
         var executor   = newVirtualThreadPerTaskExecutor();
         var statistics = new LinkedBlockingQueue<Statistic>();
@@ -345,7 +346,7 @@ public class CalculateAverage_nawaman {
         var thread = new Thread(() -> assignStationNameId());
         thread.start();
         
-        for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> statistics.add(statistic))) {
+        for (var extractionTask : extractionTasks(filePath, chunkCount, statistics::add)) {
             executor.submit(extractionTask);
         }
         
@@ -354,7 +355,7 @@ public class CalculateAverage_nawaman {
             statistic = statistics.take();
             
             var lastInQueue      = statistics.size() == 0;
-            var includeAllChunks = statistic.chunkNames.size() == chunkCount;
+            var includeAllChunks = statistic.chunkCount == chunkCount;
             var isLastStatistic  =  lastInQueue && includeAllChunks;
             if (isLastStatistic) {
                 break;
@@ -371,23 +372,6 @@ public class CalculateAverage_nawaman {
         System.out.println(statistic.sorted());
         
         System.out.println("Time: " + (System.currentTimeMillis() - startTime) + "ms");
-    }
-    
-    private static void assignStationNameId() {
-        try {
-            while(true) {
-                var stationName = stationNameQueue.poll();
-                if (stationName == null) {
-                    Thread.sleep(1);
-                    continue;
-                }
-                
-                stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
-                    return random.nextInt(0, Integer.MAX_VALUE);
-                });
-            }
-        } catch (InterruptedException e) {
-        }
     }
     
     private static void useValidateToStringIfSpecified(String[] args) {
@@ -414,10 +398,9 @@ public class CalculateAverage_nawaman {
     }
     
     static void extractionTask(String filePath, int chunkIndex, long chunkSize, Consumer<Statistic> accepter) {
-        var position  = chunkIndex*chunkSize;
-        var chunkName = "Chunk-" + chunkIndex;
+        var position= chunkIndex*chunkSize;
         try {
-            var extractor = StatisticExtractor.create(chunkName, filePath, position, chunkSize);
+            var extractor = StatisticExtractor.create(filePath, position, chunkSize);
             var statistic = extractor.extract();
             accepter.accept(statistic);
         } catch (IOException e) {
@@ -434,6 +417,23 @@ public class CalculateAverage_nawaman {
         } catch (IOException e) {
             var message = "Panic: Failed to get file size! filePath=%s".formatted(filePath);
             throw new Error(message, e);
+        }
+    }
+    
+    static void assignStationNameId() {
+        try {
+            while(true) {
+                var stationName = stationNameQueue.poll();
+                if (stationName == null) {
+                    Thread.sleep(0);
+                    continue;
+                }
+                
+                stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
+                    return random.nextInt(0, Integer.MAX_VALUE);
+                });
+            }
+        } catch (InterruptedException e) {
         }
     }
     
