@@ -11,6 +11,7 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,10 +56,6 @@ public class CalculateAverage_nawaman {
     };
     
     static Function<StationStatistic, String> stationStatisticToString = defaultToString;
-    
-    private static final Random                                  random           = new Random();
-    private static final ConcurrentHashMap<StationName, Integer> stationNameIds   = new ConcurrentHashMap<>();
-    private static final ConcurrentLinkedQueue<StationName>      stationNameQueue = new ConcurrentLinkedQueue<>();
     
     static class StationName implements Comparable<StationName> {
         
@@ -131,6 +128,38 @@ public class CalculateAverage_nawaman {
         public int compareTo(StationName o) {
             // Avoid handling sorting of UTF-8 characters myself so convert it to string.
             return this.toString().compareTo(o.toString());
+        }
+    }
+    
+    static class StationNames implements Runnable {
+        private final Random random = new Random();
+        
+        private final Map<StationName, Integer> stationNameIds   = new ConcurrentHashMap<>();
+        private final Queue<StationName>        stationNameQueue = new ConcurrentLinkedQueue<>();
+        
+        void add(StationName stationName) {
+            stationNameQueue.add(stationName);
+        }
+        
+        public void run() {
+            assignStationNameId();
+        }
+        
+        void assignStationNameId() {
+            try {
+                while (true) {
+                    var stationName = stationNameQueue.poll();
+                    if (stationName == null) {
+                        Thread.sleep(0);
+                        continue;
+                    }
+                    
+                    stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
+                        return random.nextInt(0, Integer.MAX_VALUE);
+                    });
+                }
+            } catch (InterruptedException e) {
+            }
         }
     }
     
@@ -307,7 +336,7 @@ public class CalculateAverage_nawaman {
             }
         }
         
-        Statistic extract() throws IOException {
+        Statistic extract(StationNames names) throws IOException {
             var statistic   = new Statistic(1, false);
             var stationName = new StationName();
             var temperature = new TemperatureBuffer();
@@ -321,7 +350,7 @@ public class CalculateAverage_nawaman {
                 var isFirstOfKind = station.stationName == stationName;
                 if (isFirstOfKind) {
                     // Add to station queue so that we can assign ID to it to make the merge much faster.
-                    stationNameQueue.add(station.stationName);
+                    names.add(station.stationName);
                     
                     // The buffer is not reusable once it is used in the map, so we need to create a new one.
                     stationName = new StationName();
@@ -343,10 +372,11 @@ public class CalculateAverage_nawaman {
         var executor   = newVirtualThreadPerTaskExecutor();
         var statistics = new LinkedBlockingQueue<Statistic>();
         
-        var thread = new Thread(() -> assignStationNameId());
-        thread.start();
+        var stationNames = new StationNames();
+        var nameAssigner = new Thread(stationNames);
+        nameAssigner.start();
         
-        for (var extractionTask : extractionTasks(filePath, chunkCount, statistics::add)) {
+        for (var extractionTask : extractionTasks(stationNames, filePath, chunkCount, statistics::add)) {
             executor.submit(extractionTask);
         }
         
@@ -366,7 +396,7 @@ public class CalculateAverage_nawaman {
             executor.submit(() -> statistics.add(baseStatistic.absorb(otherStatistic)));
         }
         
-        thread.interrupt();
+        nameAssigner.interrupt();
         executor.shutdownNow();
         
         System.out.println(statistic.sorted());
@@ -384,7 +414,7 @@ public class CalculateAverage_nawaman {
         }
     }
     
-    static Runnable[] extractionTasks(String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
+    static Runnable[] extractionTasks(StationNames names, String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
         long fileSize  = fileSize(filePath);
         long chunkSize = (fileSize / chunkCount) + 1; // Add some buffer to ensure that the entire file is covered.
                                                       // Java round integer division down so the sum of each might be
@@ -392,16 +422,16 @@ public class CalculateAverage_nawaman {
         var runnables = new Runnable[chunkCount];
         for (int i = 0; i < chunkCount; i++) {
             int cpuIndex  = i;
-            runnables[i] = (() -> extractionTask(filePath, cpuIndex, chunkSize, resultAccepter));
+            runnables[i] = (() -> extractionTask(names, filePath, cpuIndex, chunkSize, resultAccepter));
         }
         return runnables;
     }
     
-    static void extractionTask(String filePath, int chunkIndex, long chunkSize, Consumer<Statistic> accepter) {
+    static void extractionTask(StationNames names, String filePath, int chunkIndex, long chunkSize, Consumer<Statistic> accepter) {
         var position= chunkIndex*chunkSize;
         try {
             var extractor = StatisticExtractor.create(filePath, position, chunkSize);
-            var statistic = extractor.extract();
+            var statistic = extractor.extract(names);
             accepter.accept(statistic);
         } catch (IOException e) {
             var message
@@ -417,23 +447,6 @@ public class CalculateAverage_nawaman {
         } catch (IOException e) {
             var message = "Panic: Failed to get file size! filePath=%s".formatted(filePath);
             throw new Error(message, e);
-        }
-    }
-    
-    static void assignStationNameId() {
-        try {
-            while(true) {
-                var stationName = stationNameQueue.poll();
-                if (stationName == null) {
-                    Thread.sleep(0);
-                    continue;
-                }
-                
-                stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
-                    return random.nextInt(0, Integer.MAX_VALUE);
-                });
-            }
-        } catch (InterruptedException e) {
         }
     }
     
