@@ -66,14 +66,14 @@
 	}
 </style>
 
-<Box expanded={isI9Expanded} width={315} height={319} onClick={toggleI9Expand}>
-    <img class="result-img" src="i9-Results.png" alt="i9 Results" width="315px" height="319px"/>
+<Box expanded={isI9Expanded} width={453} height={371} onClick={toggleI9Expand}>
+    <img class="result-img" src="i9-Results.png" alt="i9 Results" width="453px" height="371px"/>
 </Box>
-<Box expanded={isM6Expanded} width={315} height={319} onClick={toggleM6Expand}>
-    <img class="result-img" src="m6-Results.png" alt="m6 Results" width="315px" height="319px"/>
+<Box expanded={isM6Expanded} width={465} height={347} onClick={toggleM6Expand}>
+    <img class="result-img" src="m6-Results.png" alt="m6 Results" width="465px" height="347px"/>
 </Box>
 <Box expanded={isCodeExpanded} width={1000} height={600} linkText="View on GitHub" linkUrl="https://github.com/NawaMan/OneBRC/blob/main/src/onebrc/CalculateAverage_nawaman.java">
-	<JavaCode javaCode={data.text} revealLines={[[36, [328, [315, [305]]]]]} width="1000px" height="600px" />
+	<JavaCode javaCode={data.text} revealLines={[[39, [363, 379, 384, 390, [1]]]]} width="1000px" height="600px" />
 </Box>
 
 <ContentPage title="Results">
@@ -83,13 +83,13 @@
 			<td class="left">
 				<div class="result r-i9" on:click={toggleI9Expand} on:keydown={toggleI9Expand} role="button" tabindex="-1">
 					<div>i9 13Gen (32 vCPU) - 128GB</div>
-					<div><b>2.1507</b> seconds</div>
+					<div><b>1.8</b> seconds</div>
 				</div>
 			</td>
 			<td class="right">
 				<div class="result r-m6a" on:click={toggleM6Expand} on:keydown={toggleM6Expand} role="button" tabindex="-1">
 					<div>m6a.8xlarge (32 vCPU) - 128GB</div>
-					<div><b>3.215</b> seconds</div>
+					<div><b>3.003</b> seconds</div>
 				</div>
 			</td>
 		</tr>

@@ -3,7 +3,7 @@ package onebrc;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.nio.file.StandardOpenOption.READ;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -11,13 +11,15 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
+import java.util.Queue;
+import java.util.Random;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * One-Billion Row Challenge solution by NawaMan.
@@ -36,6 +38,25 @@ import java.util.function.Function;
  */
 public class CalculateAverage_nawaman {
     
+    static double round(double value) {
+        return Math.round(value * 10.0) / 10.0;
+    }
+    
+    static Function<StationStatistic, String> defaultToString = statisic -> {
+        return round(statisic.min                            / 10.0) + "/"
+                + round((round(statisic.sum)/statisic.count) / 10.0) + "/"
+                + round(statisic.max                         / 10.0);
+    };
+    
+    static Function<StationStatistic, String> validateToString = statisic -> {
+        return round(statisic.min   / 10.0) + "/"
+             + round(statisic.sum   / 10.0) + "/"
+             + round(statisic.count /  1.0) + "/"
+             + round(statisic.max   / 10.0);
+    };
+    
+    static Function<StationStatistic, String> stationStatisticToString = defaultToString;
+    
     static class StationName implements Comparable<StationName> {
         
         static final int NAME_BUFFER_SIZE = 128;
@@ -43,6 +64,7 @@ public class CalculateAverage_nawaman {
         private byte[] bytes = new byte[NAME_BUFFER_SIZE];
         private int    length;
         private int    hash;
+        private int    id = -1;
         
         private volatile String toString = null;
         
@@ -57,7 +79,7 @@ public class CalculateAverage_nawaman {
                 if (b == ';')
                     break;
                 bytes[nameIndex++] = b;
-                nameHash = (nameHash << 5) - nameHash + b;  // nameHash*31 + b
+                nameHash = (nameHash << 6) - nameHash + b;  // nameHash*31 + b
             }
             
             this.bytes  = bytes;
@@ -84,6 +106,9 @@ public class CalculateAverage_nawaman {
             if (hash != other.hash)
                 return false;
             
+            if (id != -1 && other.id != -1)
+                return id == other.id;
+            
             return Arrays.equals(bytes, 0, length, other.bytes, 0, length);
         }
         
@@ -103,6 +128,38 @@ public class CalculateAverage_nawaman {
         public int compareTo(StationName o) {
             // Avoid handling sorting of UTF-8 characters myself so convert it to string.
             return this.toString().compareTo(o.toString());
+        }
+    }
+    
+    static class StationNames implements Runnable {
+        private final Random random = new Random();
+        
+        private final Map<StationName, Integer> stationNameIds   = new ConcurrentHashMap<>();
+        private final Queue<StationName>        stationNameQueue = new ConcurrentLinkedQueue<>();
+        
+        void add(StationName stationName) {
+            stationNameQueue.add(stationName);
+        }
+        
+        public void run() {
+            assignStationNameId();
+        }
+        
+        void assignStationNameId() {
+            try {
+                while (true) {
+                    var stationName = stationNameQueue.poll();
+                    if (stationName == null) {
+                        Thread.sleep(0);
+                        continue;
+                    }
+                    
+                    stationName.id = stationNameIds.computeIfAbsent(stationName, (name) -> {
+                        return random.nextInt(0, Integer.MAX_VALUE);
+                    });
+                }
+            } catch (InterruptedException e) {
+            }
         }
     }
     
@@ -150,17 +207,13 @@ public class CalculateAverage_nawaman {
         long        sum   = 0;
         long        count = 0;
         
-        static double round(double value) {
-            return Math.round(value * 10.0) / 10.0;
-        }
-        
         StationStatistic(StationName stationName) {
             this.stationName = stationName;
         }
         
         void add(int temperatureTimesTen) {
-            min = min(min, temperatureTimesTen);
-            max = max(max, temperatureTimesTen);
+            min  = min(min, temperatureTimesTen);
+            max  = max(max, temperatureTimesTen);
             sum += temperatureTimesTen;
             count++;
         }
@@ -174,10 +227,7 @@ public class CalculateAverage_nawaman {
         
         @Override
         public String toString() {
-            // This is copied from the baseline so that the rounding is the same.
-            return round(min                / 10.0) + "/"
-                 + round((round(sum)/count) / 10.0) + "/"
-                 + round(max                / 10.0);
+            return stationStatisticToString.apply(this);
         }
     }
     
@@ -186,14 +236,11 @@ public class CalculateAverage_nawaman {
         // The max station name is 10,000 but we can start smaller as each extractor only do part of it.
         static final int STATISTIC_MAP_SIZE = 1024;
         
-        final Set<String>                        chunkNames = new TreeSet<String>();
+        int chunkCount = 0;
         final Map<StationName, StationStatistic> stationStatistics;
         
-        Statistic(String name, boolean isSorted) {
-            if (name != null) {
-                chunkNames.add(name);
-            }
-            
+        Statistic(int chunkCount, boolean isSorted) {
+            this.chunkCount = chunkCount;
             stationStatistics = isSorted
                         ? new TreeMap<StationName, StationStatistic>()
                         : new ConcurrentHashMap<StationName, StationStatistic>(STATISTIC_MAP_SIZE);
@@ -203,34 +250,22 @@ public class CalculateAverage_nawaman {
             return stationStatistics.computeIfAbsent(stationName, mappingFunction);
         }
         
-        StationStatistic getStationStatistic(StationName stationName) {
-            return stationStatistics.get(stationName);
-        }
-        
-        void setStationStatistic(StationStatistic stationStatistic) {
-            stationStatistics.put(stationStatistic.stationName, stationStatistic);
-        }
-        
         Statistic absorb(Statistic other) {
-            chunkNames.addAll(other.chunkNames);
-            for (var entry : other.stationStatistics.entrySet()) {
-                var name       = entry.getKey();
-                var newStation = entry.getValue();
+            chunkCount += other.chunkCount;
+            other.stationStatistics.forEach((name, otherStation) -> {
                 stationStatistics.compute(name, (k, station) -> {
                     if (station == null) {
-                        return newStation;
+                        return otherStation;
                     }
-                    station.include(newStation);
+                    station.include(otherStation);
                     return station;
                 });
-            }
+            });
             return this;
         }
         
         Statistic sorted() {
-            return (stationStatistics instanceof TreeMap)
-                    ? this
-                    : new Statistic(null, true).absorb(this);
+            return new Statistic(0, true).absorb(this);
         }
         
         @Override
@@ -240,15 +275,15 @@ public class CalculateAverage_nawaman {
         
     }
     
-    static record StatisticExtractor(String extractorName, ByteBuffer buffer, long boundarySize) {
+    static record StatisticExtractor(ByteBuffer buffer) {
         
-        static StatisticExtractor create(String name, String filePath, long start, long size) throws IOException {
+        static StatisticExtractor create(String filePath, long start, long estimatedSize) throws IOException {
             try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
                 // Read a bit longer on the end to ensure that the last line is included.
                 // Since the name of the station is at most 100 bytes, 300 extra bytes are read.
                 // This because, there can be up to 100+ from the previous and 100+ extended into the next part.
                 var tailMargin = 300L;
-                var sizeToRead = size + tailMargin;
+                var sizeToRead = estimatedSize + tailMargin;
                 
                 // Get one more byte in the front to check if the newline char is at the beginning of a line.
                 // Without this, we do not know if the first read bytes are part of the previous extract
@@ -260,42 +295,65 @@ public class CalculateAverage_nawaman {
                 var lastPosition = channel.size();
                 var endPosition  = min(start + sizeToRead, lastPosition);
                 var mapSize      = endPosition - startPosition;
-                var buffer       = channel.map(FileChannel.MapMode.READ_ONLY, startPosition, mapSize);
-                var skippedBytes = seekToStart(startPosition, buffer);
-                var boundarySize = size - skippedBytes;
-                return new StatisticExtractor(name, buffer, boundarySize);
+                var mappedBuffer = channel.map(FileChannel.MapMode.READ_ONLY, startPosition, mapSize);
+                
+                var chunkStart = seekStartPosition(mappedBuffer, startPosition);
+                var chunkEnd   = seekEndPosition(mappedBuffer, estimatedSize);
+                
+                mappedBuffer.position((int)chunkStart);
+                mappedBuffer.limit   ((int)chunkEnd);
+                var slicedBuffer = mappedBuffer.slice();
+                slicedBuffer.position(0);
+                
+                return new StatisticExtractor(slicedBuffer);
             }
         }
         
-        static long seekToStart(long startPosition, ByteBuffer buffer) {
-            long skippedBytes = 0;
-            if (startPosition != 0) {
-                while (buffer.hasRemaining()) {
-                    byte b = buffer.get();
-                    skippedBytes++;
-                    if (b == '\n')
-                        break;
-                }
-            }
-            return skippedBytes;
+        static long seekStartPosition(ByteBuffer buffer, long startPosition) {
+            if (startPosition == 0)
+                return 0;
+            
+            var start = buffer.position();
+            findNewLine(buffer);
+            
+            return buffer.position() - start;
         }
         
-        Statistic extract() throws IOException {
-            var statistic         = new Statistic(extractorName, false);
-            var stationNameBuffer = new StationName();
-            var temperatureBuffer = new TemperatureBuffer();
-            var startPosition     = buffer.position();
-            var stopPosition      = startPosition + boundarySize;
-            while (buffer.hasRemaining() && (buffer.position() <= stopPosition)) {
-                stationNameBuffer.readFrom(buffer);
-                temperatureBuffer.readFrom(buffer);
+        static int seekEndPosition(ByteBuffer buffer, long boundarySize) {
+            if (boundarySize > buffer.limit())
+                return buffer.limit();
+            
+            buffer.position((int)boundarySize);
+            findNewLine(buffer);
+            
+            return buffer.position();
+        }
+        
+        private static final void findNewLine(ByteBuffer buffer) {
+            while (buffer.hasRemaining()) {
+                if (buffer.get() == '\n')
+                    return;
+            }
+        }
+        
+        Statistic extract(StationNames names) throws IOException {
+            var statistic   = new Statistic(1, false);
+            var stationName = new StationName();
+            var temperature = new TemperatureBuffer();
+            while (buffer.hasRemaining()) {
+                stationName.readFrom(buffer);
+                temperature.readFrom(buffer);
                 
-                var station = statistic.computeIfAbsent(stationNameBuffer, StationStatistic::new);
-                station.add(temperatureBuffer.temperatureTimesTen);
+                var station = statistic.computeIfAbsent(stationName, StationStatistic::new);
+                station.add(temperature.temperatureTimesTen);
                 
-                // The buffer is not reusable once it is used in the map, so we need to create a new one.
-                if (station.stationName == stationNameBuffer) {
-                    stationNameBuffer = new StationName();
+                var isFirstOfKind = station.stationName == stationName;
+                if (isFirstOfKind) {
+                    // Add to station queue so that we can assign ID to it to make the merge much faster.
+                    names.add(station.stationName);
+                    
+                    // The buffer is not reusable once it is used in the map, so we need to create a new one.
+                    stationName = new StationName();
                 }
             }
             return statistic;
@@ -303,16 +361,22 @@ public class CalculateAverage_nawaman {
     }
     
     public static void main(String[] args) throws InterruptedException {
+        useValidateToStringIfSpecified(args);
+        
         var startTime = System.currentTimeMillis();
         
         var filePath   = "measurements.txt";
         var cpuCount   = Runtime.getRuntime().availableProcessors();
-        var chunkCount = cpuCount;
+        var chunkCount = 32 * cpuCount;
         
-        var executor   = newFixedThreadPool(cpuCount);
+        var executor   = newVirtualThreadPerTaskExecutor();
         var statistics = new LinkedBlockingQueue<Statistic>();
         
-        for (var extractionTask : extractionTasks(filePath, chunkCount, (statistic) -> statistics.add(statistic))) {
+        var stationNames = new StationNames();
+        var nameAssigner = new Thread(stationNames);
+        nameAssigner.start();
+        
+        for (var extractionTask : extractionTasks(stationNames, filePath, chunkCount, statistics::add)) {
             executor.submit(extractionTask);
         }
         
@@ -321,7 +385,7 @@ public class CalculateAverage_nawaman {
             statistic = statistics.take();
             
             var lastInQueue      = statistics.size() == 0;
-            var includeAllChunks = statistic.chunkNames.size() == chunkCount;
+            var includeAllChunks = statistic.chunkCount == chunkCount;
             var isLastStatistic  =  lastInQueue && includeAllChunks;
             if (isLastStatistic) {
                 break;
@@ -331,16 +395,26 @@ public class CalculateAverage_nawaman {
             var otherStatistic = statistics.take();
             executor.submit(() -> statistics.add(baseStatistic.absorb(otherStatistic)));
         }
+        
+        nameAssigner.interrupt();
         executor.shutdownNow();
         
         System.out.println(statistic.sorted());
-        executor.shutdownNow();
         
-        var endTime = System.currentTimeMillis();
-        System.out.println("Time: " + (endTime - startTime) + "ms");
+        System.out.println("Time: " + (System.currentTimeMillis() - startTime) + "ms");
     }
     
-    static Runnable[] extractionTasks(String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
+    private static void useValidateToStringIfSpecified(String[] args) {
+        if (args.length > 0) {
+            Stream.of(args).forEach(arg -> {
+                if (arg.equals("--validate")) {
+                    stationStatisticToString = validateToString;
+                }
+            });
+        }
+    }
+    
+    static Runnable[] extractionTasks(StationNames names, String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
         long fileSize  = fileSize(filePath);
         long chunkSize = (fileSize / chunkCount) + 1; // Add some buffer to ensure that the entire file is covered.
                                                       // Java round integer division down so the sum of each might be
@@ -348,17 +422,16 @@ public class CalculateAverage_nawaman {
         var runnables = new Runnable[chunkCount];
         for (int i = 0; i < chunkCount; i++) {
             int cpuIndex  = i;
-            runnables[i] = (() -> extractionTask(filePath, cpuIndex, chunkSize, resultAccepter));
+            runnables[i] = (() -> extractionTask(names, filePath, cpuIndex, chunkSize, resultAccepter));
         }
         return runnables;
     }
     
-    static void extractionTask(String filePath, int chunkIndex, long chunkSize, Consumer<Statistic> accepter) {
-        var position  = chunkIndex*chunkSize;
-        var chunkName = "Chunk-" + chunkIndex;
+    static void extractionTask(StationNames names, String filePath, int chunkIndex, long chunkSize, Consumer<Statistic> accepter) {
+        var position= chunkIndex*chunkSize;
         try {
-            var extractor = StatisticExtractor.create(chunkName, filePath, position, chunkSize);
-            var statistic = extractor.extract();
+            var extractor = StatisticExtractor.create(filePath, position, chunkSize);
+            var statistic = extractor.extract(names);
             accepter.accept(statistic);
         } catch (IOException e) {
             var message
@@ -372,8 +445,9 @@ public class CalculateAverage_nawaman {
         try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
             return channel.size();
         } catch (IOException e) {
-            var message = "Panic: Failed to get file size! filePath=%d".formatted(filePath);
+            var message = "Panic: Failed to get file size! filePath=%s".formatted(filePath);
             throw new Error(message, e);
         }
     }
+    
 }
