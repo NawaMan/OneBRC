@@ -1,15 +1,10 @@
 <script lang="ts">
-	import { scaleMode } from '$lib/stores/scaleMode';
-
-	function toggleScale() {
-		scaleMode.update((current) => !current);
-	}
 </script>
 
 <div class="copyright">
 	<span class="text">© NawaNawa 2024</span>
 	<span class="hover-text"
-		><a href="https://nawaman.net/contact.html"
+		><a href="https://nawaman.net/contact.html" target="_blank"
 			>Copyright <b>NawaNawa &lt;contact@nawaman.net&gt;</b> 2024</a
 		></span
 	>

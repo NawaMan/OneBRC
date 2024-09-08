@@ -5,6 +5,7 @@
     export let hoverText  = '';
 	export let isSelected = false;
 	export let isDisabled = false;
+	export let isVisible  = true;
 
 	onMount(() => {
 		if (!hoverText) {
@@ -54,12 +55,15 @@
 	button .hover-text {
 		display: none;
 	}
-	button:hover .hover-text,
-	button.selected .hover-text {
+	button:hover:not(button.hidden) .hover-text,
+	button.selected:not(button.hidden) .hover-text {
 		display: inline;
 	}
-	button:hover .text,
+	button:hover    .text,
 	button.selected .text {
+		display: none;
+	}
+	button.hidden {
 		display: none;
 	}
 </style>
@@ -67,6 +71,7 @@
 <button 
 	disabled={isDisabled} 
 	class:selected={isSelected} 
+	class:hidden={!isVisible}
 	on:click>
 	<span class="text"      >{text}</span>
 	<span class="hover-text">{hoverText}</span>

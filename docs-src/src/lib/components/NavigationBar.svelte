@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { browser } from '$app/environment';
-	import CtrlBtn from './CtrlBtn.svelte';
+	import { browser }            from '$app/environment';
+	import CtrlBtn                from './CtrlBtn.svelte';
 
 	export let firstLink = '/';
-	export let prevLink = '';
-	export let nextLink = '';
-	export let lastLink = '/challenge.html';
+	export let prevLink  = '';
+	export let nextLink  = '';
+	export let lastLink  = '/solution-overview.html';
 	export let onContinue: (() => void) | null = null;
 
 	$: onFirst = () => firstLink && (window.location.href = firstLink);
@@ -50,7 +50,7 @@
 <div class="nav no-print">
 	<CtrlBtn text="FIRST"    on:click={onFirst}    isDisabled={!firstLink} />
 	<CtrlBtn text="PREV"     on:click={onPrev}     isDisabled={!prevLink} />
-	<CtrlBtn text="CONTINUE" on:click={onContinue} isDisabled={!onContinue} />
+	<CtrlBtn text="CONTINUE" on:click={onContinue} isDisabled={!onContinue} isVisible={false} />
 	<CtrlBtn text="NEXT"     on:click={onNext}     isDisabled={!nextLink} />
 	<CtrlBtn text="LAST"     on:click={onLast}     isDisabled={!lastLink}/>
 </div>
