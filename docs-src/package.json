@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
-		"build": "cp ../src/onebrc/CalculateAverage_nawaman.java static && vite build",
+		"build": "cp ../src/onebrc/CalculateAverage_nawaman.java static && vite build && rm -Rf ../docs && mv docs ../docs",
 		"preview": "vite preview",
         "deploy": "pnpm build && pnpx gh-pages -d ../docs -t true",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
