@@ -84,6 +84,6 @@
 	<img class="glasses" src="ThugLifeGlasses.png" alt="Glasses" />
 </ContentPage>
 <NavigationBar
-	prevLink="/overview.html"
-	nextLink="/results.html"
+	prevLink="./overview.html"
+	nextLink="./results.html"
 />

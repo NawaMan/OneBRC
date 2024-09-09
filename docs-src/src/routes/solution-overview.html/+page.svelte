@@ -281,7 +281,7 @@
 		</svg>
 	</WideDiv>
 </ContentPage>
-<NavigationBar prevLink="/challenge.html" />
+<NavigationBar prevLink="./challenge.html" />
 <Hint text="{hint}" />
 
 <style>
