@@ -1,4 +1,16 @@
 <script>
+	if (typeof window !== 'undefined') {
+		window.location.href = './presentation/index.html';
+	}
+</script>
+  
+<!-- You can still render content if needed -->
+<div>
+	<h1>This page will redirect to index.html</h1>
+</div>
+  
+
+<!-- <script>
 </script>
 
 <div id="background">
@@ -22,4 +34,4 @@
 		margin-left: auto;
 		margin-right: auto;
 	}
-</style>
+</style> -->
