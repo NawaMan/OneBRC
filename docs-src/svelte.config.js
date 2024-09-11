@@ -9,7 +9,9 @@ export default {
 		adapter: adapter({
 			pages: 'docs',
 			assets: 'docs',
-			fallback: 'index.html'
+			fallback: 'index.html',
+			strict: false,
+			precompress: true
 		}),
 		paths: {
 			base: '/OneBRC',
