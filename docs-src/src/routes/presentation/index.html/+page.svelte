@@ -3,9 +3,6 @@
 	import TitlePage from "$lib/templates/TitlePage.svelte";
 </script>
 
-<style>
-</style>
-
 <TitlePage>
 	<span slot="title"      >One Billion Row Challenge</span>
 	<span slot="subtitle"   >NawaMan's Java Solution</span>
@@ -14,3 +11,6 @@
 <NavigationBar
 	nextLink="./overview.html"
 />
+
+<style>
+</style>

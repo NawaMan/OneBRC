@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '$lib/styles/global.css';
+	import '$lib/styles/presentation.css';
 	import '$lib/styles/tooltip.css';
 	import { browser }    from '$app/environment';
 	import { onMount }    from 'svelte';
@@ -9,10 +10,10 @@
 	import SizeMode       from '$lib/components/SizeMode.svelte';
 
 	let container: HTMLElement;
-	let content: HTMLElement;
+	let content:   HTMLElement;
 
-	let isScaled    = $scaleMode;
-	let initialized = false;
+	let   isScaled    = $scaleMode;
+	let   initialized = false;
 	const aspectRatio = 1280 / 720;
 
 	function adjustSize() {
@@ -20,8 +21,8 @@
 			return;
 
 		if (!isScaled) {
-			container.style.width  = '1280px';
-			container.style.height =  '720px';
+			container.style.width   = '1280px';
+			container.style.height  =  '720px';
 			content.style.transform = `scale(1)`;
 			content.style.transformOrigin = 'top left';
 			return;
