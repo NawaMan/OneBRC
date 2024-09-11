@@ -1,7 +1,7 @@
 <script>
 	if (typeof window !== 'undefined') {
 		if (!window.location.pathname.endsWith('.html')) {
-			window.location.href = window.location.pathname + '/index.html';
+			window.location.href = window.location.pathname + 'index.html';
 	  	}
 	}
 </script>
