@@ -1,13 +1,27 @@
 <script>
-	if (typeof window !== 'undefined') {
-		if (!window.location.pathname.endsWith('.html')) {
-			window.location.href = window.location.pathname + 'index.html';
-	  	}
-	}
 </script>
-  
-<!-- You can still render content if needed -->
-<div>
-	<h1>This page will redirect to index.html</h1>
+
+<div id="background">
+	<div id="main">
+		Hello world!
+	</div>
 </div>
-  
+
+<style>
+	#background {
+		background-color: #f0ead2;
+		padding: 0px;
+		margin: 0px;
+		width: 100vw;
+		height: 100vh;
+		display: flex;
+	}
+
+	#main {
+		background-color: #fff;
+		width: 1280px;
+		height: 100px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+</style>

@@ -3,10 +3,10 @@
 	import { browser }            from '$app/environment';
 	import CtrlBtn                from './CtrlBtn.svelte';
 
-	export let firstLink = './index.html';
+	export let firstLink = './onebrc.html';
 	export let prevLink  = '';
 	export let nextLink  = '';
-	export let lastLink  = './presentation/solution.html';
+	export let lastLink  = './solution.html';
 	export let onContinue: (() => void) | null = null;
 
 	$: onFirst = () => firstLink && (window.location.href = firstLink);
