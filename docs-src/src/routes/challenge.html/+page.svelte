@@ -131,5 +131,5 @@
 </ContentPage>
 <NavigationBar
 	prevLink="./results.html"
-	nextLink="./solution-overview.html"
+	nextLink="./solution.html"
 />
