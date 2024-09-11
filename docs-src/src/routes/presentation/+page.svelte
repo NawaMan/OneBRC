@@ -5,8 +5,7 @@
 	  	}
 	}
 </script>
-  
-<!-- You can still render content if needed -->
+
 <div>
 	<h1>This page will redirect to index.html</h1>
 </div>
