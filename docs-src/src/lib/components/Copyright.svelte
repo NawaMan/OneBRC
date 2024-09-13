@@ -2,10 +2,10 @@
 </script>
 
 <div class="copyright">
-	<span class="text">© NawaNawa 2024</span>
+	<span class="text">© NawaMan 2024</span>
 	<span class="hover-text"
 		><a href="https://nawaman.net/contact.html" target="_blank"
-			>Copyright <b>NawaNawa &lt;contact@nawaman.net&gt;</b> 2024</a
+			>Copyright <b>NawaMan &lt;contact@nawaman.net&gt;</b> 2024</a
 		></span
 	>
 </div>
@@ -34,7 +34,8 @@
 	.copyright:hover .hover-text {
 		display: inline;
 		opacity: 1;
-		font-family: 'Playfair Display Regular';
+		font-stretch: expanded;
+		font-family: 'Amatic SC', cursive;
 	}
 
 	.copyright:hover .text {
