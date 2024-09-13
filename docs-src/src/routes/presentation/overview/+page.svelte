@@ -78,6 +78,6 @@
 	</table>
 </ContentPage>
 <NavigationBar
-	prevLink="./onebrc.html"
-	nextLink="./overview-2.html"
+	prevLink="./onebrc"
+	nextLink="./overview-2"
 />

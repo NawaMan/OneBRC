@@ -72,12 +72,12 @@
 	{#if $isContentVisible}
 	<div class="content">
 		<ol>
-			<li><a href="./onebrc.html"    >Title</a></li>
-			<li><a href="./overview.html"  >Overview</a></li>
-			<li><a href="./overview-2.html">Overview (2)</a></li>
-			<li><a href="./results.html"   >Results</a></li>
-			<li><a href="./challenge.html" >One Billion Row Challenge</a></li>
-			<li><a href="./solution.html"  >Solution Overview</a></li>
+			<li><a href="./onebrc"    >Title</a></li>
+			<li><a href="./overview"  >Overview</a></li>
+			<li><a href="./overview-2">Overview (2)</a></li>
+			<li><a href="./results"   >Results</a></li>
+			<li><a href="./challenge" >One Billion Row Challenge</a></li>
+			<li><a href="./solution"  >Solution Overview</a></li>
 		</ol>
 	</div>
 	{/if}

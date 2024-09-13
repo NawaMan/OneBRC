@@ -130,6 +130,6 @@
 	</div>
 </ContentPage>
 <NavigationBar
-	prevLink="./results.html"
-	nextLink="./solution.html"
+	prevLink="./results"
+	nextLink="./solution"
 />

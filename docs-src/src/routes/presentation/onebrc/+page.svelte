@@ -9,7 +9,7 @@
 	<span slot="subsubtitle">(2-3 seconds)</span>
 </TitlePage>
 <NavigationBar
-	nextLink="./overview.html"
+	nextLink="./overview"
 />
 
 <style>

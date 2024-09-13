@@ -305,7 +305,7 @@
 
 	</WideDiv>
 </ContentPage>
-<NavigationBar prevLink="./challenge.html" />
+<NavigationBar prevLink="./challenge" />
 <Hint text="{hint}" />
 
 
