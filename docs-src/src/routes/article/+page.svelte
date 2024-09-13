@@ -3,7 +3,7 @@
 
 <div id="background">
 	<div id="main">
-		<a href="../slides">Slides</a>
+		<a href="../slides/onebrc">Slides</a>
 	</div>
 </div>
 
