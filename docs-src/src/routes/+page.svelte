@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 	if (typeof window !== 'undefined') {
 		window.location.href = (window.location.pathname + '/presentation/onebrc').replaceAll('//', '/');
 	}
@@ -7,9 +7,9 @@
 <div>
 	<h1>This page will be redirect.</h1>
 </div>
-  
+   -->
 
-<!-- <script>
+<script>
 </script>
 
 <div id="background">
@@ -35,4 +35,4 @@
 		margin-left: auto;
 		margin-right: auto;
 	}
-</style> -->
+</style>
