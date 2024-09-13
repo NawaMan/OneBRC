@@ -1,20 +1,9 @@
 <script>
-	if (typeof window !== 'undefined') {
-		window.location.href = (window.location.pathname + '/article').replaceAll('//', '/');
-	}
-</script>
-
-<div>
-	<h1>This page will be redirect.</h1>
-</div>
-  
-<!-- 
-<script>
 </script>
 
 <div id="background">
 	<div id="main">
-		Hello world!
+		<a href="../slides">Slides</a>
 	</div>
 </div>
 
