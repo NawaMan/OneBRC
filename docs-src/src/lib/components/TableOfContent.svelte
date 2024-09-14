@@ -45,10 +45,11 @@
 </script>
 
 <div class="toc no-print" class:expanded={$isContentVisible} bind:this={tocRef}>
-	<CtrlBtn text="ToC" hoverText="Table of Content" on:click={toggleTableOfContent} isSelected={$isContentVisible} />
+	<CtrlBtn text="Table of Content" hoverText="Table of Content" on:click={toggleTableOfContent} isSelected={$isContentVisible} />
 
 	{#if $isContentVisible}
 	<div class="content">
+		<div id="article"><a href="../">View as article</a></div>
 		<ol>
 			<li><a href="./onebrc"    >Title</a></li>
 			<li><a href="./overview"  >Overview</a></li>
@@ -90,8 +91,18 @@
 		padding: 0px;
 	}
 
-	.toc .content ol li a {
+	a {
 		/* cosmetic */
 		text-decoration: none;
+	}
+
+	.toc .content ol li a {
+		/* cosmetic */
+		padding-left: 0.5em;
+		padding-right: 0.5em;
+	}
+	#article:hover,
+	.toc .content ol li:hover {
+		background-color: #ddd;
 	}
 </style>

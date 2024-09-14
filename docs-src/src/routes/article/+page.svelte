@@ -3,7 +3,7 @@
 
 <div id="background">
 	<div id="main">
-		<a href="../slides/onebrc">Slides</a>
+		<a href="../slides/onebrc">View as slides</a>
 	</div>
 </div>
 
@@ -24,4 +24,4 @@
 		margin-left: auto;
 		margin-right: auto;
 	}
-</style> -->
+</style>
