@@ -1,0 +1,1 @@
+import{w as o}from"./index.CgeZsTF7.js";let t=!0;{const e=localStorage.getItem("scaleMode");e!==null?t=e==="true":localStorage.setItem("scaleMode","true")}const l=o(t);l.subscribe(e=>{localStorage.setItem("scaleMode",e.toString())});export{l as s};

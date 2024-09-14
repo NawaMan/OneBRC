@@ -39,7 +39,7 @@
 			container.style.width = 'calc(100vw - 10px)';
 			container.style.height = `${Math.round(container.offsetWidth / aspectRatio)}px`;
 		}
-		let scale = (container.offsetWidth - 10) / 1280.0;
+		let scale = (container.offsetWidth - 30) / 1280.0;
 		content.style.transform = `scale(${scale})`;
 		content.style.transformOrigin = 'top left';
 	}

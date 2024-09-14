@@ -1,6 +1,12 @@
 <script lang="ts">
 	import CtrlBtn from './CtrlBtn.svelte';
 	import { scaleMode } from '$lib/stores/scaleMode';
+	import { get } from 'svelte/store';
+
+	let isFixed = get(scaleMode);
+	scaleMode.subscribe(value => {
+		isFixed = value;
+	});
 
 	function toggleScale() {
 		scaleMode.update(current => !current);
@@ -18,5 +24,5 @@
 </style>
 
 <div class="mode no-print">
-	<CtrlBtn text="M" hoverText="MODE" on:click={toggleScale} />
+	<CtrlBtn text={isFixed ? 'FIXED' : 'SCALED'} hoverText={isFixed ? 'To SCALED mode' : 'To FIXED mode'}  on:click={toggleScale} />
 </div>

@@ -4,6 +4,7 @@
 	import { writable } from 'svelte/store';
 	import CtrlBtn from './CtrlBtn.svelte';
 
+	let tocRef: HTMLElement;
 	let isContentVisible = writable(false);
 
 	function toggleTableOfContent() {
@@ -22,51 +23,28 @@
 			turnOffTableOfContent();
 		}
 	}
+	function handleClickOutside(event: MouseEvent) {
+		if (tocRef && !tocRef.contains(event.target as Node)) {
+			turnOffTableOfContent();
+		}
+	}
 
 	onMount(() => {
 		if (browser) {
 			window.addEventListener('keydown', handleGlobalKeydown);
+			document.addEventListener('click', handleClickOutside);
 		}
 	});
 
 	onDestroy(() => {
 		if (browser) {
 			window.removeEventListener('keydown', handleGlobalKeydown);
+			document.removeEventListener('click', handleClickOutside);
 		}
 	});
 </script>
 
-<style>
-	.toc {
-		/* functional */
-		position: absolute;
-		top: 0px;
-		left:0px;
-		margin:0px;
-		padding: 0px;
-	}
-
-	.toc .content {
-		/* cosmetic */
-		margin: 0em;
-		padding: 1em;
-		border: 1px solid #ccc;
-		border-radius: 2px;
-		color: #111;
-		background-color: #eee;
-	}
-	.toc .content ol {
-		/* cosmetic */
-		padding-left: 1em;
-		padding-top: 0em;
-	}
-	.toc .content ol li a {
-		/* cosmetic */
-		text-decoration: none;
-	}
-</style>
-
-<div class="toc no-print" class:expanded={$isContentVisible}>
+<div class="toc no-print" class:expanded={$isContentVisible} bind:this={tocRef}>
 	<CtrlBtn text="ToC" hoverText="Table of Content" on:click={toggleTableOfContent} isSelected={$isContentVisible} />
 
 	{#if $isContentVisible}
@@ -82,3 +60,38 @@
 	</div>
 	{/if}
 </div>
+
+<style>
+	.toc {
+		/* functional */
+		position: absolute;
+		top: 0px;
+		left:0px;
+		margin:0px;
+		padding: 0px;
+	}
+
+	.toc .content {
+		/* cosmetic */
+		padding-left: 2em; /* The number will take some space so we have to prepare extra space. */
+		padding-right: 1em;
+		padding-top: 0em;
+		padding-bottom: 0em;
+		margin: 0em;
+		margin-left: 0.2em;
+		border: 1px solid #ccc;
+		border-radius: 2px;
+		color: #111;
+		background-color: #eee;
+	}
+
+	.toc .content ol {
+		/* cosmetic */
+		padding: 0px;
+	}
+
+	.toc .content ol li a {
+		/* cosmetic */
+		text-decoration: none;
+	}
+</style>
