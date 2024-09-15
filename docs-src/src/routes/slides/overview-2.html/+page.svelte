@@ -35,7 +35,7 @@
 	<img class="glasses" src="../ThugLifeGlasses.png" alt="Glasses" />
 </ContentPage>
 <NavigationBar
-	prevLink="./overview"
+	prevLink="./overview.html"
 	nextLink="./results.html"
 />
 
