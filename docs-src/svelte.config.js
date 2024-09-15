@@ -9,7 +9,7 @@ export default {
 		adapter: adapter({
 			pages: 'docs',
 			assets: 'docs',
-			fallback: "index.html",
+			fallback: "article.html",
 			precompress: true
 		})
 	}
