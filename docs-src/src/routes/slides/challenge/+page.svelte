@@ -3,6 +3,70 @@
 	import ContentPage from "$lib/templates/ContentPage.svelte";
 </script>
 
+<ContentPage
+	title="One Billion Row Challenge">
+	<div class="left">
+		<ul>
+			<li>Read a <b>text file</b> containing <b>1 billion rows</b> of measurements.</li>
+			<li>Each line contains a weather <b>station name</b> and <b>temperature</b>:
+				<ul>
+					<li>Rows are delimited by a newline character (<b>'\n'</b>).</li>
+					<li>Station name and temperature are separated by a semicolon.</li>
+					<li>Station name is encoded in <b>UTF-8</b> and is <b>100 bytes</b> or shorter.</li>
+					<li>The temperature ranges from -99.9 to 99.9 (<b>1-2 digits before</b> the decimal point and <b>1 digit after</b>).</li>
+				</ul>
+			</li>
+			<li>Calculate the <b>minimum</b>, <b>maximum</b>, and <b>average</b> temperatures for <b>each station</b>.</li>
+			<li>Print the results in the format of Java <b>sorted-map `toString()`</b>.</li>
+			<li><b>No external dependencies</b>.</li>
+			<li>All source code should be in a <b>single file</b>.</li>
+			<li>Benchmark on a <b>32-core CPU</b> with <b>128 GB RAM</b>.</li>
+		</ul>		
+	</div>
+	<div class="right">
+		<div class="tab">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<line x1="3" y1="4" x2="16" y2="4"/>
+				<line x1="3" y1="8" x2="11" y2="8"/>
+				<line x1="3" y1="12" x2="16" y2="12"/>
+				<line x1="3" y1="16" x2="11" y2="16"/>
+			</svg>
+			measurements.txt
+		</div>
+		<table class="editor">
+			<tr>
+			<td class="linenums">
+				<div>1</div>
+				<div>2</div>
+				<div>3</div>
+				<div>4</div>
+				<div class="blur">455</div>
+				<div class="blur">15,466</div>
+				<div class="blur">1,546,536</div>
+				<div>1,000,000,000</div>
+			</td>
+			<td class="code">
+				<div>Ottawa;14.2</div>
+				<div>Bangkok;44.0</div>
+				<div>Sydney;-2.5</div>
+				<div>Łódź;-20.4</div>
+				<div class="blur">Mercury;-50.7</div>
+				<div class="blur">Mars;-4.7</div>
+				<div class="blur">Venus;84.5</div>
+				<div>Budapest;14.9</div>
+			</td>
+			</tr>
+		</table>
+		<p>
+			File size: <b>13GB</b>
+		</p>
+	</div>
+</ContentPage>
+<NavigationBar
+	prevLink="./results"
+	nextLink="./solution"
+/>
+
 <style>
 	b {
 		color: burlywood;
@@ -69,67 +133,3 @@
 		padding-bottom: 0.0em;
 	}
 </style>
-
-<ContentPage
-	title="One Billion Row Challenge">
-	<div class="left">
-		<ul>
-			<li>Read a <b>text file</b> containing <b>1 billion rows</b> of measurements.</li>
-			<li>Each line contains a weather <b>station name</b> and <b>temperature</b>:
-				<ul>
-					<li>Rows are delimited by a newline character (<b>'\n'</b>).</li>
-					<li>Station name and temperature are separated by a semicolon.</li>
-					<li>Station name is encoded in <b>UTF-8</b> and is <b>100 bytes</b> or shorter.</li>
-					<li>The temperature ranges from -99.9 to 99.9 (<b>1-2 digits before</b> the decimal point and <b>1 digit after</b>).</li>
-				</ul>
-			</li>
-			<li>Calculate the <b>minimum</b>, <b>maximum</b>, and <b>average</b> temperatures for <b>each station</b>.</li>
-			<li>Print the results in the format of Java <b>sorted-map `toString()`</b>.</li>
-			<li><b>No external dependencies</b>.</li>
-			<li>All source code should be in a <b>single file</b>.</li>
-			<li>Benchmark on a <b>32-core CPU</b> with <b>128 GB RAM</b>.</li>
-		</ul>		
-	</div>
-	<div class="right">
-		<div class="tab">
-			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-				<line x1="3" y1="4" x2="16" y2="4"/>
-				<line x1="3" y1="8" x2="11" y2="8"/>
-				<line x1="3" y1="12" x2="16" y2="12"/>
-				<line x1="3" y1="16" x2="11" y2="16"/>
-			</svg>
-			measurements.txt
-		</div>
-		<table class="editor">
-			<tr>
-			<td class="linenums">
-				<div>1</div>
-				<div>2</div>
-				<div>3</div>
-				<div>4</div>
-				<div class="blur">455</div>
-				<div class="blur">15,466</div>
-				<div class="blur">1,546,536</div>
-				<div>1,000,000,000</div>
-			</td>
-			<td class="code">
-				<div>Ottawa;14.2</div>
-				<div>Bangkok;44.0</div>
-				<div>Sydney;-2.5</div>
-				<div>Łódź;-20.4</div>
-				<div class="blur">Mercury;-50.7</div>
-				<div class="blur">Mars;-4.7</div>
-				<div class="blur">Venus;84.5</div>
-				<div>Budapest;14.9</div>
-			</td>
-			</tr>
-		</table>
-		<p>
-			File size: <b>13GB</b>
-		</p>
-	</div>
-</ContentPage>
-<NavigationBar
-	prevLink="./results"
-	nextLink="./solution"
-/>
