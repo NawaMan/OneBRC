@@ -63,7 +63,7 @@
 	</div>
 </ContentPage>
 <NavigationBar
-	prevLink="./results"
+	prevLink="./results.html"
 	nextLink="./solution.html"
 />
 
