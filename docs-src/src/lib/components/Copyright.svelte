@@ -5,7 +5,7 @@
 	<span class="text">© NawaMan 2024</span>
 	<span class="hover-text"
 		><a href="https://nawaman.net/contact.html" target="_blank"
-			>Copyright <b>NawaMan &lt;contact@nawaman.net&gt;</b> 2024</a
+			>Copyright <b>NawaMan &lt;https://nawaman.net/contact.html&gt;</b> 2024</a
 		></span
 	>
 </div>
@@ -17,7 +17,7 @@
 		/* cosmetic */
 		position: absolute;
 		padding-left: 0.5em;
-		padding-right: 0.5em;
+		padding-right: 0px;
 		bottom: 0px;
 		right: 0px;
 		margin-right: 0.5em;

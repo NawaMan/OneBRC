@@ -6,7 +6,7 @@
 	export let firstLink = './onebrc';
 	export let prevLink  = '';
 	export let nextLink  = '';
-	export let lastLink  = './solution';
+	export let lastLink  = './solution.html';
 	export let onContinue: (() => void) | null = null;
 
 	$: onFirst = () => firstLink && (window.location.href = firstLink);

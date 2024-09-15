@@ -68,6 +68,7 @@
 					window.addEventListener('resize', adjustSize);
 				}
 			});
+
 			initialized = true;
 		}
 	});
@@ -91,8 +92,10 @@
 		height: 720px;
 		margin: 0 auto;
 		display: flex;
-		background: #112c63;
-		border: 5px solid #ccc; /* Optional: adds a border to visualize the container */
+		/* background: #112c63; */
+		background: #181818;
+		/* border: 5px solid #ccc; */
+		border: 5px solid #000;
 		position: relative;
 	}
 	.container.scale-mode {
@@ -113,7 +116,8 @@
 		justify-content: center;
 		align-items: center;
 		color: #C0F1FF;
-		background: #112c63;
+		/* background: #112c63; */
+		background: #181818;
 		font-family: 'Noto Sans', 'Cormorant Garamond', serif;
 	}
 </style>

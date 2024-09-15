@@ -64,7 +64,7 @@
 </ContentPage>
 <NavigationBar
 	prevLink="./results"
-	nextLink="./solution"
+	nextLink="./solution.html"
 />
 
 <style>

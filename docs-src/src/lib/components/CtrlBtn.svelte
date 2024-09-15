@@ -25,7 +25,8 @@
 		margin-left: 0.5em;
 		text-justify: center;
 		text-align: center;
-		background-color: #061e30;
+		/* background-color: #061e30; */
+		background: #181818;
 		color: #bbb;
 		font-weight: bold;
 		border: 0px;
