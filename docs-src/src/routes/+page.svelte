@@ -1,20 +1,17 @@
 <script>
-	if (typeof window !== 'undefined') {
-		window.location.href = (window.location.pathname + '/article.html').replaceAll('//', '/');
-	}
-</script>
+	import { onMount } from "svelte";
 
-<div>
-	<h1>This page will be redirect.</h1>
-</div>
-  
-<!-- 
-<script>
+	onMount(() => {
+		document.body.classList.remove('rendering');
+	});
 </script>
 
 <div id="background">
 	<div id="main">
-		Hello world!
+		<div>
+			<div>We have not got a change to write an article for this yet.</div>
+			<div>But we do have <a href="../slides/onebrc.html">presentation slides</a> you might want to check it out.</div>
+		</div>
 	</div>
 </div>
 
@@ -29,10 +26,24 @@
 	}
 
 	#main {
+		color: black;
 		background-color: #fff;
-		width: 1280px;
-		height: 100px;
+		width: calc(100vw*0.8);
+		height: calc(100vh*0.8);
+		margin-top: calc(100vh*0.1);
 		margin-left: auto;
 		margin-right: auto;
+		border-radius: 10px;
+		text-align: center;
+		justify-content: center;
+		align-items: center;
+		display: flex;
+
+		font-size: x-large;
 	}
-</style> -->
+
+	a::before,
+	a::after {
+		content: " ";
+	}
+</style>
