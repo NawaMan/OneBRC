@@ -47,17 +47,26 @@
 	onMount(() => {
 		if (browser) {
 			scaleMode.subscribe(value => {
+				// Flickering fix
+				// For some reason it takes quite a but of time from the statically rendered page to adjust its size.
+				// So page is flickering when it's first loaded and when change pages.
+				// Particularly noticeable when the page is SCALED by default but user set to FIXED.
+				// This is a temporary fix to prevent flickering.
+				// See in the global.css for the 'rendering' class.
+
+
 				isScaled = value;
 
 				window.removeEventListener('resize', adjustSize);
+				// TEMP: Flickering fix
+				document.body.classList.add('rendering');
 				adjustSize();
+				// TEMP: Flickering fix
+				document.body.classList.remove('rendering');
 				if (isScaled) {
 					window.addEventListener('resize', adjustSize);
 				}
 			});
-			setTimeout(function () {
-				adjustSize();
-			}, 0);
 			initialized = true;
 		}
 	});

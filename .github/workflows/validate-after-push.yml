@@ -1,4 +1,4 @@
-name: Validate the calculations after push
+name: Validate the calculations after push and build the documentation
 
 on: [push]
 
@@ -23,3 +23,19 @@ jobs:
     
     - name: Validate NawaMan results with baseline result
       run: ./validate-calculation.sh 1000000
+
+  Build-Documentation:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 9.7.0
+    
+      - name: Build
+        working-directory: ./docs-src
+        run: pnpm install && pnpm build
