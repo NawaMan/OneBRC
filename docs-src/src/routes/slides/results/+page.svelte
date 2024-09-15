@@ -61,7 +61,7 @@
 </ContentPage>
 <NavigationBar
 	prevLink="./overview-2"
-	nextLink="./challenge"
+	nextLink="./challenge.html"
 />
 
 <style>

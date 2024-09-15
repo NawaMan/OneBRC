@@ -72,7 +72,7 @@
 		</div>
 	</WideDiv>
 </ContentPage>
-<NavigationBar prevLink="./challenge" />
+<NavigationBar prevLink="./challenge.html" />
 <Hint text="{hint}" />
 
 <style>

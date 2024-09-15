@@ -55,7 +55,7 @@
 			<li><a href="./overview"  >Overview</a></li>
 			<li><a href="./overview-2">Overview (2)</a></li>
 			<li><a href="./results"   >Results</a></li>
-			<li><a href="./challenge" >One Billion Row Challenge</a></li>
+			<li><a href="./challenge.html" >One Billion Row Challenge</a></li>
 			<li><a href="./solution.html"  >Solution Overview</a></li>
 		</ol>
 	</div>
