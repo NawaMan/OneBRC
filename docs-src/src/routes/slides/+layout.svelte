@@ -53,6 +53,7 @@
 				// Particularly noticeable when the page is SCALED by default but user set to FIXED.
 				// This is a temporary fix to prevent flickering.
 				// See in the global.css for the 'rendering' class.
+				// The real solition is to have the page as a component and outter part stay the same but that would make this a SPA.
 
 
 				isScaled = value;
