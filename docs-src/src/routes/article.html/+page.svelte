@@ -43,7 +43,7 @@
 	}
 
 	a::before,
-	a + *::after {
+	a::after {
 		content: " ";
 	}
 </style>
