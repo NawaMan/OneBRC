@@ -1,6 +1,6 @@
 <script>
 	if (typeof window !== 'undefined') {
-		window.location.href = (window.location.pathname + '/onebrc').replaceAll('//', '/');
+		window.location.href = (window.location.pathname + '/onebrc.html').replaceAll('//', '/');
 	}
 </script>
 

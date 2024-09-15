@@ -35,7 +35,7 @@
 	</table>
 </ContentPage>
 <NavigationBar
-	prevLink="./onebrc"
+	prevLink="./onebrc.html"
 	nextLink="./overview-2.html"
 />
 

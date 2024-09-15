@@ -51,7 +51,7 @@
 	<div class="content">
 		<div id="article"><a href="../">View as article</a></div>
 		<ol>
-			<li><a href="./onebrc"    >Title</a></li>
+			<li><a href="./onebrc.html"    >Title</a></li>
 			<li><a href="./overview.html"  >Overview</a></li>
 			<li><a href="./overview-2.html">Overview (2)</a></li>
 			<li><a href="./results.html"   >Results</a></li>

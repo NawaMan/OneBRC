@@ -3,7 +3,7 @@
 	import { browser }            from '$app/environment';
 	import CtrlBtn                from './CtrlBtn.svelte';
 
-	export let firstLink = './onebrc';
+	export let firstLink = './onebrc.html';
 	export let prevLink  = '';
 	export let nextLink  = '';
 	export let lastLink  = './solution.html';
