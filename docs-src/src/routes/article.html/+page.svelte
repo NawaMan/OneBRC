@@ -26,6 +26,7 @@
 	}
 
 	#main {
+		color: black;
 		background-color: #fff;
 		width: calc(100vw*0.8);
 		height: calc(100vh*0.8);
