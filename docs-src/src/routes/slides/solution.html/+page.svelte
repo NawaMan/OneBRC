@@ -87,6 +87,6 @@
 	}
 	#blinds rect:hover {
 		fill-opacity:0.75 !important;
-		fill:#f0f0f9 !important;
+		fill:#0f0f08 !important;
 	}
 </style>
