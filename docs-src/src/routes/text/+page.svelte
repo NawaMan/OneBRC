@@ -10,7 +10,7 @@
 	<div id="main">
 		<div>
 			<div>We have not got a change to write an article for this yet.</div>
-			<div>But we do have <a href="../slides/onebrc.html">presentation slides</a> you might want to check it out.</div>
+			<div>But we do have <a href="./slides/onebrc.html">presentation slides</a> you might want to check it out.</div>
 		</div>
 	</div>
 </div>

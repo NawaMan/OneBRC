@@ -49,7 +49,7 @@
 
 	{#if $isContentVisible}
 	<div class="content">
-		<div id="article"><a href="../">View as article</a></div>
+		<div id="article"><a href="../text.html">View as article</a></div>
 		<ol>
 			<li><a href="./onebrc.html"    >Title</a></li>
 			<li><a href="./overview.html"  >Overview</a></li>
