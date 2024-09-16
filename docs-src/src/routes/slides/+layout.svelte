@@ -94,8 +94,8 @@
 		display: flex;
 		/* background: #112c63; */
 		background: #181818;
-		/* border: 5px solid #ccc; */
-		border: 5px solid #000;
+		border: 1px solid #ccc;
+		/* border: 1px solid #000; */
 		position: relative;
 	}
 	.container.scale-mode {
