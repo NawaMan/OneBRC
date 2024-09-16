@@ -55,7 +55,7 @@
 		innerWidth="2000"
 		height="500"
 		startScrollPosition={-500}
-		style="border: 2px #C0F1FF solid; border-radius: 2px; height: 550px; background-color: #FFF;">
+		style="border: 2px #C0F1FF solid; border-radius: 2px; height: 550px; background-color: #181818;">
 
 		<div id="diagram">
 			{#if svgContent}
@@ -63,11 +63,11 @@
 			{/if}
 			<!-- The absolute dimension here is to make sure it is the same size the diagram image. -->
 			<svg id="blinds" bind:this={blinds} xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 3830.640967790001 1048.6091475027065" width="3830.640967790001" height="1048.6091475027065">
-				<rect style="fill:#f9f9f9;fill-opacity:0.9;stroke:none" x="1720" y="5" width="257" height="540" rx="10" ry="10" />
-				<rect style="fill:#f9f9f9;fill-opacity:0.9;stroke:none" x="1462" y="5" width="515" height="540" rx="10" ry="10" />
-				<rect style="fill:#f9f9f9;fill-opacity:0.9;stroke:none" x="740" y="5" width="1237" height="540" rx="10" ry="10" />
-				<rect style="fill:#f9f9f9;fill-opacity:0.9;stroke:none" x="310" y="5" width="1667" height="540" rx="10" ry="10" />
-				<rect style="fill:#f9f9f9;fill-opacity:0.9;stroke:none" x="117" y="5" width="1860" height="540" rx="10" ry="10" />
+				<rect style="fill:#080808;fill-opacity:0.9;stroke:none" x="1720" y="5" width="257" height="540" rx="10" ry="10" />
+				<rect style="fill:#080808;fill-opacity:0.9;stroke:none" x="1462" y="5" width="515" height="540" rx="10" ry="10" />
+				<rect style="fill:#080808;fill-opacity:0.9;stroke:none" x="740" y="5" width="1237" height="540" rx="10" ry="10" />
+				<rect style="fill:#080808;fill-opacity:0.9;stroke:none" x="310" y="5" width="1667" height="540" rx="10" ry="10" />
+				<rect style="fill:#080808;fill-opacity:0.9;stroke:none" x="117" y="5" width="1860" height="540" rx="10" ry="10" />
 			</svg>
 		</div>
 	</WideDiv>
