@@ -280,9 +280,8 @@ public class CalculateAverage_nawaman {
         static StatisticExtractor create(String filePath, long start, long estimatedSize) throws IOException {
             try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
                 // Read a bit longer on the end to ensure that the last line is included.
-                // Since the name of the station is at most 100 bytes, 300 extra bytes are read.
-                // This because, there can be up to 100+ from the previous and 100+ extended into the next part.
-                var tailMargin = 300L;
+                // Since the name of the station is at most 100 bytes.
+                var tailMargin = 100L;
                 var sizeToRead = estimatedSize + tailMargin;
                 
                 // Get one more byte in the front to check if the newline char is at the beginning of a line.
@@ -421,24 +420,22 @@ public class CalculateAverage_nawaman {
                                                       //    the actual total.
         var runnables = new Runnable[chunkCount];
         for (int i = 0; i < chunkCount; i++) {
-            int cpuIndex  = i;
-            runnables[i] = (() -> extractionTask(names, filePath, cpuIndex, chunkSize, resultAccepter));
+            int chunkIndex = i;
+            runnables[i] = (() -> {
+                var position= chunkIndex*chunkSize;
+                try {
+                    var extractor = StatisticExtractor.create(filePath, position, chunkSize);
+                    var statistic = extractor.extract(names);
+                    resultAccepter.accept(statistic);
+                } catch (IOException e) {
+                    var message
+                            = "Panic: Failed to read file chunk! filePath=%s, chunkIndex=%d, chunkSize=%d, position=%d"
+                            .formatted(filePath, chunkIndex, chunkSize, position);
+                    throw new Error(message, e);
+                }
+            });
         }
         return runnables;
-    }
-    
-    static void extractionTask(StationNames names, String filePath, int chunkIndex, long chunkSize, Consumer<Statistic> accepter) {
-        var position= chunkIndex*chunkSize;
-        try {
-            var extractor = StatisticExtractor.create(filePath, position, chunkSize);
-            var statistic = extractor.extract(names);
-            accepter.accept(statistic);
-        } catch (IOException e) {
-            var message
-                    = "Panic: Failed to read file chunk! filePath=%s, chunkIndex=%d, chunkSize=%d, position=%d"
-                    .formatted(filePath, chunkIndex, chunkSize, position);
-            throw new Error(message, e);
-        }
     }
     
     static long fileSize(String filePath) {

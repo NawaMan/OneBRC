@@ -421,24 +421,22 @@ public class CalculateAverage_nawaman {
                                                       //    the actual total.
         var runnables = new Runnable[chunkCount];
         for (int i = 0; i < chunkCount; i++) {
-            int cpuIndex  = i;
-            runnables[i] = (() -> extractionTask(names, filePath, cpuIndex, chunkSize, resultAccepter));
+            int chunkIndex = i;
+            runnables[i] = (() -> {
+                var position= chunkIndex*chunkSize;
+                try {
+                    var extractor = StatisticExtractor.create(filePath, position, chunkSize);
+                    var statistic = extractor.extract(names);
+                    resultAccepter.accept(statistic);
+                } catch (IOException e) {
+                    var message
+                            = "Panic: Failed to read file chunk! filePath=%s, chunkIndex=%d, chunkSize=%d, position=%d"
+                            .formatted(filePath, chunkIndex, chunkSize, position);
+                    throw new Error(message, e);
+                }
+            });
         }
         return runnables;
-    }
-    
-    static void extractionTask(StationNames names, String filePath, int chunkIndex, long chunkSize, Consumer<Statistic> accepter) {
-        var position= chunkIndex*chunkSize;
-        try {
-            var extractor = StatisticExtractor.create(filePath, position, chunkSize);
-            var statistic = extractor.extract(names);
-            accepter.accept(statistic);
-        } catch (IOException e) {
-            var message
-                    = "Panic: Failed to read file chunk! filePath=%s, chunkIndex=%d, chunkSize=%d, position=%d"
-                    .formatted(filePath, chunkIndex, chunkSize, position);
-            throw new Error(message, e);
-        }
     }
     
     static long fileSize(String filePath) {
