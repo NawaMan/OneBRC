@@ -6,12 +6,12 @@
 		"dev": "vite dev",
 		"build": "cp ../src/onebrc/CalculateAverage_nawaman.java static && vite build && rm -Rf ../docs && mv docs ../docs && cp redirect-index.html ../docs/index.html",
 		"preview": "vite preview",
-        "deploy": "pnpm build && pnpx gh-pages -d ../docs -t true",
+		"deploy": "pnpm build && pnpx gh-pages -d ../docs -t true",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
-    	"postbuild": "mv ../docs/.nojekyll\\  ../docs/.nojekyll"
+		"postbuild": "mv ../docs/.nojekyll\\  ../docs/.nojekyll"
 	},
 	"devDependencies": {
 		"@codemirror/lang-java": "6.0.1",
