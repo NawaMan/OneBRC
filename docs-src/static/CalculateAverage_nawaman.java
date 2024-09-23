@@ -280,9 +280,8 @@ public class CalculateAverage_nawaman {
         static StatisticExtractor create(String filePath, long start, long estimatedSize) throws IOException {
             try (var channel = FileChannel.open(Paths.get(filePath), READ)) {
                 // Read a bit longer on the end to ensure that the last line is included.
-                // Since the name of the station is at most 100 bytes, 300 extra bytes are read.
-                // This because, there can be up to 100+ from the previous and 100+ extended into the next part.
-                var tailMargin = 300L;
+                // Since the name of the station is at most 100 bytes.
+                var tailMargin = 100L;
                 var sizeToRead = estimatedSize + tailMargin;
                 
                 // Get one more byte in the front to check if the newline char is at the beginning of a line.
@@ -376,7 +375,7 @@ public class CalculateAverage_nawaman {
         var nameAssigner = new Thread(stationNames);
         nameAssigner.start();
         
-        for (var extractionTask : extractionTasks(stationNames, filePath, chunkCount, statistics::add)) {
+        for (var extractionTask : createExtractionTasks(stationNames, filePath, chunkCount, statistics::add)) {
             executor.submit(extractionTask);
         }
         
@@ -414,7 +413,7 @@ public class CalculateAverage_nawaman {
         }
     }
     
-    static Runnable[] extractionTasks(StationNames names, String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
+    static Runnable[] createExtractionTasks(StationNames names, String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
         long fileSize  = fileSize(filePath);
         long chunkSize = (fileSize / chunkCount) + 1; // Add some buffer to ensure that the entire file is covered.
                                                       // Java round integer division down so the sum of each might be

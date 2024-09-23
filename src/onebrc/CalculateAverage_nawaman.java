@@ -375,7 +375,7 @@ public class CalculateAverage_nawaman {
         var nameAssigner = new Thread(stationNames);
         nameAssigner.start();
         
-        for (var extractionTask : extractionTasks(stationNames, filePath, chunkCount, statistics::add)) {
+        for (var extractionTask : createExtractionTasks(stationNames, filePath, chunkCount, statistics::add)) {
             executor.submit(extractionTask);
         }
         
@@ -413,7 +413,7 @@ public class CalculateAverage_nawaman {
         }
     }
     
-    static Runnable[] extractionTasks(StationNames names, String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
+    static Runnable[] createExtractionTasks(StationNames names, String filePath, int chunkCount, Consumer<Statistic> resultAccepter) {
         long fileSize  = fileSize(filePath);
         long chunkSize = (fileSize / chunkCount) + 1; // Add some buffer to ensure that the entire file is covered.
                                                       // Java round integer division down so the sum of each might be
