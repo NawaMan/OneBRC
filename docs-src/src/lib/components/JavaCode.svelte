@@ -10,6 +10,9 @@
 	export let revealLines = [];
 
 	// @ts-ignore
+	export let cursorLine = 1;
+
+	// @ts-ignore
 	let editor;
 	// @ts-ignore
 	let editorElement;
@@ -135,10 +138,12 @@
 						// @ts-ignore
 						editor.setSelection({
 							startLineNumber: lineNumber,
-							startColumn: 1,
-							endLineNumber: lineNumber + 1,
+							startColumn: 0,
+							endLineNumber: lineNumber,
 							endColumn: 1
 						});
+						// @ts-ignore
+						editor.revealLine(cursorLine);
 						// @ts-ignore
 						editor.trigger('keyboard', 'editor.unfold');
 					});
