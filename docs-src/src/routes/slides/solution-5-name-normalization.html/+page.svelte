@@ -23,7 +23,7 @@
 	});
 </script>
 
-<ContentPage title="Solution (4): Vectorize Comparison">
+<ContentPage title="Solution (5): Name Normalization">
 	<WideDiv
 		outerWidth="1190"
 		innerWidth="2000"
@@ -42,8 +42,7 @@
 	</div>
 </ContentPage>
 <NavigationBar
-	prevLink="./solution-3-one-pass-parsing.html"
-	nextLink="./solution-5-name-normalization.html" />
+	prevLink="./solution-4-vectorize-compare.html" />
 
 <style>
 	#diagram {
