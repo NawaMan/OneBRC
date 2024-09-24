@@ -8,6 +8,7 @@
 	let hint = "scroll to pan";
 
 	let svgContent = '';
+
 	async function fetchSVG() {
 		const response = await fetch('../Solution-Diagram.svg');
 		svgContent
@@ -22,7 +23,7 @@
 	});
 </script>
 
-<ContentPage title="Solution (1): Mutiple-Thread Processing">
+<ContentPage title="Solution (3): One-Pass Parser">
 	<WideDiv
 		outerWidth="1190"
 		innerWidth="2000"
@@ -40,10 +41,7 @@
 		Hello
 	</div>
 </ContentPage>
-<Hint text="{hint}" />
-<NavigationBar 
-	prevLink="./solution.html" 
-	nextLink="./solution-2-string-conversion.html" />
+<NavigationBar prevLink="./solution-2-string-conversion.html" />
 
 <style>
 	#diagram {

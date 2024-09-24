@@ -2,13 +2,18 @@
 	export let outerWidth: string;
 	export let innerWidth: string;
 	export let height:     string;
+	export let scrollable: boolean = true;
     export let startScrollPosition: number           = 0;
 	export let minScrollPosition:   number|undefined = undefined;
     export let maxScrollPosition:   number|undefined = undefined;
+	export let onScroll:            (target: EventTarget | null, position: number) => void = () => {};
 
 	let scrollPosition = startScrollPosition;
 
 	function handleScroll(event: WheelEvent) {
+		if (!scrollable)
+			return;
+		
         if (minScrollPosition === undefined) minScrollPosition = parseInt(innerWidth) * -0.25;
         if (maxScrollPosition === undefined) maxScrollPosition = parseInt(innerWidth) *  0.75;
 
@@ -19,6 +24,8 @@
 		}
         scrollPosition = Math.max(minScrollPosition, scrollPosition);
         scrollPosition = Math.min(maxScrollPosition, scrollPosition);
+
+		onScroll(event.target, scrollPosition);
 	}
 </script>
 
