@@ -56,11 +56,12 @@
 			<li><a href="./overview-2.html">Overview (2)</a></li>
 			<li><a href="./results.html"   >Results</a></li>
 			<li><a href="./challenge.html" >One Billion Row Challenge</a></li>
-			
+
 			<li><a href="./solution.html"                    >Solution</a></li>
 			<li><a href="./solution-1-multithread.html"      >Solution (1): Multithread</a></li>
 			<li><a href="./solution-2-string-conversion.html">Solution (2): Delay String Conversion</a></li>
 			<li><a href="./solution-3-one-pass-parsing.html" >Solution (3): One-Pass Parser</a></li>
+			<li><a href="./solution-4-vectorize-compare.html">Solution (4): Vectorize Comparison</a></li>
 		</ol>
 	</div>
 	{/if}

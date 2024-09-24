@@ -23,7 +23,7 @@
 	});
 </script>
 
-<ContentPage title="Solution (3): One-Pass Parser">
+<ContentPage title="Solution (4): Vectorize Comparison">
 	<WideDiv
 		outerWidth="1190"
 		innerWidth="2000"
@@ -41,9 +41,7 @@
 		Hello
 	</div>
 </ContentPage>
-<NavigationBar
-	prevLink="./solution-2-string-conversion.html"
-	nextLink="./solution-4-vectorize-compare.html" />
+<NavigationBar prevLink="./solution-3-one-pass-parsing.html" />
 
 <style>
 	#diagram {
