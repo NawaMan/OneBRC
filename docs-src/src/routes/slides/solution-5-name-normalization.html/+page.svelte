@@ -42,7 +42,9 @@
 	</div>
 </ContentPage>
 <NavigationBar
-	prevLink="./solution-4-vectorize-compare.html" />
+	prevLink="./solution-4-vectorize-compare.html"
+	nextLink="./conclusion.html"
+/>
 
 <style>
 	#diagram {

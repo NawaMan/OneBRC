@@ -63,6 +63,8 @@
 			<li><a href="./solution-3-one-pass-parsing.html"  >Solution (3): One-Pass Parser</a></li>
 			<li><a href="./solution-4-vectorize-compare.html" >Solution (4): Vectorize Comparison</a></li>
 			<li><a href="./solution-5-name-normalization.html">Solution (5): Name Normalization</a></li>
+
+			<li><a href="./conclusion.html">Conclusion</a></li>
 		</ol>
 	</div>
 	{/if}
