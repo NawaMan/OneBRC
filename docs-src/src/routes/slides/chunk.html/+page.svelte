@@ -5,17 +5,10 @@
 	import NavigationBar from '$lib/components/NavigationBar.svelte';
 	import WideDiv from '$lib/components/WideDiv.svelte';
 	import { onMount } from 'svelte';
-	import classNames from 'classnames';
   
 	// @ts-ignore
 	export let data;
   
-	let linkCode = true;
-	
-	$: classes = classNames({
-		'linkCode': linkCode
-	});
-
 	let svgContent = '';
 	let blinds: SVGSVGElement;
 
