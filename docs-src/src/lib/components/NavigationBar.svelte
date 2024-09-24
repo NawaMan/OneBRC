@@ -6,7 +6,7 @@
 	export let firstLink = './onebrc.html';
 	export let prevLink  = '';
 	export let nextLink  = '';
-	export let lastLink  = './solution.html';
+	export let lastLink  = './solution-1-multithread.html';
 	export let onContinue: (() => void) | null = null;
 
 	$: onFirst = () => firstLink && (window.location.href = firstLink);

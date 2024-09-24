@@ -56,7 +56,8 @@
 			<li><a href="./overview-2.html">Overview (2)</a></li>
 			<li><a href="./results.html"   >Results</a></li>
 			<li><a href="./challenge.html" >One Billion Row Challenge</a></li>
-			<li><a href="./solution.html"  >Solution Overview</a></li>
+			<li><a href="./solution.html"  >Solution</a></li>
+			<li><a href="./solution-1-multithread.html">Solution(1): Multithread</a></li>
 		</ol>
 	</div>
 	{/if}

@@ -49,44 +49,52 @@
 	});
 </script>
 
-<ContentPage title="Solution">
+<ContentPage title="Solution (1): Mutiple-thread processing">
 	<WideDiv
 		outerWidth="1190"
 		innerWidth="2000"
 		height="500"
-		startScrollPosition={-500}
+		startScrollPosition={0}
 		style="border: 2px #C0F1FF solid; border-radius: 2px; height: 550px; background-color: #181818;">
 
 		<div id="diagram">
 			{#if svgContent}
 			{@html svgContent}
 			{/if}
-			<!-- The absolute dimension here is to make sure it is the same size the diagram image. -->
-			<svg id="blinds" bind:this={blinds} xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 3830.640967790001 1048.6091475027065" width="3830.640967790001" height="1048.6091475027065">
-				<rect style="fill:#080808;fill-opacity:0.9;stroke:none" x="1720" y="5" width="257" height="540" rx="10" ry="10" />
-				<rect style="fill:#080808;fill-opacity:0.9;stroke:none" x="1462" y="5" width="515" height="540" rx="10" ry="10" />
-				<rect style="fill:#080808;fill-opacity:0.9;stroke:none" x="740" y="5" width="1237" height="540" rx="10" ry="10" />
-				<rect style="fill:#080808;fill-opacity:0.9;stroke:none" x="310" y="5" width="1667" height="540" rx="10" ry="10" />
-				<rect style="fill:#080808;fill-opacity:0.9;stroke:none" x="117" y="5" width="1860" height="540" rx="10" ry="10" />
-			</svg>
+		</div>
+		<div class="blind">
+		</div>
+		<div id="side">
+			Hello
 		</div>
 	</WideDiv>
 </ContentPage>
-<NavigationBar prevLink="./challenge.html" nextLink="./solution-1-multithread.html" />
-<Hint text="{hint}" />
+<NavigationBar prevLink="./solution.html" />
 
 <style>
 	#diagram {
 		position: relative;
 	}
 
-	#blinds {
+	#side,
+	.blind {
 		position: absolute;
 		top: 0px;
 		left: 0px;
+		background-color: #181818;
 	}
-	#blinds rect:hover {
-		fill-opacity:0.75 !important;
-		fill:#0f0f08 !important;
+	.blind {
+		left: 570px;
+		top: 480px;
+		width: 190px;
+		height: 80px;
+	}
+	#side {
+		left:   750px;
+		top:     15px;
+		width:  432px;
+		height: 520px;
+		border-radius: 10px;
+		box-shadow: 0 0 20px 20px rgba(0, 0, 0, 0.8);
 	}
 </style>
