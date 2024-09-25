@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Box from '$lib/components/Box.svelte';
 	import Hint from '$lib/components/Hint.svelte';
 	import NavigationBar from '$lib/components/NavigationBar.svelte';
 	import WideDiv from '$lib/components/WideDiv.svelte';
@@ -6,6 +7,13 @@
 	import { onMount } from 'svelte';
 
 	let hint = "scroll to pan";
+
+	let isCodeExpanded = false;
+
+	function toggleCodeExpanded() {
+		isCodeExpanded = !isCodeExpanded;
+		console.log("isCodeExpanded: " + isCodeExpanded);
+	}
 
 	let svgContent = '';
 	async function fetchSVG() {
@@ -37,13 +45,28 @@
 		</div>
 	</WideDiv>
 	<div id="side">
-		Hello
+		<div id="side-content">
+			<ul>
+				<li>Split the data into chunks</li>
+				<li>Process on separate threads</li>
+				<li>Optimized at 30 x CPU count</li>
+				<li>Use Java 21 "Virtual threads"</li>
+				<li>Extract concurrently</li>
+				<li>Combine concurrently</li>
+				<li>Normalize names concurrently</li>
+			</ul>
+			<img class="thumbnail" src="../multithreads.png" alt="main()" width="350" on:click={toggleCodeExpanded} />
+		</div>
 	</div>
 </ContentPage>
 <Hint text="{hint}" />
 <NavigationBar 
 	prevLink="./solution.html" 
-	nextLink="./solution-2-memory-mapped-file.html" />
+	nextLink="./solution-2-memory-mapped-file.html"
+/>
+<Box expanded={isCodeExpanded} width={762} height={590} onClick={toggleCodeExpanded}>
+    <img src="../multithreads.png" alt="main()" width="762px" height="590px"/>
+</Box>
 
 <style>
 	#diagram {
@@ -58,5 +81,17 @@
 		background-color: #181818;
 		border-radius: 10px;
 		box-shadow: 0 0 20px 20px rgba(0, 0, 0, 0.8);
+	}
+	#side-content {
+		margin-top: 15px;
+		margin-left: 10px;
+		margin-right: 10px;
+		width: 100wv;
+	}
+	.thumbnail {
+		margin-left: 30px;
+		cursor: pointer;
+		border-radius: 5px;
+		border: 2px solid #C0F1FF;
 	}
 </style>
