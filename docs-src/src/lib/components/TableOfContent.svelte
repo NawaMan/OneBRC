@@ -59,10 +59,11 @@
 
 			<li><a href="./solution.html"                     >Solution</a></li>
 			<li><a href="./solution-1-multithread.html"       >Solution (1): Multithread</a></li>
-			<li><a href="./solution-2-string-conversion.html" >Solution (2): Delay String Conversion</a></li>
-			<li><a href="./solution-3-one-pass-parsing.html"  >Solution (3): One-Pass Parser</a></li>
-			<li><a href="./solution-4-vectorize-compare.html" >Solution (4): Vectorize Comparison</a></li>
-			<li><a href="./solution-5-name-normalization.html">Solution (5): Name Normalization</a></li>
+			<li><a href="./solution-2-memory-mapped-file.html">Solution (2): Memory-Mapped File</a></li>
+			<li><a href="./solution-3-string-conversion.html" >Solution (3): Delay String Conversion</a></li>
+			<li><a href="./solution-4-one-pass-parsing.html"  >Solution (4): One-Pass Parser</a></li>
+			<li><a href="./solution-5-vectorize-compare.html" >Solution (5): Vectorize Comparison</a></li>
+			<li><a href="./solution-6-name-normalization.html">Solution (6): Name Normalization</a></li>
 
 			<li><a href="./conclusion.html">Conclusion</a></li>
 		</ol>

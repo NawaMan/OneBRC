@@ -23,7 +23,7 @@
 	});
 </script>
 
-<ContentPage title="Solution (2): Delay String Conversion">
+<ContentPage title="Solution (3): Delay String Conversion">
 	<WideDiv
 		outerWidth="1190"
 		innerWidth="2000"
@@ -42,8 +42,8 @@
 	</div>
 </ContentPage>
 <NavigationBar
-	prevLink="./solution-1-multithread.html"
-	nextLink="./solution-3-one-pass-parsing.html" />
+	prevLink="./solution-2-memory-mapped-file.html"
+	nextLink="./solution-4-one-pass-parsing.html" />
 
 <style>
 	#diagram {

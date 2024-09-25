@@ -73,7 +73,10 @@
 	</WideDiv>
 </ContentPage>
 <Hint text="{hint}" />
-<NavigationBar prevLink="./challenge.html" nextLink="./solution-1-multithread.html" />
+<NavigationBar
+	prevLink="./challenge.html"
+	nextLink="./solution-1-multithread.html"
+/>
 
 <style>
 	#diagram {

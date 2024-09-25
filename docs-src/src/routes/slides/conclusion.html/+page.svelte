@@ -63,7 +63,7 @@
 	</div>
 </ContentPage>
 <NavigationBar
-	prevLink="./solution-5-name-normalization.html"
+	prevLink="./solution-6-name-normalization.html"
 />
 
 <style>

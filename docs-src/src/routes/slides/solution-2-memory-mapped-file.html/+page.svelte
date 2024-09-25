@@ -23,7 +23,7 @@
 	});
 </script>
 
-<ContentPage title="Solution (5): Name Normalization">
+<ContentPage title="Solution (2): Memory Mapped File">
 	<WideDiv
 		outerWidth="1190"
 		innerWidth="2000"
@@ -42,9 +42,8 @@
 	</div>
 </ContentPage>
 <NavigationBar
-	prevLink="./solution-4-vectorize-compare.html"
-	nextLink="./conclusion.html"
-/>
+	prevLink="./solution-1-multithread.html"
+	nextLink="./solution-3-string-conversion.html" />
 
 <style>
 	#diagram {
