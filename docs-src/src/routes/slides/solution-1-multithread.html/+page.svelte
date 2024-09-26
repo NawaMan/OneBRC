@@ -49,7 +49,7 @@
 			<ul>
 				<li>Split the data into chunks</li>
 				<li>Process on separate threads</li>
-				<li>Optimized at 30 x CPU count</li>
+				<li>Optimized at 32 x CPU count</li>
 				<li>Use Java 21 "Virtual threads"</li>
 				<li>Extract concurrently</li>
 				<li>Combine concurrently</li>
@@ -64,8 +64,8 @@
 	prevLink="./solution.html" 
 	nextLink="./solution-2-memory-mapped-file.html"
 />
-<Box expanded={isCodeExpanded} width={762} height={590} onClick={toggleCodeExpanded}>
-    <img src="../multithreads.png" alt="main()" width="762px" height="590px"/>
+<Box expanded={isCodeExpanded} width={952} height={664} onClick={toggleCodeExpanded}>
+    <img src="../multithreads.png" alt="main()" width="952px" height="664px"/>
 </Box>
 
 <style>

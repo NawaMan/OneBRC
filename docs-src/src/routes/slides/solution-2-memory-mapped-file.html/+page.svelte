@@ -1,13 +1,24 @@
 <script lang="ts">
+	import Box from '$lib/components/Box.svelte';
 	import Hint from '$lib/components/Hint.svelte';
 	import NavigationBar from '$lib/components/NavigationBar.svelte';
 	import WideDiv from '$lib/components/WideDiv.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
+	import { faThList } from '@fortawesome/free-solid-svg-icons';
+	import { text } from '@sveltejs/kit';
 	import { onMount } from 'svelte';
 
 	let hint = "scroll to pan";
 
+	let isCodeExpanded = false;
+
+	function toggleCodeExpanded() {
+		isCodeExpanded = !isCodeExpanded;
+		console.log("isCodeExpanded: " + isCodeExpanded);
+	}
+
 	let svgContent = '';
+	let items: HTMLElement;
 
 	async function fetchSVG() {
 		const response = await fetch('../Solution-Diagram.svg');
@@ -18,8 +29,31 @@
 				.replaceAll("height=\"1048.6091475027065\"", "width=\"540\"");
 	}
 
+	function crossOutItem(this: HTMLElement) {
+		if (this.classList.contains("accept")) {
+			this.style.color = "#C0FFC0";
+			let thumbup = document.getElementById("thumbup");
+			if (thumbup != null) {
+				thumbup.style.visibility = "visible";
+			}
+		} else {
+			this.style.textDecoration = "line-through";
+		}
+	}
+
 	onMount(() => {
 		fetchSVG();
+
+		// Select all rect elements inside the svg and add event listeners
+		const choices = items.querySelectorAll('li');
+		choices.forEach((choice) => {
+			choice.addEventListener('click', crossOutItem);
+		});
+		return () => {
+			choices.forEach((choice) => {
+				choice.removeEventListener('click', crossOutItem);
+			});
+		};
 	});
 </script>
 
@@ -38,12 +72,29 @@
 		</div>
 	</WideDiv>
 	<div id="side">
-		Hello
+		<div id="side-content">
+			Choices
+			<ul bind:this={items}  style="list-style-type: circle;">
+				<li>Read the file to a string</li>
+				<li>Read the lines to strings</li>
+				<li>Read bytes using <code>RandomAccessFile</code></li>
+				<li>Direct map to <code>ByteBuffer</code> (native memory)</li>
+				<li class="accept">
+					Map to <code>ByteBuffer</code> on heap 
+					<img id="thumbup" src="../thumbs-up-transparent.png" alt="thumbup" />
+				</li>
+			</ul>
+			<img class="thumbnail" src="../memory-mapped-file.png" alt="main()" width="350" on:click={toggleCodeExpanded} />
+		</div>
 	</div>
 </ContentPage>
 <NavigationBar
 	prevLink="./solution-1-multithread.html"
-	nextLink="./solution-3-string-conversion.html" />
+	nextLink="./solution-3-string-conversion.html"
+/>
+<Box expanded={isCodeExpanded} width={932} height={551} onClick={toggleCodeExpanded}>
+    <img src="../memory-mapped-file.png" alt="main()" width="932px" height="551px"/>
+</Box>
 
 <style>
 	#diagram {
@@ -58,5 +109,25 @@
 		background-color: #181818;
 		border-radius: 10px;
 		box-shadow: 0 0 20px 20px rgba(0, 0, 0, 0.8);
+	}
+	#side-content {
+		margin-top: 15px;
+		margin-left: 10px;
+		margin-right: 10px;
+		width: 100wv;
+	}
+	.thumbnail {
+		margin-left: 30px;
+		cursor: pointer;
+		border-radius: 5px;
+		border: 2px solid #C0F1FF;
+	}
+	li {
+		cursor: pointer;
+	}
+	#thumbup {
+		width: 32px;
+		visibility: hidden;
+		vertical-align: middle;
 	}
 </style>

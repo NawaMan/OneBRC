@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from "svelte";
+
 	export let width;
 	export let height;
 
@@ -17,6 +19,14 @@
 	function collapse() {
 		expanded = false;
 	}
+
+	onMount(() => {
+		window.addEventListener('keydown', collapse);
+
+		return () => {
+		window.removeEventListener('keydown', collapse);
+		};
+	});
 </script>
 
 <div
