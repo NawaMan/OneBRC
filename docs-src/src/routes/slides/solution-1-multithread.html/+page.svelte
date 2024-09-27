@@ -55,7 +55,9 @@
 				<li>Combine concurrently</li>
 				<li>Normalize names concurrently</li>
 			</ul>
-			<img class="thumbnail" src="../multithreads.png" alt="main()" width="350" on:click={toggleCodeExpanded} />
+			<button class="thumbnail" on:click={toggleCodeExpanded}>
+				<img src="../multithreads.png" alt="main()" width="350"/>
+			</button>
 		</div>
 	</div>
 </ContentPage>
@@ -89,7 +91,7 @@
 		width: 100wv;
 	}
 	.thumbnail {
-		margin-left: 30px;
+		margin-left: 20px;
 		cursor: pointer;
 		border-radius: 5px;
 		border: 2px solid #C0F1FF;

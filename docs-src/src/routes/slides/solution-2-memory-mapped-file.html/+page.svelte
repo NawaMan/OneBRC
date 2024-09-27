@@ -84,7 +84,10 @@
 					<img id="thumbup" src="../thumbs-up-transparent.png" alt="thumbup" />
 				</li>
 			</ul>
-			<img class="thumbnail" src="../memory-mapped-file.png" alt="main()" width="350" on:click={toggleCodeExpanded} />
+
+			<button class="thumbnail" on:click={toggleCodeExpanded}>
+				<img src="../memory-mapped-file.png" alt="main()" width="350"/>
+			</button>
 		</div>
 	</div>
 </ContentPage>
