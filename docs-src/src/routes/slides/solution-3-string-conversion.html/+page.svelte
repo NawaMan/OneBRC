@@ -51,19 +51,15 @@
 	<div id="side">
 		<div id="side-content">
 			<ul>
-				<li>A byte array for read buffer</li>
-				<li>Another byte array for a new string</li>
-				<li>The string is thrown away during merge</li>
-				<li>Strings only need when sort</li>
-				<li>Merging only need hash and equal check</li>
-				<li>Byte arrays are comparable</li>
-				<li>Reuse byte array when possible</li>
+				<li>Read from file as part of a chunk</li>
+				<li>Recorgnized and extracted as name</li>
+				<li>Looked up in the map as a key</li>
+				<li class="needed">Used to sort (as UTF8)</li>
+				<li class="needed">Print out</li>
 			</ul>
-
+			Only the last two steps that the name <b>must</b> be a string.<br />
+			
 			<div id="thumbnails">
-				<button class="thumbnail" on:click={toggleCodeOneExpanded}>
-					<img src="../line-extract.png" alt="main()" width="213"/>
-				</button>
 				<button class="thumbnail" on:click={toggleCodeTwoExpanded}>
 					<img src="../name-equals.png" alt="main()" width="136"/>
 				</button>
@@ -71,16 +67,13 @@
 		</div>
 	</div>
 </ContentPage>
+<Box expanded={isCodeTwoExpanded} width={698} height={650} onClick={toggleCodeTwoExpanded} scrollable={true}>
+    <img src="../name-equals.png" alt="main()" width="698px" height="1200px"/>
+</Box>
 <NavigationBar
 	prevLink="./solution-2-memory-mapped-file.html"
 	nextLink="./solution-4-one-pass-parsing.html"
 />
-<Box expanded={isCodeOneExpanded} width={928} height={394} onClick={toggleCodeOneExpanded}>
-    <img src="../line-extract.png" alt="main()" width="928px" height="394px"/>
-</Box>
-<Box expanded={isCodeTwoExpanded} width={698} height={650} onClick={toggleCodeTwoExpanded} scrollable={true}>
-    <img src="../name-equals.png" alt="main()" width="698px" height="1200px"/>
-</Box>
 
 <style>
 	#diagram {
@@ -97,16 +90,29 @@
 		border-radius: 10px;
 		box-shadow: 0 0 20px 20px rgba(0, 0, 0, 0.8);
 	}
+	#side-content {
+		padding-top: 20px;
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+	#side-content ul {
+		padding-top: 0px;
+		padding-bottom: 20px;
+		padding-left: 20px;
+		margin: 0px;
+	}
+	#thumbnails {
+		display: flex;
+		justify-content: center;
+		padding-top: 20px;
+	}
 	.thumbnail {
 		margin-left: 5px;
 		cursor: pointer;
 		border-radius: 5px;
 		border: 2px solid #C0F1FF;
 	}
-	#thumbnails {
-		display: flex;
-		justify-content: center; /* Center horizontally */
-		align-items: center; /* Center vertically if needed */
-		flex-wrap: wrap; /* Allow wrapping if there are too many thumbnails */
+	.needed {
+		color: #C0FFCB;
 	}
 </style>
