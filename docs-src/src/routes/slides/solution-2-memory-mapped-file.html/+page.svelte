@@ -14,7 +14,6 @@
 
 	function toggleCodeExpanded() {
 		isCodeExpanded = !isCodeExpanded;
-		console.log("isCodeExpanded: " + isCodeExpanded);
 	}
 
 	let svgContent = '';

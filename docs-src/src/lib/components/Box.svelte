@@ -4,14 +4,15 @@
 	export let width;
 	export let height;
 
-	export let expanded : boolean       = false;
-	export let showClose: boolean       = true;
-	export let top      : string | null = null;
-	export let left     : string | null = null;
-	export let bottom   : string | null = null;
-	export let right    : string | null = null;
-	export let linkUrl  : string | null = null;
-	export let linkText : string        = 'LINK';
+	export let expanded   : boolean       = false;
+	export let showClose  : boolean       = true;
+	export let scrollable : boolean       = false;
+	export let top        : string | null = null;
+	export let left       : string | null = null;
+	export let bottom     : string | null = null;
+	export let right      : string | null = null;
+	export let linkUrl    : string | null = null;
+	export let linkText   : string        = 'LINK';
 
 	export let shadowOpacity: number              = 0.5;
 	export let onClick      : (() => void) | null = null;
@@ -31,7 +32,7 @@
 
 <div
 	class="parent {expanded ? 'expanded' : ''}"
-	style="--custom-top: {top}; --custom-left: {left}; --custom-bottom: {bottom}; --custom-right: {right}; --shadow-opacity: {shadowOpacity};"
+	style="--custom-top: {top}; --custom-left: {left}; --custom-bottom: {bottom}; --custom-right: {right}; --shadow-opacity: {shadowOpacity}; --scrollable: {scrollable ? 'scroll' : 'hidden'};"
 >
 	<div
 		class="img-box"
@@ -136,7 +137,8 @@
 
 	.parent .img-box {
 		padding: 0px;
-		overflow: hidden;
+		overflow-x: hidden;
+		overflow-y: var(--scrollable);
 		background-color: black;
 
 		border: 0px solid lightblue;
