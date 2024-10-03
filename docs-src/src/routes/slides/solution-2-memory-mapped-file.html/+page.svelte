@@ -124,6 +124,10 @@
 		border-radius: 5px;
 		border: 2px solid #C0F1FF;
 	}
+	.thumbnail:active {
+		transform: translate(2px, 2px);
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+	}
 	li {
 		cursor: pointer;
 	}

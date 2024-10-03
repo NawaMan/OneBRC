@@ -1,3 +1,5 @@
+
+
 <script lang="ts">
 	import Box from '$lib/components/Box.svelte';
 	import Hint from '$lib/components/Hint.svelte';
@@ -34,7 +36,7 @@
 	});
 </script>
 
-<ContentPage title="Solution (3): Delay String Conversion">
+<ContentPage title="Solution (4): Name as Byte Array">
 	<WideDiv
 		outerWidth="1190"
 		innerWidth="2000"
@@ -51,15 +53,17 @@
 	<div id="side">
 		<div id="side-content">
 			<ul>
-				<li>Read from file as part of a chunk</li>
-				<li>Recorgnized and extracted as name</li>
-				<li>Looked up in the map as a key</li>
-				<li class="needed">Used to sort (as UTF8)</li>
-				<li class="needed">Print out</li>
+				<li>A byte array for read buffer.</li>
+				<li>Length and hash are calculated while reading.</li>
+				<li>The buffer used for map key check.</li>
+				<li>If key exists, reuse the byte array.</li>
+				<li>If not exists, the array become the key and create a new read buffer.</li>
 			</ul>
-			Only the last two steps that the name <b>must</b> be a string.<br />
-			
+
 			<div id="thumbnails">
+				<button class="thumbnail" on:click={toggleCodeOneExpanded}>
+					<img src="../line-extract.png" alt="main()" width="213"/>
+				</button>
 				<button class="thumbnail" on:click={toggleCodeTwoExpanded}>
 					<img src="../name-equals.png" alt="main()" width="136"/>
 				</button>
@@ -67,12 +71,15 @@
 		</div>
 	</div>
 </ContentPage>
+<Box expanded={isCodeOneExpanded} width={928} height={394} onClick={toggleCodeOneExpanded}>
+	<img src="../line-extract.png" alt="main()" width="928px" height="394px"/>
+</Box>
 <Box expanded={isCodeTwoExpanded} width={698} height={650} onClick={toggleCodeTwoExpanded} scrollable={true}>
-    <img src="../name-equals.png" alt="main()" width="698px" height="1200px"/>
+	<img src="../name-equals.png" alt="main()" width="698px" height="1200px"/>
 </Box>
 <NavigationBar
-	prevLink="./solution-2-memory-mapped-file.html"
-	nextLink="./solution-4-name-as-byte-array.html"
+	prevLink="./solution-3-string-conversion.html"
+	nextLink="./solution-5-vectorize-compare.html"
 />
 
 <style>
@@ -85,38 +92,36 @@
 		top:    110px;
 		width:  432px;
 		height: 580px;
-		font-size: 20px;
+		font-size: 22px;
 		background-color: #181818;
 		border-radius: 10px;
 		box-shadow: 0 0 20px 20px rgba(0, 0, 0, 0.8);
 	}
-	#side-content {
-		padding-top: 20px;
-		padding-left: 30px;
-		padding-right: 30px;
-	}
-	#side-content ul {
-		padding-top: 0px;
-		padding-bottom: 20px;
-		padding-left: 20px;
-		margin: 0px;
-	}
 	#thumbnails {
 		display: flex;
 		justify-content: center;
-		padding-top: 20px;
+		padding-top: 0px;
 	}
 	.thumbnail {
-		margin-left: 5px;
-		cursor: pointer;
+		padding: 0px;
+		border: none;
 		border-radius: 5px;
-		border: 2px solid #C0F1FF;
+		cursor: pointer;
+		background-color: transparent;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 	.thumbnail:active {
 		transform: translate(2px, 2px);
 		box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 	}
-	.needed {
-		color: #C0FFCB;
+	.thumbnail img {
+		padding-top: 0px;
+		padding-left: 10px;
+		padding-right: 10px;
+		max-height: 100%;
+		max-width: 100%;
+		object-fit: contain;
 	}
 </style>

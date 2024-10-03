@@ -74,6 +74,7 @@
 
     .parent .close,
     .parent .link {
+		font-size: small;
         position: absolute;
         overflow: hidden;
         cursor: pointer;
