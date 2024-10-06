@@ -53,7 +53,7 @@
 			<td colspan="2">
 				<div class="code" on:click={toggleCodeExpand} on:keydown={toggleCodeExpand} role="button" tabindex="-1">
 					<div>No "Unsafe" - No GraalVM</div>
-					<div>Readable Code!</div>
+					<div>Comprehensible Code!</div>
 				</div>
 			</td>
 		</tr>

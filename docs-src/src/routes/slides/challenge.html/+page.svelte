@@ -1,16 +1,24 @@
 <script>
-	import NavigationBar from "$lib/components/NavigationBar.svelte";
-	import ContentPage from "$lib/templates/ContentPage.svelte";
+import Label from "$lib/components/Label.svelte";
+import NavigationBar from "$lib/components/NavigationBar.svelte";
+import ContentPage from "$lib/templates/ContentPage.svelte";
+
+let hoveredTextFile      = false;
+let hoveredOneBillionRow = false;
+let hoveredStationName   = false;
+let hoveredTemperature   = false;
+let hoveredNewLine       = false;
+
 </script>
 
 <ContentPage
 	title="One Billion Row Challenge">
 	<div class="left">
 		<ul>
-			<li>Read a <b>text file</b> containing <b>1 billion rows</b> of measurements.</li>
-			<li>Each line contains a weather <b>station name</b> and <b>temperature</b>:
+			<li>Read a <Label bind:isHovered={hoveredTextFile}>text file</Label> containing <Label bind:isHovered={hoveredOneBillionRow}>1 billion rows</Label> of measurements.</li>
+			<li>Each line contains a weather <Label bind:isHovered={hoveredStationName}>station name</Label> and <Label bind:isHovered={hoveredTemperature}>temperature</Label>:
 				<ul>
-					<li>Rows are delimited by a newline character (<b>'\n'</b>).</li>
+					<li>Rows are delimited by a newline character (<Label bind:isHovered={hoveredNewLine}>'\n'</Label>).</li>
 					<li>Station name and temperature are separated by a semicolon.</li>
 					<li>Station name is encoded in <b>UTF-8</b> and is <b>100 bytes</b> or shorter.</li>
 					<li>The temperature ranges from -99.9 to 99.9 (<b>1-2 digits before</b> the decimal point and <b>1 digit after</b>).</li>
@@ -24,7 +32,7 @@
 		</ul>		
 	</div>
 	<div class="right">
-		<div class="tab">
+		<div class="tab" class:highlight={hoveredTextFile}>
 			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 				<line x1="3" y1="4" x2="16" y2="4"/>
 				<line x1="3" y1="8" x2="11" y2="8"/>
@@ -43,17 +51,17 @@
 				<div class="blur">455</div>
 				<div class="blur">15,466</div>
 				<div class="blur">1,546,536</div>
-				<div>1,000,000,000</div>
+				<div class:highlight={hoveredOneBillionRow}>1,000,000,000</div>
 			</td>
 			<td class="code">
-				<div>Ottawa;14.2</div>
-				<div>Bangkok;44.0</div>
-				<div>Sydney;-2.5</div>
-				<div>Łódź;-20.4</div>
-				<div class="blur">Mercury;-50.7</div>
-				<div class="blur">Mars;-4.7</div>
-				<div class="blur">Venus;84.5</div>
-				<div>Budapest;14.9</div>
+				<div><span class:highlight={hoveredStationName}>Ottawa</span>;<span class:highlight={hoveredTemperature}>14.2</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div><span class:highlight={hoveredStationName}>Bangkok</span>;<span class:highlight={hoveredTemperature}>44.0</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div><span class:highlight={hoveredStationName}>Sydney</span>;<span class:highlight={hoveredTemperature}>-2.5</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div><span class:highlight={hoveredStationName}>Łódź</span>;<span class:highlight={hoveredTemperature}>-20.4</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div class="blur"><span class:highlight={hoveredStationName}>Mercury</span>;<span class:highlight={hoveredTemperature}>-50.7</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div class="blur"><span class:highlight={hoveredStationName}>Mars</span>;<span class:highlight={hoveredTemperature}>-4.7</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div class="blur"><span class:highlight={hoveredStationName}>Venus</span>;<span class:highlight={hoveredTemperature}>84.5</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div class:highlight={hoveredOneBillionRow}><span class:highlight={hoveredStationName}>Budapest</span>;<span class:highlight={hoveredTemperature}>14.9</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
 			</td>
 			</tr>
 		</table>
@@ -107,8 +115,7 @@
 	.code {
 		width: 40%;
 	}
-	.code div::after {
-		content: "¶";
+	.newline {
 		color: #777;
 	}
 	.code div.blur::after,
@@ -131,5 +138,23 @@
 		padding-right: 0.5em;
 		padding-top: 0.0em;
 		padding-bottom: 0.0em;
+	}
+	
+	.highlight {
+		animation: highlight-animation 1s ease-in-out infinite alternate;
+	}
+	@keyframes highlight-animation {
+		0% {
+			color: #C0F1FF;
+			filter: brightness(1.5);
+			box-shadow: 0 0 10px 10px rgba(150, 255, 153, 0.5);
+			text-shadow: 0 0 20px 20px rgba(150, 255, 153, 0.5);
+		}
+		100% {
+			color: #C0FFCB;
+			filter: brightness(1);
+			/* box-shadow: 0 0 0 0 rgba(150, 255, 255, 0.4); */
+			text-shadow: 0 0 0 0 rgba(150, 255, 153, 0.4);
+		}
 	}
 </style>
