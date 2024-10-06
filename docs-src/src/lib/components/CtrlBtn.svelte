@@ -27,7 +27,7 @@
 		text-align: center;
 		/* background-color: #061e30; */
 		background: #181818;
-		color: #bbb;
+		color: #333;
 		font-weight: bold;
 		border: 0px;
 	}
