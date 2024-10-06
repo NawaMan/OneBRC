@@ -54,7 +54,7 @@
 	</WideDiv>
 	<div id="side">
 		<div class="side-content">
-			To speed up the process of merging,
+			To speed up the process of combining,
 			if can assign a unique ID for each name.
 			So the subsequent comparison can skip the array equals step.
 

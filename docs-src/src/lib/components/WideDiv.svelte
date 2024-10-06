@@ -18,9 +18,9 @@
         if (maxScrollPosition === undefined) maxScrollPosition = parseInt(innerWidth) *  0.75;
 
 		if (event.deltaX != 0) {
-			scrollPosition += event.deltaX;
+			scrollPosition += event.deltaX / 2;
 		} else {
-			scrollPosition += event.deltaY;
+			scrollPosition += event.deltaY / 2;
 		}
         scrollPosition = Math.max(minScrollPosition, scrollPosition);
         scrollPosition = Math.min(maxScrollPosition, scrollPosition);

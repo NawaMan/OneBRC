@@ -20,10 +20,15 @@
 					<li>Use name normalization</li>
 				</ul>
 			</li>
-		</ul>		
+		</ul>
+		<div style="padding: 100px; text-align: center; font-size: 80px;">
+			Thank you!
+		</div>
 	</div>
-	<div class="right">
-		<img src="../nawaman.png"  width="400px" alt="NawaMan" />
+	<div class="right" style="text-align: center;">
+		<img src="../nawaman.png"  width="300px" alt="NawaMan" style="margin: 80px; margin-top: 30px; margin-bottom: 0px;" />
+		<div style="margin-left: 110px;">NawaMan</div>
+		<a style="margin-left: 90px; font-size:medium;" href="https://nawaman.net/contact.html" target="_blank">https://nawaman.net/contact.html</a>
 	</div>
 </ContentPage>
 <NavigationBar
@@ -38,7 +43,7 @@
 		margin: 0px;
 	}
 	ul li ul {
-		font-size: 0.9em;
+		font-size: larger;
 	}
 	.left,
 	.right {

@@ -37,6 +37,7 @@
 			}
 		} else {
 			this.style.textDecoration = "line-through";
+			this.style.color = "#FFC0C0";
 		}
 	}
 
@@ -130,6 +131,9 @@
 	}
 	li {
 		cursor: pointer;
+	}
+	li:hover {
+		color: #C0FFCB;
 	}
 	#thumbup {
 		width: 32px;
