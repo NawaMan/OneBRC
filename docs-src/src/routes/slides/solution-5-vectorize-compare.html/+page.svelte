@@ -112,6 +112,15 @@
 		border-radius: 10px;
 		box-shadow: 0 0 20px 20px rgba(0, 0, 0, 0.8);
 	}
+
+	#thumbnails {
+		padding-left: 20px;
+		padding-right: 20px;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: auto auto;
+		gap: 5px;
+	}
 	.thumbnail {
 		padding: 0px;
 		border: none;
@@ -123,16 +132,6 @@
 		transform: translate(2px, 2px);
 		box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 	}
-
-	#thumbnails {
-		padding-left: 20px;
-		padding-right: 20px;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		grid-template-rows: auto auto;
-		gap: 5px;
-		}
-
 	.thumbnail1 {
 		grid-column: 1;
 		grid-row: 1;
