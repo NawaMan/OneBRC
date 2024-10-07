@@ -8,6 +8,10 @@ let hoveredOneBillionRow = false;
 let hoveredStationName   = false;
 let hoveredTemperature   = false;
 let hoveredNewLine       = false;
+let hoveredSemicolon     = false;
+let hoveredNegative      = false;
+let hoveredTwoDigits     = false;
+let hoveredOneDigits     = false;
 
 </script>
 
@@ -19,9 +23,13 @@ let hoveredNewLine       = false;
 			<li>Each line contains a weather <Label bind:isHovered={hoveredStationName}>station name</Label> and <Label bind:isHovered={hoveredTemperature}>temperature</Label>:
 				<ul>
 					<li>Rows are delimited by a newline character (<Label bind:isHovered={hoveredNewLine}>'\n'</Label>).</li>
-					<li>Station name and temperature are separated by a semicolon.</li>
+					<li>Station name and temperature are separated by a <Label bind:isHovered={hoveredSemicolon}>semicolon</Label>.</li>
 					<li>Station name is encoded in <b>UTF-8</b> and is <b>100 bytes</b> or shorter.</li>
-					<li>The temperature ranges from -99.9 to 99.9 (<b>1-2 digits before</b> the decimal point and <b>1 digit after</b>).</li>
+					<li>The temperature ranges from -99.9 to 99.9 
+						(<Label bind:isHovered={hoveredTwoDigits}>1-2 digits before</Label>the decimal point, 
+						<Label bind:isHovered={hoveredOneDigits}>1 digit after</Label> and can be 
+						<Label bind:isHovered={hoveredNegative}>negative</Label>).
+					</li>
 				</ul>
 			</li>
 			<li>Calculate the <b>minimum</b>, <b>maximum</b>, and <b>average</b> temperatures for <b>each station</b>.</li>
@@ -54,20 +62,31 @@ let hoveredNewLine       = false;
 				<div class:highlight={hoveredOneBillionRow}>1,000,000,000</div>
 			</td>
 			<td class="code">
-				<div><span class:highlight={hoveredStationName}>Ottawa</span>;<span class:highlight={hoveredTemperature}>14.2</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
-				<div><span class:highlight={hoveredStationName}>Bangkok</span>;<span class:highlight={hoveredTemperature}>44.0</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
-				<div><span class:highlight={hoveredStationName}>Sydney</span>;<span class:highlight={hoveredTemperature}>-2.5</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
-				<div><span class:highlight={hoveredStationName}>Łódź</span>;<span class:highlight={hoveredTemperature}>-20.4</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
-				<div class="blur"><span class:highlight={hoveredStationName}>Mercury</span>;<span class:highlight={hoveredTemperature}>-50.7</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
-				<div class="blur"><span class:highlight={hoveredStationName}>Mars</span>;<span class:highlight={hoveredTemperature}>-4.7</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
-				<div class="blur"><span class:highlight={hoveredStationName}>Venus</span>;<span class:highlight={hoveredTemperature}>84.5</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
-				<div class:highlight={hoveredOneBillionRow}><span class:highlight={hoveredStationName}>Budapest</span>;<span class:highlight={hoveredTemperature}>14.9</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div><span class:highlight={hoveredStationName}>Ottawa</span><span class:highlight={hoveredSemicolon}>;</span><span class:highlight={hoveredTemperature}>14.2</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div><span class:highlight={hoveredStationName}>Bangkok</span><span class:highlight={hoveredSemicolon}>;</span><span class:highlight={hoveredTemperature}>44.0</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div><span class:highlight={hoveredStationName}>Sydney</span><span class:highlight={hoveredSemicolon}>;</span><span class:highlight={hoveredTemperature}>-2.5</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div><span class:highlight={hoveredStationName}>Łódź</span><span class:highlight={hoveredSemicolon}>;</span><span class:highlight={hoveredTemperature}>-20.4</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div class="blur"><span class:highlight={hoveredStationName}>Mercury</span><span class:highlight={hoveredSemicolon}>;</span><span class:highlight={hoveredTemperature}>-50.7</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div class="blur"><span class:highlight={hoveredStationName}>Mars</span><span class:highlight={hoveredSemicolon}>;</span><span class:highlight={hoveredTemperature}>-4.7</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div class="blur"><span class:highlight={hoveredStationName}>Venus</span><span class:highlight={hoveredSemicolon}>;</span><span class:highlight={hoveredTemperature}>84.5</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
+				<div class:highlight={hoveredOneBillionRow}><span class:highlight={hoveredStationName}>Budapest</span><span class:highlight={hoveredSemicolon}>;</span><span class:highlight={hoveredTemperature}>14.9</span><span class="newline" class:highlight={hoveredNewLine}>¶</span></div>
 			</td>
 			</tr>
 		</table>
 		<p>
 			File size: <b>13GB</b>
 		</p>
+		Digits
+		<table border=1 class="temperature-table">
+			<tr>
+				<td><span class:highlight={hoveredTwoDigits}>&nbsp;1</span>.<span class:highlight={hoveredOneDigits}>2</span></td>
+				<td><span class:highlight={hoveredTwoDigits}>&nbsp;12</span>.<span class:highlight={hoveredOneDigits}>3</span></td>
+			</tr>
+			<tr>
+				<td><span class:highlight={hoveredNegative}>-</span><span class:highlight={hoveredTwoDigits}>1</span>.<span class:highlight={hoveredOneDigits}>2</span></td>
+				<td><span class:highlight={hoveredNegative}>-</span><span class:highlight={hoveredTwoDigits}>12</span>.<span class:highlight={hoveredOneDigits}>3</span></td>
+			</tr>
+		</table>
 	</div>
 </ContentPage>
 <NavigationBar
@@ -139,7 +158,7 @@ let hoveredNewLine       = false;
 		padding-top: 0.0em;
 		padding-bottom: 0.0em;
 	}
-	
+
 	.highlight {
 		animation: highlight-animation 1s ease-in-out infinite alternate;
 	}
@@ -156,5 +175,11 @@ let hoveredNewLine       = false;
 			/* box-shadow: 0 0 0 0 rgba(150, 255, 255, 0.4); */
 			text-shadow: 0 0 0 0 rgba(150, 255, 153, 0.4);
 		}
+	}
+
+	.temperature-table tr td {
+		padding-left: 0.5em;
+		padding-right: 0.5em;
+		font-family: 'Courier New', Courier, monospace;
 	}
 </style>

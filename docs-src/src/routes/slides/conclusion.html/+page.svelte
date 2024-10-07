@@ -36,9 +36,6 @@
 />
 
 <style>
-	b {
-		color: burlywood;
-	}
 	ul {
 		margin: 0px;
 	}
