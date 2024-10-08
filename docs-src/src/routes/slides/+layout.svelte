@@ -5,10 +5,18 @@
 	import { browser }    from '$app/environment';
 	import { onMount }    from 'svelte';
 	import { scaleMode }  from '$lib/stores/scaleMode';
+	import { page }       from '$app/stores';
 	import Copyright      from '$lib/components/Copyright.svelte';
 	import TableOfContent from '$lib/components/TableOfContent.svelte';
 	import SizeMode       from '$lib/components/SizeMode.svelte';
 
+	export let noteContent: string = null;
+	$: {
+		if ($page.data.noteContent) {
+			noteContent = $page.data.noteContent;
+		}
+	}
+	
 	let container: HTMLElement;
 	let content:   HTMLElement;
 
@@ -84,6 +92,11 @@
 		<Copyright />
 		{/if}
 	</div>
+	{#if noteContent && !isScaled}
+	<div class="note">
+		{@html noteContent}
+	</div>
+	{/if}
 </div>
 
 <style>
@@ -92,10 +105,9 @@
 		height: 720px;
 		margin: 0 auto;
 		display: flex;
-		/* background: #112c63; */
+		flex-direction: column;
 		background: #181818;
 		border: 1px solid #ccc;
-		/* border: 1px solid #000; */
 		position: relative;
 	}
 	.container.scale-mode {
@@ -120,4 +132,19 @@
 		background: #181818;
 		font-family: 'Noto Sans', 'Cormorant Garamond', serif;
 	}
+
+	.container:not(.scale-mode) {
+		transform: translateY(-50px);
+	}
+
+	.note {
+		display: block;
+		width: calc(1280px - 20px);
+		margin-top: 20px;
+		padding: 10px; 
+		color: #fff;
+		border: 1px solid #fff;
+		border-radius: 5px;
+	}
+
 </style>

@@ -1,4 +1,4 @@
-<script>
+<script context="module">
 	import NavigationBar from "$lib/components/NavigationBar.svelte";
 	import TitlePage from "$lib/templates/TitlePage.svelte";
 </script>
