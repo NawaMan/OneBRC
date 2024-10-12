@@ -61,11 +61,11 @@
 			</ul>
 
 			<div id="thumbnails">
-				<button class="thumbnail" on:click={toggleCodeOneExpanded}>
-					<img src="../line-extract.png" alt="main()" width="213"/>
-				</button>
 				<button class="thumbnail" on:click={toggleCodeTwoExpanded}>
 					<img src="../name-equals.png" alt="main()" width="136"/>
+				</button>
+				<button class="thumbnail" on:click={toggleCodeOneExpanded}>
+					<img src="../line-extract.png" alt="main()" width="213"/>
 				</button>
 			</div>
 		</div>

@@ -50,10 +50,9 @@
 				<li>Split the data into chunks</li>
 				<li>Process on separate threads</li>
 				<li>Optimized at 32 x CPU count</li>
-				<li>Use Java 21 "Virtual threads"</li>
+				<li>Use "Virtual threads"</li>
 				<li>Extract concurrently</li>
 				<li>Combine concurrently</li>
-				<li>Normalize names concurrently</li>
 			</ul>
 			<button class="thumbnail" on:click={toggleCodeExpanded}>
 				<img src="../multithreads.png" alt="main()" width="350"/>
