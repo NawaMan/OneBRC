@@ -50,7 +50,7 @@
 <div class="nav no-print">
 	<CtrlBtn text="FIRST"    on:click={onFirst}    isDisabled={!firstLink} />
 	<CtrlBtn text="PREV"     on:click={onPrev}     isDisabled={!prevLink} />
-	<CtrlBtn text="CONTINUE" on:click={onContinue} isDisabled={!onContinue} isVisible={false} />
+	<CtrlBtn text="CONTINUE" on:click={onContinue} isDisabled={!onContinue} />
 	<CtrlBtn text="NEXT"     on:click={onNext}     isDisabled={!nextLink} />
 	<CtrlBtn text="LAST"     on:click={onLast}     isDisabled={!lastLink}/>
 </div>
