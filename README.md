@@ -12,3 +12,8 @@ Run `benchmark-locally.sh`
 ## Benchmark on the Cloud (AWS)
 
 Run `benchmark-on-aws.sh`
+
+
+### Solution 
+
+Visit this [slides](https://nawaman.github.io/OneBRC/slides/onebrc.html).
