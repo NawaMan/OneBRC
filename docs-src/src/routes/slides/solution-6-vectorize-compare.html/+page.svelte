@@ -1,13 +1,10 @@
 <script lang="ts">
-	import Box from '$lib/components/Box.svelte';
-	import Hint from '$lib/components/Hint.svelte';
-	import NavigationBar from '$lib/components/NavigationBar.svelte';
-	import Note from '$lib/components/Note.svelte';
-	import WideDiv from '$lib/components/WideDiv.svelte';
+	import Box         from '$lib/components/Box.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
-	import { onMount } from 'svelte';
+	import Note        from '$lib/components/Note.svelte';
+	import WideDiv     from '$lib/components/WideDiv.svelte';
 
-	let hint = "scroll to pan";
+	import { onMount } from 'svelte';
 
 	let isCodeOneExpanded = false;
 	let isCodeTwoExpanded = false;
@@ -86,10 +83,6 @@
 		</div>
 	</div>
 </ContentPage>
-<NavigationBar
-	prevLink="./solution-5-value-as-integer.html"
-	nextLink="./solution-7-name-normalization.html"
-/>
 <Box expanded={isCodeOneExpanded} width={675} height={386} onClick={toggleCodeOneExpanded} left="400px">
 	<img src="../name-array-equals.png" alt="StationName.equals()" width="675px" height="386px"/>
 </Box>

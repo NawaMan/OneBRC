@@ -1,6 +1,5 @@
 <script>
-	import NavigationBar from "$lib/components/NavigationBar.svelte";
-	import Note from "$lib/components/Note.svelte";
+	import Note        from "$lib/components/Note.svelte";
 	import ContentPage from "$lib/templates/ContentPage.svelte";
 </script>
 
@@ -50,9 +49,6 @@
 		  
 	</div>
 </ContentPage>
-<NavigationBar
-	prevLink="./solution-7-name-normalization.html"
-/>
 <Note>
 	<p>
 		There are more tricks and experimentation done to achive this

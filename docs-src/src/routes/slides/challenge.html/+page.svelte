@@ -1,19 +1,17 @@
 <script>
-import Label from "$lib/components/Label.svelte";
-import NavigationBar from "$lib/components/NavigationBar.svelte";
-	import Note from "$lib/components/Note.svelte";
-import ContentPage from "$lib/templates/ContentPage.svelte";
+	import Label       from "$lib/components/Label.svelte";
+	import Note        from "$lib/components/Note.svelte";
+	import ContentPage from "$lib/templates/ContentPage.svelte";
 
-let hoveredTextFile      = false;
-let hoveredOneBillionRow = false;
-let hoveredStationName   = false;
-let hoveredTemperature   = false;
-let hoveredNewLine       = false;
-let hoveredSemicolon     = false;
-let hoveredNegative      = false;
-let hoveredTwoDigits     = false;
-let hoveredOneDigits     = false;
-
+	let hoveredTextFile      = false;
+	let hoveredOneBillionRow = false;
+	let hoveredStationName   = false;
+	let hoveredTemperature   = false;
+	let hoveredNewLine       = false;
+	let hoveredSemicolon     = false;
+	let hoveredNegative      = false;
+	let hoveredTwoDigits     = false;
+	let hoveredOneDigits     = false;
 </script>
 
 <ContentPage
@@ -90,10 +88,6 @@ let hoveredOneDigits     = false;
 		</table>
 	</div>
 </ContentPage>
-<NavigationBar
-	prevLink="./results.html"
-	nextLink="./solution.html"
-/>
 <Note>
 	<p>Before talking about the solution, let review the challange in more details.</p>
     <p>which is ...</p>

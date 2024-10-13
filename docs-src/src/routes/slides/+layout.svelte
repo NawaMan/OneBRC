@@ -2,13 +2,14 @@
 	import '$lib/styles/global.css';
 	import '$lib/styles/presentation.css';
 	import '$lib/styles/tooltip.css';
-	import { browser }    from '$app/environment';
-	import { onMount }    from 'svelte';
-	import { scaleMode }  from '$lib/stores/scaleMode';
-	import { page }       from '$app/stores';
+	
 	import Copyright      from '$lib/components/Copyright.svelte';
 	import TableOfContent from '$lib/components/TableOfContent.svelte';
 	import SizeMode       from '$lib/components/SizeMode.svelte';
+
+	import { browser }    from '$app/environment';
+	import { onMount }    from 'svelte';
+	import { scaleMode }  from '$lib/stores/scaleMode';
 	
 	let container: HTMLElement;
 	let content:   HTMLElement;
@@ -55,7 +56,6 @@
 				// This is a temporary fix to prevent flickering.
 				// See in the global.css for the 'rendering' class.
 				// The real solition is to have the page as a component and outter part stay the same but that would make this a SPA.
-
 
 				isScaled = value;
 

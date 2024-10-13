@@ -1,12 +1,8 @@
 <script lang="ts">
-	import Box from '$lib/components/Box.svelte';
-	import Hint from '$lib/components/Hint.svelte';
-	import NavigationBar from '$lib/components/NavigationBar.svelte';
-	import Note from '$lib/components/Note.svelte';
-	import WideDiv from '$lib/components/WideDiv.svelte';
+	import Box         from '$lib/components/Box.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
-	import { faThList } from '@fortawesome/free-solid-svg-icons';
-	import { text } from '@sveltejs/kit';
+	import Note        from '$lib/components/Note.svelte';
+	import WideDiv     from '$lib/components/WideDiv.svelte';
 	import { onMount } from 'svelte';
 
 	let hint = "scroll to pan";
@@ -92,10 +88,6 @@
 		</div>
 	</div>
 </ContentPage>
-<NavigationBar
-	prevLink="./solution-1-multithread.html"
-	nextLink="./solution-3-string-conversion.html"
-/>
 <Box expanded={isCodeExpanded} width={932} height={551} onClick={toggleCodeExpanded}>
     <img src="../memory-mapped-file.png" alt="main()" width="932px" height="551px"/>
 </Box>

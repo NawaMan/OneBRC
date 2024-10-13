@@ -1,8 +1,6 @@
 <script>
-	import NavigationBar from "$lib/components/NavigationBar.svelte";
 	import ContentPage from "$lib/templates/ContentPage.svelte";
-	import YouTube from "$lib/components/YouTube.svelte";
-	import Note from "$lib/components/Note.svelte";
+	import Note        from "$lib/components/Note.svelte";
 </script>
 
 <ContentPage title="Overview">
@@ -35,10 +33,6 @@
 		</tr>
 	</table>
 </ContentPage>
-<NavigationBar
-	prevLink="./onebrc.html"
-	nextLink="./overview-2.html"
-/>
 <Note>
 	<p>The "One Billion Row Challenge" was proposed by Gunnar Morling on Jan 1st of 2024.</p>
 	<p>The challenge is to write a program that can read a CSV-liked file with one billion rows of data.</p>

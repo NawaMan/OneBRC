@@ -74,10 +74,6 @@
 	</WideDiv>
 </ContentPage>
 <Hint text="{hint}" />
-<NavigationBar
-	prevLink="./challenge.html"
-	nextLink="./solution-1-multithread.html"
-/>
 <Note>
 	<p>Here is the high-level view of the solution. I will go over the details in the incoming slides.</p>
 	<p>

@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import { browser } from '$app/environment';
-	import { writable } from 'svelte/store';
 	import CtrlBtn from './CtrlBtn.svelte';
+
+	import { browser }   from '$app/environment';
+	import { onMount }   from 'svelte';
+	import { onDestroy } from 'svelte';
+	import { writable }  from 'svelte/store';
 
 	let tocRef: HTMLElement;
 	let isContentVisible = writable(false);

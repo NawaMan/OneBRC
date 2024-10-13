@@ -1,8 +1,7 @@
 <script>
-	import NavigationBar from "$lib/components/NavigationBar.svelte";
 	import ContentPage from "$lib/templates/ContentPage.svelte";
-	import YouTube from "$lib/components/YouTube.svelte";
-	import Note from "$lib/components/Note.svelte";
+	import Note        from "$lib/components/Note.svelte";
+	import YouTube     from "$lib/components/YouTube.svelte";
 </script>
 
 <ContentPage title="Overview">
@@ -35,10 +34,6 @@
 	</table>
 	<img class="glasses" src="../ThugLifeGlasses.png" alt="Glasses" />
 </ContentPage>
-<NavigationBar
-	prevLink="./overview.html"
-	nextLink="./results.html"
-/>
 <Note>
 	<p>However, some time in August, I saw these two YouTube VDOs which sparked my interest.</p>
     <p>

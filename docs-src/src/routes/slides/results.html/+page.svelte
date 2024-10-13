@@ -1,9 +1,8 @@
 <script lang="ts">
-	import NavigationBar from "$lib/components/NavigationBar.svelte";
+	import Box         from "$lib/components/Box.svelte";
 	import ContentPage from "$lib/templates/ContentPage.svelte";
-    import JavaCode from "$lib/components/JavaCode.svelte";
-	import Box from "$lib/components/Box.svelte";
-	import Note from "$lib/components/Note.svelte";
+    import JavaCode    from "$lib/components/JavaCode.svelte";
+	import Note        from "$lib/components/Note.svelte";
   
     // @ts-ignore
     export let data;
@@ -60,10 +59,6 @@
 		</tr>
 	</table>
 </ContentPage>
-<NavigationBar
-	prevLink="./overview-2.html"
-	nextLink="./challenge.html"
-/>
 <Note>
 	<p>The result?</p>
 	<p>Pretty good, actually.</p>

@@ -1,13 +1,10 @@
 <script lang="ts">
-	import Box from '$lib/components/Box.svelte';
-	import Hint from '$lib/components/Hint.svelte';
-	import NavigationBar from '$lib/components/NavigationBar.svelte';
-	import Note from '$lib/components/Note.svelte';
-	import WideDiv from '$lib/components/WideDiv.svelte';
+	import Box         from '$lib/components/Box.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
-	import { onMount } from 'svelte';
+	import Note        from '$lib/components/Note.svelte';
+	import WideDiv     from '$lib/components/WideDiv.svelte';
 
-	let hint = "scroll to pan";
+	import { onMount } from 'svelte';
 
 	let isCodeOneExpanded = false;
 	let isCodeTwoExpanded = false;
@@ -88,10 +85,6 @@
 		</div>
 	</div>
 </ContentPage>
-<NavigationBar
-	prevLink="./solution-6-vectorize-compare.html"
-	nextLink="./conclusion.html"
-/>
 <Box expanded={isCodeOneExpanded} width={915} height={399} onClick={toggleCodeOneExpanded}>
 	<img src="../add-name-to-queue.png" alt="main()" width="915px" height="399px"/>
 </Box>

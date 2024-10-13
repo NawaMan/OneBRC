@@ -1,12 +1,11 @@
 
 
 <script lang="ts">
-	import Box from '$lib/components/Box.svelte';
-	import Hint from '$lib/components/Hint.svelte';
-	import NavigationBar from '$lib/components/NavigationBar.svelte';
-	import Note from '$lib/components/Note.svelte';
-	import WideDiv from '$lib/components/WideDiv.svelte';
+	import Box         from '$lib/components/Box.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
+	import Note        from '$lib/components/Note.svelte';
+	import WideDiv     from '$lib/components/WideDiv.svelte';
+
 	import { onMount } from 'svelte';
 
 	let hint = "scroll to pan";
@@ -78,10 +77,6 @@
 <Box expanded={isCodeTwoExpanded} width={698} height={650} onClick={toggleCodeTwoExpanded} scrollable={true} left="380px">
 	<img src="../name-equals.png" alt="main()" width="698px" height="1200px"/>
 </Box>
-<NavigationBar
-	prevLink="./solution-3-string-conversion.html"
-	nextLink="./solution-5-value-as-integer.html"
-/>
 <Note>
 	So, if we don't use strings, what can we use instead?
 	Byte array of course!

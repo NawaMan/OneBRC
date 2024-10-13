@@ -1,12 +1,11 @@
 
 
 <script lang="ts">
-	import Box from '$lib/components/Box.svelte';
-	import Hint from '$lib/components/Hint.svelte';
-	import NavigationBar from '$lib/components/NavigationBar.svelte';
-	import Note from '$lib/components/Note.svelte';
-	import WideDiv from '$lib/components/WideDiv.svelte';
+	import Box         from '$lib/components/Box.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
+	import Note        from '$lib/components/Note.svelte';
+	import WideDiv     from '$lib/components/WideDiv.svelte';
+
 	import { onMount } from 'svelte';
 
 	let hint = "scroll to pan";
@@ -64,10 +63,6 @@
 		</div>
 	</div>
 </ContentPage>
-<NavigationBar
-	prevLink="./solution-4-name-as-byte-array.html"
-	nextLink="./solution-6-vectorize-compare.html"
-/>
 <Box expanded={isCodeOneExpanded} width={660} height={605} onClick={toggleCodeOneExpanded} left="390px" top="390px" shadowOpacity={0.0}>
 	<img src="../TemperatureBuffer.png" alt="main()" width="660px" height="605px"/>
 </Box>

@@ -1,10 +1,32 @@
 <!-- Title page. -->
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import { browser } from '$app/environment';
-	import CtrlBtn from '$lib/components/CtrlBtn.svelte';
-	import { scaleMode } from '$lib/stores/scaleMode';
+	import NavigationBar from '$lib/components/NavigationBar.svelte';
+
+	import { getPageNavigation }   from '$lib/utils/navigate';
+	import { type PageNavigation } from '$lib/utils/navigate';
+	import { pages }               from '../../routes/pages';
+	import { page }                from "$app/stores";
+
+	let navigation: PageNavigation;
+
+	$: {
+		const currentPath = $page.url.pathname.split("/").pop() || null; 
+		navigation = getPageNavigation(pages, currentPath || "", "./");
+	}
 </script>
+
+<div class="page">
+	<h1 class="title"     ><slot name="title"       /></h1>
+	<p class='subtitle'   ><slot name="subtitle"    /></p>
+	<p class='subsubtitle'><slot name="subsubtitle" /></p>
+</div>
+
+<NavigationBar
+	firstLink={navigation.first}
+	prevLink={navigation.prev}
+	nextLink={navigation.next}
+	lastLink={navigation.last}
+/>
 
 <style>
 	.page {
@@ -29,9 +51,3 @@
 		font-size: 2em;
 	}
 </style>
-
-<div class="page">
-	<h1 class="title"     ><slot name="title"       /></h1>
-	<p class='subtitle'   ><slot name="subtitle"    /></p>
-	<p class='subsubtitle'><slot name="subsubtitle" /></p>
-</div>
