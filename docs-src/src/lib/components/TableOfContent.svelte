@@ -6,6 +6,11 @@
 	import { onDestroy } from 'svelte';
 	import { writable }  from 'svelte/store';
 
+	import type { PageNavigation } from '$lib/utils/navigate';
+
+
+    export let pages: Array<{path: string, title: string}> = [];
+
 	let tocRef: HTMLElement;
 	let isContentVisible = writable(false);
 
@@ -52,24 +57,11 @@
 	{#if $isContentVisible}
 	<div class="content">
 		<div id="article"><a href="../text.html">View as article</a></div>
-		<ol>
-			<li><a href="./onebrc.html"    >Title</a></li>
-			<li><a href="./overview.html"  >Overview</a></li>
-			<li><a href="./overview-2.html">Overview (2)</a></li>
-			<li><a href="./results.html"   >Results</a></li>
-			<li><a href="./challenge.html" >One Billion Row Challenge</a></li>
-
-			<li><a href="./solution.html"                     >Solution</a></li>
-			<li><a href="./solution-1-multithread.html"       >Solution (1): Multithread</a></li>
-			<li><a href="./solution-2-memory-mapped-file.html">Solution (2): Memory-Mapped File</a></li>
-			<li><a href="./solution-3-string-conversion.html" >Solution (3): Delay String Conversion</a></li>
-			<li><a href="./solution-4-name-as-byte-array.html">Solution (4): Name as Byte Array</a></li>
-			<li><a href="./solution-5-value-as-integer.html" >Solution (5): Value as Integer</a></li>
-			<li><a href="./solution-6-vectorize-compare.html" >Solution (6): Vectorize Comparison</a></li>
-			<li><a href="./solution-7-name-normalization.html">Solution (7): Name Normalization</a></li>
-
-			<li><a href="./conclusion.html">Conclusion</a></li>
-		</ol>
+        <ol>
+            {#each pages as { path, title }}
+                <li><a href={`./${path}`}>{title}</a></li>
+            {/each}
+        </ol>
 	</div>
 	{/if}
 </div>

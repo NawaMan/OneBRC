@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '$lib/styles/global.css';
+	import '$lib/styles/note.css';
 	import '$lib/styles/presentation.css';
 	import '$lib/styles/tooltip.css';
 	
@@ -9,6 +10,7 @@
 
 	import { browser }    from '$app/environment';
 	import { onMount }    from 'svelte';
+    import { pages }      from '../../routes/pages';
 	import { scaleMode }  from '$lib/stores/scaleMode';
 	
 	let container: HTMLElement;
@@ -80,7 +82,7 @@
 	<div class="content"  bind:this={content}>
 		{#if initialized}
 		<slot />
-		<TableOfContent />
+		<TableOfContent {pages} />
 		<SizeMode  />
 		<Copyright />
 		{/if}
