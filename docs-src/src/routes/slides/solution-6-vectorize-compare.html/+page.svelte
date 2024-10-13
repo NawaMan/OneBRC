@@ -38,7 +38,7 @@
 	});
 </script>
 
-<ContentPage title="Solution (6): Name Normalization">
+<ContentPage title="Solution (6): Vectorize Comparison">
 	<WideDiv
 		outerWidth="1190"
 		innerWidth="2000"
@@ -53,53 +53,50 @@
 		</div>
 	</WideDiv>
 	<div id="side">
-		<div class="side-content">
-			To speed up the process of combining,
-			if can assign a unique ID for each name.
-			So the subsequent comparison can skip the array equals step.
-
+		<div id="side-content">
 			<ul>
-				<li>A new name detect for each chunk.</li>
-				<li>The name is added to the queue.</li>
-				<li>Unique ID us obtained or generated.</li>
-				<li>The ID is assigned back to the name.</li>
+				<li>Name is used as map key.</li>
+				<li>Map use <code>hash</code> to short list match.</li>
+				<li>But map will confirm with <code>equals</code>.</li>
+				<li>Thus, name <code>equals</code> must be fast.</li>
+				<li>To do we use vectorization.</li>
+				<li>Fortunately that was built in!</li>
 			</ul>
-		</div>
-		<div id="thumbnails">
-			<div class="thumbnail thumbnail1" >
-				<button on:click={toggleCodeOneExpanded}>
-					<img src="../add-name-to-queue.png" alt="main()" width="164"/>
-					<div style="font-size: small;">Add name to queue</div>
-				</button>
-			</div>
-			<div class="thumbnail thumbnail2" >
-				<button on:click={toggleCodeTwoExpanded}>
-					<img src="../assign-name-id.png" alt="main()" width="155"/>
-					<div style="font-size: small;">Assign name ID</div>
-				</button>
-			</div>
-			<div class="thumbnail thumbnail3" >
-				<button on:click={toggleCodeThreeExpanded}>
-					<img src="../id-in-name-equals.png" alt="main()" width="124"/>
-					<div style="font-size: small;">ID in name <code>equals()</code></div>
-				</button>
+			<div id="thumbnails">
+				<div class="thumbnail thumbnail1" >
+					<button on:click={toggleCodeOneExpanded}>
+						<img src="../name-array-equals.png" alt="main()" width="185.63"/>
+						<div style="font-size: small;">StationName.equals()</div>
+					</button>
+				</div>
+				<div class="thumbnail thumbnail2" >
+					<button on:click={toggleCodeTwoExpanded}>
+						<img src="../arrays-equals.png" alt="main()" width="128.43"/>
+						<div style="font-size: small;">Arrays.equals()</div>
+					</button>
+				</div>
+				<div class="thumbnail thumbnail3" >
+					<button on:click={toggleCodeThreeExpanded}>
+						<img src="../arraysupport-mismatch.png" alt="main()" width="175.18"/>
+						<div style="font-size: small;">ArraySupports.mismatch()</div>
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
 </ContentPage>
-<Box expanded={isCodeOneExpanded} width={915} height={399} onClick={toggleCodeOneExpanded}>
-	<img src="../add-name-to-queue.png" alt="main()" width="915px" height="399px"/>
+<Box expanded={isCodeOneExpanded} width={675} height={386} onClick={toggleCodeOneExpanded}>
+	<img src="../name-array-equals.png" alt="StationName.equals()" width="675px" height="386px"/>
 </Box>
-<Box expanded={isCodeTwoExpanded} width={859} height={548} onClick={toggleCodeTwoExpanded} scrollable={true}>
-	<img src="../assign-name-id.png" alt="main()" width="859px" height="548px"/>
+<Box expanded={isCodeTwoExpanded} width={656} height={279} onClick={toggleCodeTwoExpanded} scrollable={true}>
+	<img src="../arrays-equals.png" alt="Arrays.equals()" width="656px" height="279px"/>
 </Box>
-<Box expanded={isCodeThreeExpanded} width={689} height={681} onClick={toggleCodeThreeExpanded} scrollable={true}>
-	<img src="../id-in-name-equals.png" alt="main()" width="689px" height="681px"/>
+<Box expanded={isCodeThreeExpanded} width={616} height={539} onClick={toggleCodeThreeExpanded} scrollable={true}>
+	<img src="../arraysupport-mismatch.png" alt="ArraySupports.mismatch()" width="616px" height="539px"/>
 </Box>
 <NavigationBar
-	prevLink="./solution-5-vectorize-compare.html"
-	nextLink="./conclusion.html"
-/>
+	prevLink="./solution-5-value-as-integer.html"
+	nextLink="./solution-7-name-normalization.html" />
 
 <style>
 	#diagram {
@@ -111,15 +108,9 @@
 		top:    110px;
 		width:  432px;
 		height: 580px;
-		font-size: 20px;
 		background-color: #181818;
 		border-radius: 10px;
 		box-shadow: 0 0 20px 20px rgba(0, 0, 0, 0.8);
-	}
-	.side-content {
-		padding-top: 10px;
-		padding-left: 20px;
-		padding-right: 20px;
 	}
 
 	#thumbnails {

@@ -73,7 +73,7 @@
 	</WideDiv>
 	<div id="side">
 		<div id="side-content">
-			Choices
+			Alternatives
 			<ul bind:this={items}  style="list-style-type: circle;">
 				<li>Read the file to a string</li>
 				<li>Read the lines to strings</li>

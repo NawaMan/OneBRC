@@ -4,10 +4,9 @@ export const trailingSlash = "never";
 
 export const load = () => {
     const noteContent
-            = "The result? Pretty good. The program run in 1.8 seconds to 3 seconds!"
-            + "You can click them to see more details."
-            + "The code didn't use 'unsafe' and is not using 'GraalVM'."
-            + "And no hard the read code (hard to maintian)."
+            = "The result? Pretty good, actually. The program run in between 1.8 seconds to 3 seconds! "
+            + "You can click them to see more details. "
+            + "The code achives this without using'unsafe' and is not using 'GraalVM'. "
             + "The code is very comprehensible.";
     return { noteContent };
 };

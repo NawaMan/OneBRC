@@ -4,7 +4,7 @@ export const trailingSlash = "never";
 
 export const load = () => {
     const noteContent
-            = "The first trick is to use virtual threads to process each chunk in parallel."
-            + "The map combine is also done with virtual threads.";
+            = "Next we optimize the extraction of the temperature value from the string. "
+            + "Instead of extract to float or double";
     return { noteContent };
 };

@@ -4,9 +4,10 @@ export const trailingSlash = "never";
 
 export const load = () => {
     const noteContent
-            = "However, some time in August, I saw these two VDOs which sparked my interest."
-            + "And I later found that the benchmark machine would have large memory."
-            + "Which change the problem to be more CPU bound."
+            = "However, some time in August, I saw these two youtube VDOs which sparked my interest."
+            + "And I later learn that the benchmark will run the machine with large memory."
+            + "That changes the problem to be more CPU bound."
+            + "Dispite thinking that Mr. Morling might just want some on to solve problem for him."
             + "So, I decided to give it a try.";
     return { noteContent };
 };

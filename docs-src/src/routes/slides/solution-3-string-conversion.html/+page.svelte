@@ -8,16 +8,6 @@
 
 	let hint = "scroll to pan";
 
-	let isCodeOneExpanded = false;
-	let isCodeTwoExpanded = false;
-
-	function toggleCodeOneExpanded() {
-		isCodeOneExpanded = !isCodeOneExpanded;
-	}
-	function toggleCodeTwoExpanded() {
-		isCodeTwoExpanded = !isCodeTwoExpanded;
-	}
-
 	let svgContent = '';
 
 	async function fetchSVG() {
@@ -58,18 +48,9 @@
 				<li class="needed">Print out</li>
 			</ul>
 			Only the last two steps that the name <b>must</b> be a string.<br />
-			
-			<div id="thumbnails">
-				<button class="thumbnail" on:click={toggleCodeTwoExpanded}>
-					<img src="../name-equals.png" alt="main()" width="136"/>
-				</button>
-			</div>
 		</div>
 	</div>
 </ContentPage>
-<Box expanded={isCodeTwoExpanded} width={698} height={650} onClick={toggleCodeTwoExpanded} scrollable={true}>
-    <img src="../name-equals.png" alt="main()" width="698px" height="1200px"/>
-</Box>
 <NavigationBar
 	prevLink="./solution-2-memory-mapped-file.html"
 	nextLink="./solution-4-name-as-byte-array.html"
@@ -100,21 +81,6 @@
 		padding-bottom: 20px;
 		padding-left: 20px;
 		margin: 0px;
-	}
-	#thumbnails {
-		display: flex;
-		justify-content: center;
-		padding-top: 20px;
-	}
-	.thumbnail {
-		margin-left: 5px;
-		cursor: pointer;
-		border-radius: 5px;
-		border: 2px solid #C0F1FF;
-	}
-	.thumbnail:active {
-		transform: translate(2px, 2px);
-		box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 	}
 	.needed {
 		color: #C0FFCB;

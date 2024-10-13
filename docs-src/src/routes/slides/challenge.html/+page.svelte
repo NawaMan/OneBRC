@@ -26,9 +26,9 @@ let hoveredOneDigits     = false;
 					<li>Station name and temperature are separated by a <Label bind:isHovered={hoveredSemicolon}>semicolon</Label>.</li>
 					<li>Station name is encoded in <b>UTF-8</b> and is <b>100 bytes</b> or shorter.</li>
 					<li>The temperature ranges from -99.9 to 99.9 
-						(<Label bind:isHovered={hoveredTwoDigits}>1-2 digits before</Label>the decimal point, 
-						<Label bind:isHovered={hoveredOneDigits}>1 digit after</Label> and can be 
-						<Label bind:isHovered={hoveredNegative}>negative</Label>).
+						(<Label bind:isHovered={hoveredTwoDigits}>1-2 digits before</Label> the decimal point, 
+						<Label bind:isHovered={hoveredOneDigits}>1 digit after</Label> and an optional 
+						<Label bind:isHovered={hoveredNegative}>negative sign</Label>).
 					</li>
 				</ul>
 			</li>

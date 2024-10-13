@@ -11,13 +11,9 @@
 	let hint = "scroll to pan";
 
 	let isCodeOneExpanded = false;
-	let isCodeTwoExpanded = false;
 
 	function toggleCodeOneExpanded() {
 		isCodeOneExpanded = !isCodeOneExpanded;
-	}
-	function toggleCodeTwoExpanded() {
-		isCodeTwoExpanded = !isCodeTwoExpanded;
 	}
 
 	let svgContent = '';
@@ -36,7 +32,7 @@
 	});
 </script>
 
-<ContentPage title="Solution (4): Name as Byte Array">
+<ContentPage title="Solution (5): Value as Integer">
 	<WideDiv
 		outerWidth="1190"
 		innerWidth="2000"
@@ -53,33 +49,26 @@
 	<div id="side">
 		<div id="side-content">
 			<ul>
-				<li>A byte array for read buffer.</li>
-				<li>Length and hash are calculated while reading.</li>
-				<li>The buffer used for map key check.</li>
-				<li>If key exists, reuse the byte array.</li>
-				<li>If not exists, the array become the key and create a new read buffer.</li>
+				<li>Floating point number is not precise for 1 digit decimal.</li>
+				<li>Convert string to float is expensive.</li>
+				<li>The value can be represent using integer but times 10</li>
+				<li>For example, 14.2 can be represent using int 142.</li>
 			</ul>
 
 			<div id="thumbnails">
-				<button class="thumbnail" on:click={toggleCodeTwoExpanded}>
-					<img src="../name-equals.png" alt="main()" width="136"/>
-				</button>
 				<button class="thumbnail" on:click={toggleCodeOneExpanded}>
-					<img src="../line-extract.png" alt="main()" width="213"/>
+					<img src="../TemperatureBuffer.png" alt="main()" width="272"/>
 				</button>
 			</div>
 		</div>
 	</div>
 </ContentPage>
-<Box expanded={isCodeOneExpanded} width={928} height={394} onClick={toggleCodeOneExpanded}>
-	<img src="../line-extract.png" alt="main()" width="928px" height="394px"/>
-</Box>
-<Box expanded={isCodeTwoExpanded} width={698} height={650} onClick={toggleCodeTwoExpanded} scrollable={true}>
-	<img src="../name-equals.png" alt="main()" width="698px" height="1200px"/>
+<Box expanded={isCodeOneExpanded} width={660} height={605} onClick={toggleCodeOneExpanded} left="390px" top="390px">
+	<img src="../TemperatureBuffer.png" alt="main()" width="660px" height="605px"/>
 </Box>
 <NavigationBar
-	prevLink="./solution-3-string-conversion.html"
-	nextLink="./solution-5-value-as-integer.html"
+	prevLink="./solution-4-name-as-byte-array.html"
+	nextLink="./solution-6-vectorize-compare.html"
 />
 
 <style>

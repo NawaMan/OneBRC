@@ -4,7 +4,7 @@ export const trailingSlash = "never";
 
 export const load = () => {
     const noteContent
-            = "So, if we don't use strigs, what can we use instead? "
+            = "So, if we don't use strings, what can we use instead? "
             + "Byte array of course!";
     return { noteContent };
 };

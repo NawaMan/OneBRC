@@ -62,8 +62,9 @@
 			<li><a href="./solution-2-memory-mapped-file.html">Solution (2): Memory-Mapped File</a></li>
 			<li><a href="./solution-3-string-conversion.html" >Solution (3): Delay String Conversion</a></li>
 			<li><a href="./solution-4-name-as-byte-array.html">Solution (4): Name as Byte Array</a></li>
-			<li><a href="./solution-5-vectorize-compare.html" >Solution (5): Vectorize Comparison</a></li>
-			<li><a href="./solution-6-name-normalization.html">Solution (6): Name Normalization</a></li>
+			<li><a href="./solution-5-value-as-integer.html" >Solution (5): Value as Integer</a></li>
+			<li><a href="./solution-6-vectorize-compare.html" >Solution (6): Vectorize Comparison</a></li>
+			<li><a href="./solution-7-name-normalization.html">Solution (7): Name Normalization</a></li>
 
 			<li><a href="./conclusion.html">Conclusion</a></li>
 		</ol>

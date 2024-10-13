@@ -4,6 +4,12 @@ export const trailingSlash = "never";
 
 export const load = () => {
     const noteContent
-            = "This is the general flow or structure of the solution.";
+            = "Here is the high level view of the solution. I will go over the details in the next slides."
+            + "Starting from the file, we read them in to chunk. "
+            + "For each chunk, the data is then extracted into a map -- a hashmap to be specific. "
+            + "After that, every pair of map is combined into the larger one. "
+            + "This continue until we get one final map. "
+            + "Next, we sort the map and finally print it out. "
+            + "Quite straightforward. ";
     return { noteContent };
 };
