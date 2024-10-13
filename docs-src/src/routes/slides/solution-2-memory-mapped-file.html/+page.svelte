@@ -2,6 +2,7 @@
 	import Box from '$lib/components/Box.svelte';
 	import Hint from '$lib/components/Hint.svelte';
 	import NavigationBar from '$lib/components/NavigationBar.svelte';
+	import Note from '$lib/components/Note.svelte';
 	import WideDiv from '$lib/components/WideDiv.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
 	import { faThList } from '@fortawesome/free-solid-svg-icons';
@@ -98,6 +99,34 @@
 <Box expanded={isCodeExpanded} width={932} height={551} onClick={toggleCodeExpanded}>
     <img src="../memory-mapped-file.png" alt="main()" width="932px" height="551px"/>
 </Box>
+<Note>
+	<p>
+		The next trick is due the large size of the file, the read speed is one of the one biggest factor of the overall performce.
+		Different reading methods not only have different performance characteristics,
+		it also returns different data format with different performance chracteristic of itsown.
+		Another word, we need to consider both reading and processing speed. of each alternative.
+	</p>
+	<p>
+		Before diving into the alternatives, we need to keep in mind that the foundamental data structure is always array of bytes.
+		A string is backed by an array of bytes and since bytes are multable every new string will has itsown array of bytes.
+	</p>
+	<ol>
+		<li>
+			With that in mind, the first alternative is read the whole file or the whole chunk into a string
+			but that means double memory and copy time to create array of bytes for each station name as a string.
+		</li>
+		<li>Next alternative is to do it line by line but that suffer similar problem.</li>
+		<li>Next, we can use RandomAccessFile --- but its position index is in <code>int</code> which is not big enough for 13GB file.</li>
+		<li>The next alternative is to use memory mapped files which can be done in two ways:
+			<ol>
+				<li>direct mapping native memory outside of JVM,  and</li>
+				<li> mapping to heap.</li>
+			</ol>
+			Direct mapping to native memory is faster to read but the result data structure is slow to process -- in the way we need to, anyway.
+			So the fastest choice ended be mapping file to heap.
+		</li>
+	</ol>
+</Note>
 
 <style>
 	#diagram {
@@ -129,10 +158,10 @@
 		transform: translate(2px, 2px);
 		box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 	}
-	li {
+	#side li {
 		cursor: pointer;
 	}
-	li:hover {
+	#side li:hover {
 		color: #C0FFCB;
 	}
 	#thumbup {

@@ -2,6 +2,7 @@
 	import NavigationBar from "$lib/components/NavigationBar.svelte";
 	import ContentPage from "$lib/templates/ContentPage.svelte";
 	import YouTube from "$lib/components/YouTube.svelte";
+	import Note from "$lib/components/Note.svelte";
 </script>
 
 <ContentPage title="Overview">
@@ -38,6 +39,14 @@
 	prevLink="./onebrc.html"
 	nextLink="./overview-2.html"
 />
+<Note>
+	<p>The "One Billion Row Challenge" was proposed by Gunnar Morling on Jan 1st of 2024.</p>
+	<p>The challenge is to write a program that can read a CSV-liked file with one billion rows of data.</p>
+	<p>
+		I saw the original twitter post on that day but I thought this was I/O bound problem which I am not interested in.
+		and did not pay attention to it.
+	</p>
+</Note>
 
 <style>
 	a {

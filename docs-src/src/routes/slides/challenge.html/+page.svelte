@@ -1,6 +1,7 @@
 <script>
 import Label from "$lib/components/Label.svelte";
 import NavigationBar from "$lib/components/NavigationBar.svelte";
+	import Note from "$lib/components/Note.svelte";
 import ContentPage from "$lib/templates/ContentPage.svelte";
 
 let hoveredTextFile      = false;
@@ -93,6 +94,10 @@ let hoveredOneDigits     = false;
 	prevLink="./results.html"
 	nextLink="./solution.html"
 />
+<Note>
+	<p>Before talking about the solution, let review the challange in more details.</p>
+    <p>which is ...</p>
+</Note>
 
 <style>
 	b {

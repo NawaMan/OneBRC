@@ -2,6 +2,7 @@
 	import Box from '$lib/components/Box.svelte';
 	import Hint from '$lib/components/Hint.svelte';
 	import NavigationBar from '$lib/components/NavigationBar.svelte';
+	import Note from '$lib/components/Note.svelte';
 	import WideDiv from '$lib/components/WideDiv.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
 	import { onMount } from 'svelte';
@@ -57,6 +58,19 @@
 	prevLink="./solution-2-memory-mapped-file.html"
 	nextLink="./solution-4-name-as-byte-array.html"
 />
+<Note>
+	<p>
+		We touch a little bit in the previous trick that
+		... creating a string is expensive as a string needs an isolated array of bytes to store its characters.
+		Let's review the journey of the station name which is the string used for the whole process.
+	</p>
+	<p>
+	READ THE SLIDE
+	</p>
+	<p>
+		Therefore, we can delay the conversion of the station name to a string until we really need at the sorting step. ";
+	</p>
+</Note>
 
 <style>
 	#diagram {

@@ -4,6 +4,7 @@
 	import Box from '$lib/components/Box.svelte';
 	import Hint from '$lib/components/Hint.svelte';
 	import NavigationBar from '$lib/components/NavigationBar.svelte';
+	import Note from '$lib/components/Note.svelte';
 	import WideDiv from '$lib/components/WideDiv.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
 	import { onMount } from 'svelte';
@@ -81,6 +82,10 @@
 	prevLink="./solution-3-string-conversion.html"
 	nextLink="./solution-5-value-as-integer.html"
 />
+<Note>
+	So, if we don't use strings, what can we use instead?
+	Byte array of course!
+</Note>
 
 <style>
 	#diagram {

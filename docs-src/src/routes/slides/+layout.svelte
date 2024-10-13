@@ -9,13 +9,6 @@
 	import Copyright      from '$lib/components/Copyright.svelte';
 	import TableOfContent from '$lib/components/TableOfContent.svelte';
 	import SizeMode       from '$lib/components/SizeMode.svelte';
-
-	export let noteContent: string = "";
-	$: {
-		if ($page.data.noteContent) {
-			noteContent = $page.data.noteContent;
-		}
-	}
 	
 	let container: HTMLElement;
 	let content:   HTMLElement;
@@ -92,11 +85,6 @@
 		<Copyright />
 		{/if}
 	</div>
-	{#if noteContent && !isScaled}
-	<div class="note">
-		{@html noteContent}
-	</div>
-	{/if}
 </div>
 
 <style>
@@ -121,7 +109,7 @@
 		height: calc(720px - 20px);
 		min-width: calc(1280px - 20px);
 		min-height: calc(720px - 20px);
-		overflow: hidden;
+		overflow: visible;
 		padding: 10px;
 		margin: 0px;
 		display: flex;
@@ -136,23 +124,6 @@
 	.container:not(.scale-mode) {
 		/** Bookmark : Here is where we control how much the slide shift up. */
 		transform: translateY(-80px);
-	}
-
-	.note {
-		display: block;
-		width: calc(1280px - 20px);
-		margin-top: 20px;
-		padding: 10px; 
-
-		color: #000;
-		background-color: #fff;
-
-		border: 1px solid #fff;
-		border-radius: 5px;
-
-		min-height: 150px;
-		max-height: 150px;
-		overflow-y: scroll;
 	}
 
 </style>

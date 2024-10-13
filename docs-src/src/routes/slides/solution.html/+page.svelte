@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Hint from '$lib/components/Hint.svelte';
 	import NavigationBar from '$lib/components/NavigationBar.svelte';
+	import Note from '$lib/components/Note.svelte';
 	import WideDiv from '$lib/components/WideDiv.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
 	import { onMount } from 'svelte';
@@ -77,6 +78,23 @@
 	prevLink="./challenge.html"
 	nextLink="./solution-1-multithread.html"
 />
+<Note>
+	<p>Here is the high-level view of the solution. I will go over the details in the incoming slides.</p>
+	<p>
+		Starting from the file, we read them into chunks.
+		For each chunk, the data is then extracted into a map -- a hashmap to be specific.
+	</p>
+	<p>
+		The station name is used as the entry key.
+		The entry value contains: min, max, sum and count.
+	</p>
+	<p>
+		After that, every pair of map is combined into the larger one. 
+		This continues until we get one final map.
+	</p>
+	<p>Next, the map is sorted by its key and finally print it out.</p>
+	<p>Quite straightforward. </p>
+</Note>
 
 <style>
 	#diagram {

@@ -3,6 +3,7 @@
 	import ContentPage from "$lib/templates/ContentPage.svelte";
     import JavaCode from "$lib/components/JavaCode.svelte";
 	import Box from "$lib/components/Box.svelte";
+	import Note from "$lib/components/Note.svelte";
   
     // @ts-ignore
     export let data;
@@ -63,6 +64,22 @@
 	prevLink="./overview-2.html"
 	nextLink="./challenge.html"
 />
+<Note>
+	<p>The result?</p>
+	<p>Pretty good, actually.</p>
+	<p>
+		The program run in between 1.8 seconds to 3 seconds on these two machines.
+		You can click them to see more details.
+	</p>
+	<p>
+		The code achives this without using 'unsafe' and is not using 'GraalVM'.
+		It is very comprehensible -- well partitioned and don't have hard to read bitwise operations.
+	</p>
+	<p>
+		The code is just 450 lines.
+		You can see the whole code on GitHub.
+	</p>
+</Note>
 
 <style>
 	b {

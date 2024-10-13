@@ -2,6 +2,7 @@
 	import Box from '$lib/components/Box.svelte';
 	import Hint from '$lib/components/Hint.svelte';
 	import NavigationBar from '$lib/components/NavigationBar.svelte';
+	import Note from '$lib/components/Note.svelte';
 	import WideDiv from '$lib/components/WideDiv.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
 	import { onMount } from 'svelte';
@@ -68,6 +69,11 @@
 <Box expanded={isCodeExpanded} width={952} height={664} onClick={toggleCodeExpanded}>
     <img src="../multithreads.png" alt="main()" width="952px" height="664px"/>
 </Box>
+<Note>
+	<p>The first trick used to make this fast is to use virtual threads to read and process each chunk in parallel.</p>
+	<p>Virtual threads are also used to combine the statistic maps.</p>
+	<p>After some experiment, I ended up spliting the files into 1024 chunks or 32 times the CPI count.</p>
+</Note>
 
 <style>
 	#diagram {
