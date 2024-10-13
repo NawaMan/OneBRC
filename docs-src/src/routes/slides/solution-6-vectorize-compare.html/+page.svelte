@@ -85,18 +85,19 @@
 		</div>
 	</div>
 </ContentPage>
-<Box expanded={isCodeOneExpanded} width={675} height={386} onClick={toggleCodeOneExpanded}>
-	<img src="../name-array-equals.png" alt="StationName.equals()" width="675px" height="386px"/>
-</Box>
-<Box expanded={isCodeTwoExpanded} width={656} height={279} onClick={toggleCodeTwoExpanded} scrollable={true}>
-	<img src="../arrays-equals.png" alt="Arrays.equals()" width="656px" height="279px"/>
-</Box>
-<Box expanded={isCodeThreeExpanded} width={616} height={539} onClick={toggleCodeThreeExpanded} scrollable={true}>
-	<img src="../arraysupport-mismatch.png" alt="ArraySupports.mismatch()" width="616px" height="539px"/>
-</Box>
 <NavigationBar
 	prevLink="./solution-5-value-as-integer.html"
-	nextLink="./solution-7-name-normalization.html" />
+	nextLink="./solution-7-name-normalization.html"
+/>
+<Box expanded={isCodeOneExpanded} width={675} height={386} onClick={toggleCodeOneExpanded} left="400px">
+	<img src="../name-array-equals.png" alt="StationName.equals()" width="675px" height="386px"/>
+</Box>
+<Box expanded={isCodeTwoExpanded} width={656} height={279} onClick={toggleCodeTwoExpanded} scrollable={true} left="400px">
+	<img src="../arrays-equals.png" alt="Arrays.equals()" width="656px" height="279px"/>
+</Box>
+<Box expanded={isCodeThreeExpanded} width={616} height={539} onClick={toggleCodeThreeExpanded} scrollable={true} left="400px">
+	<img src="../arraysupport-mismatch.png" alt="ArraySupports.mismatch()" width="616px" height="539px"/>
+</Box>
 
 <style>
 	#diagram {

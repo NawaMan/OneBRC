@@ -87,19 +87,19 @@
 		</div>
 	</div>
 </ContentPage>
+<NavigationBar
+	prevLink="./solution-6-vectorize-compare.html"
+	nextLink="./conclusion.html"
+/>
 <Box expanded={isCodeOneExpanded} width={915} height={399} onClick={toggleCodeOneExpanded}>
 	<img src="../add-name-to-queue.png" alt="main()" width="915px" height="399px"/>
 </Box>
 <Box expanded={isCodeTwoExpanded} width={859} height={548} onClick={toggleCodeTwoExpanded} scrollable={true}>
 	<img src="../assign-name-id.png" alt="main()" width="859px" height="548px"/>
 </Box>
-<Box expanded={isCodeThreeExpanded} width={689} height={681} onClick={toggleCodeThreeExpanded} scrollable={true}>
+<Box expanded={isCodeThreeExpanded} width={689} height={681} onClick={toggleCodeThreeExpanded} scrollable={true} top="370px">
 	<img src="../id-in-name-equals.png" alt="main()" width="689px" height="681px"/>
 </Box>
-<NavigationBar
-	prevLink="./solution-6-vectorize-compare.html"
-	nextLink="./conclusion.html"
-/>
 
 <style>
 	#diagram {

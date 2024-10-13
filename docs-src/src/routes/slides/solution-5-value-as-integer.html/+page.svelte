@@ -63,13 +63,13 @@
 		</div>
 	</div>
 </ContentPage>
-<Box expanded={isCodeOneExpanded} width={660} height={605} onClick={toggleCodeOneExpanded} left="390px" top="390px">
-	<img src="../TemperatureBuffer.png" alt="main()" width="660px" height="605px"/>
-</Box>
 <NavigationBar
 	prevLink="./solution-4-name-as-byte-array.html"
 	nextLink="./solution-6-vectorize-compare.html"
 />
+<Box expanded={isCodeOneExpanded} width={660} height={605} onClick={toggleCodeOneExpanded} left="390px" top="390px">
+	<img src="../TemperatureBuffer.png" alt="main()" width="660px" height="605px"/>
+</Box>
 
 <style>
 	#diagram {

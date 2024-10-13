@@ -78,9 +78,9 @@
 				<li>Read the file to a string</li>
 				<li>Read the lines to strings</li>
 				<li>Read bytes using <code>RandomAccessFile</code></li>
-				<li>Direct map to <code>ByteBuffer</code> (native memory)</li>
+				<li>Direct map to native memory (outside of JVM)</li>
 				<li class="accept">
-					Map to <code>ByteBuffer</code> on heap 
+					Map to memory in the heap 
 					<img id="thumbup" src="../thumbs-up-transparent.png" alt="thumbup" />
 				</li>
 			</ul>

@@ -44,7 +44,9 @@
 				<li>Read from file as part of a chunk</li>
 				<li>Recorgnized and extracted as name</li>
 				<li>Looked up in the map as a key</li>
-				<li class="needed">Used to sort (as UTF8)</li>
+				<li> ... for both to get and put</li>
+				<li> and for both the initial extraction and later combination.</li>
+				<li class="needed">Used to sort the entries as UTF-8.</li>
 				<li class="needed">Print out</li>
 			</ul>
 			Only the last two steps that the name <b>must</b> be a string.<br />

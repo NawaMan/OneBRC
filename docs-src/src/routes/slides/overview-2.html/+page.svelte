@@ -20,9 +20,9 @@
 				</p>
 				<div class="text-container">
 					<div class="text-left"><span class="bound">CPU BOUND</span></div>
-					<div class="text-right">
+					<div class="text-right" style="text-align: center;">
 						<img class="drake" src="../drake-yes.png" alt="Drake say 'YES'." />
-						August 2024.
+						August 2024
 					</div>
 				</div>
 			</td>
@@ -82,7 +82,7 @@
 		position: absolute;
 		width: 90px;
 		height: 25px;
-		top: 487px;
+		top: 491px;
 		left: 1070px;
 		overflow: visible;
 	}

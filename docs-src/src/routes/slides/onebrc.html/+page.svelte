@@ -4,9 +4,8 @@
 </script>
 
 <TitlePage>
-	<span slot="title"      >One Billion Row Challenge</span>
-	<span slot="subtitle"   >NawaMan's Java Solution</span>
-	<span slot="subsubtitle">(2-3 seconds)</span>
+	<span slot="title"   >One Billion Row Challenge</span>
+	<span slot="subtitle">NawaMan's Java <a href="https://github.com/NawaMan/OneBRC" target="_blank">Solution</a></span>
 </TitlePage>
 <NavigationBar
 	nextLink="./overview.html"

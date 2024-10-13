@@ -10,7 +10,7 @@
 	import TableOfContent from '$lib/components/TableOfContent.svelte';
 	import SizeMode       from '$lib/components/SizeMode.svelte';
 
-	export let noteContent: string = null;
+	export let noteContent: string = "";
 	$: {
 		if ($page.data.noteContent) {
 			noteContent = $page.data.noteContent;
@@ -134,7 +134,8 @@
 	}
 
 	.container:not(.scale-mode) {
-		transform: translateY(-50px);
+		/** Bookmark : Here is where we control how much the slide shift up. */
+		transform: translateY(-80px);
 	}
 
 	.note {
@@ -142,9 +143,16 @@
 		width: calc(1280px - 20px);
 		margin-top: 20px;
 		padding: 10px; 
-		color: #fff;
+
+		color: #000;
+		background-color: #fff;
+
 		border: 1px solid #fff;
 		border-radius: 5px;
+
+		min-height: 150px;
+		max-height: 150px;
+		overflow-y: scroll;
 	}
 
 </style>

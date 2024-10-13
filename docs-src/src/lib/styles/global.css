@@ -72,3 +72,13 @@ a {
         display: none;
     }
 }
+
+.note p {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+.note p:nth-child(even) {
+    background-color: #e8e8e8;
+}

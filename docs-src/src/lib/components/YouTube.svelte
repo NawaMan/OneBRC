@@ -23,6 +23,8 @@ img {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 1em;
+    border: 2px white solid;
+    border-radius: 5px;
 }
 .youtube {
     position: relative;

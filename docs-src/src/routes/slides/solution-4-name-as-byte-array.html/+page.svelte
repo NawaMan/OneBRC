@@ -74,7 +74,7 @@
 <Box expanded={isCodeOneExpanded} width={928} height={394} onClick={toggleCodeOneExpanded}>
 	<img src="../line-extract.png" alt="main()" width="928px" height="394px"/>
 </Box>
-<Box expanded={isCodeTwoExpanded} width={698} height={650} onClick={toggleCodeTwoExpanded} scrollable={true}>
+<Box expanded={isCodeTwoExpanded} width={698} height={650} onClick={toggleCodeTwoExpanded} scrollable={true} left="380px">
 	<img src="../name-equals.png" alt="main()" width="698px" height="1200px"/>
 </Box>
 <NavigationBar

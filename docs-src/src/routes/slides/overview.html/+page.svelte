@@ -20,9 +20,9 @@
 				</p>
 				<div class="text-container">
 					<div class="text-left"><span class="bound">I/O BOUND</span></div>
-					<div class="text-right">
+					<div class="text-right" style="text-align: center;">
 						<img class="drake" src="../drake-no.png" alt="Drake say 'NO'." />
-						January 2024.
+						January 2024
 					</div>
 				</div>
 			</td>

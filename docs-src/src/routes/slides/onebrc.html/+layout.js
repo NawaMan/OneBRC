@@ -3,6 +3,6 @@ export const prerender = true;
 export const trailingSlash = "never";
 
 export const load = () => {
-    const noteContent = "Hi I am NawaMan. Let's talk about my One Billion Row Challenge solution.";
+    const noteContent = "Hi! I am NawaMan. Let's talk about my \"One Billion Row Challenge\" solution.";
     return { noteContent };
 };

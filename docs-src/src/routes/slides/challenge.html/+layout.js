@@ -3,6 +3,8 @@ export const prerender = true;
 export const trailingSlash = "never";
 
 export const load = () => {
-    const noteContent = "Before talking about the solutio, let review the challange in more details.";
+    const noteContent
+        = "<p>Before talking about the solution, let review the challange in more details.</p>"
+        + "<p>whcih is ...</p>";
     return { noteContent };
 };
