@@ -5,6 +5,6 @@ export const trailingSlash = "never";
 export const load = () => {
     const noteContent
         = "<p>Before talking about the solution, let review the challange in more details.</p>"
-        + "<p>whcih is ...</p>";
+        + "<p>which is ...</p>";
     return { noteContent };
 };
