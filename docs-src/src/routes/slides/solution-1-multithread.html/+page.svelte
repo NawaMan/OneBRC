@@ -12,8 +12,6 @@
 	// @ts-ignore
 	export let data;
 
-	let hint = "scroll to pan";
-
 	let isCodeExpanded = false;
 
 	function toggleCodeExpanded() {
@@ -67,7 +65,7 @@
 		</div>
 	</div>
 </ContentPage>
-<Hint text="{hint}" />
+<Hint text="scroll to pan" />
 <SolutionCodeBox expanded={isCodeExpanded} javaCode={data.javaCode} revealedLines={[362]}/>
 <Note>
 	<p>The first trick used to make this fast is to use virtual threads to read and process each chunk in parallel.</p>

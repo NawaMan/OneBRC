@@ -1,12 +1,13 @@
 
 
 <script lang="ts">
-	import ContentPage from '$lib/templates/ContentPage.svelte';
-	import Note        from '$lib/components/Note.svelte';
-	import WideDiv     from '$lib/components/WideDiv.svelte';
+	import ContentPage     from '$lib/templates/ContentPage.svelte';
+	import Hint            from '$lib/components/Hint.svelte';
+	import Note            from '$lib/components/Note.svelte';
+	import SolutionCodeBox from '$lib/components/SolutionCodeBox.svelte';
+	import WideDiv         from '$lib/components/WideDiv.svelte';
 
 	import { onMount } from 'svelte';
-	import SolutionCodeBox from '$lib/components/SolutionCodeBox.svelte';
   
   	// @ts-ignore
   	export let data;
@@ -80,6 +81,7 @@
 		</div>
 	</div>
 </ContentPage>
+<Hint text="scroll to pan" />
 <SolutionCodeBox expanded={isCodeExpanded} javaCode={data.javaCode} {revealedLines}/>
 <Note>
 	So, if we don't use strings, what can we use instead?

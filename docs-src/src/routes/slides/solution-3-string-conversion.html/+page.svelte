@@ -1,11 +1,10 @@
 <script lang="ts">
 	import ContentPage from '$lib/templates/ContentPage.svelte';
+	import Hint        from '$lib/components/Hint.svelte';
 	import Note        from '$lib/components/Note.svelte';
 	import WideDiv     from '$lib/components/WideDiv.svelte';
 
 	import { onMount } from 'svelte';
-
-	let hint = "scroll to pan";
 
 	let svgContent = '';
 
@@ -52,6 +51,7 @@
 		</div>
 	</div>
 </ContentPage>
+<Hint text="scroll to pan" />
 <Note>
 	<p>
 		We touch a little bit in the previous trick that

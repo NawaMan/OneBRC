@@ -1,12 +1,12 @@
 <script lang="ts">
-	import Box         from '$lib/components/Box.svelte';
-	import ContentPage from '$lib/templates/ContentPage.svelte';
-	import Note        from '$lib/components/Note.svelte';
-	import WideDiv     from '$lib/components/WideDiv.svelte';
+	import Box             from '$lib/components/Box.svelte';
+	import ContentPage     from '$lib/templates/ContentPage.svelte';
+	import Hint            from '$lib/components/Hint.svelte';
+	import Note            from '$lib/components/Note.svelte';
+	import SolutionCodeBox from '$lib/components/SolutionCodeBox.svelte';
+	import WideDiv         from '$lib/components/WideDiv.svelte';
 
 	import { onMount } from 'svelte';
-	import SolutionCodeBox from '$lib/components/SolutionCodeBox.svelte';
-
 
   	// @ts-ignore
   	export let data;
@@ -96,6 +96,7 @@
 		</div>
 	</div>
 </ContentPage>
+<Hint text="scroll to pan" />
 <Box expanded={isCodeTwoExpanded} width={656} height={279} onClick={toggleCodeTwoExpanded} scrollable={true} left="400px">
 	<img src="../arrays-equals.png" alt="Arrays.equals()" width="656px" height="279px"/>
 </Box>
