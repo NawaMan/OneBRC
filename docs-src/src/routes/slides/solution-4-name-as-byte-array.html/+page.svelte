@@ -1,23 +1,26 @@
 
 
 <script lang="ts">
-	import Box         from '$lib/components/Box.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
 	import Note        from '$lib/components/Note.svelte';
 	import WideDiv     from '$lib/components/WideDiv.svelte';
 
 	import { onMount } from 'svelte';
+	import SolutionCodeBox from '$lib/components/SolutionCodeBox.svelte';
+  
+  	// @ts-ignore
+  	export let data;
 
-	let hint = "scroll to pan";
+	$: revealedLines = [1];
 
-	let isCodeOneExpanded = false;
-	let isCodeTwoExpanded = false;
+	let isCodeExpanded = false;
 
-	function toggleCodeOneExpanded() {
-		isCodeOneExpanded = !isCodeOneExpanded;
-	}
-	function toggleCodeTwoExpanded() {
-		isCodeTwoExpanded = !isCodeTwoExpanded;
+  	// @ts-ignore
+	function toggleCodeExpanded(revealedLine) {
+		return function() {
+			revealedLines  = [revealedLine];
+			isCodeExpanded = !isCodeExpanded;
+		}
 	}
 
 	let svgContent = '';
@@ -62,13 +65,13 @@
 
 			<div id="thumbnails">
 				<div class="thumbnail" >
-					<button on:click={toggleCodeTwoExpanded}>
+					<button on:click={toggleCodeExpanded(60)}>
 						<img src="../name-equals.png" alt="main()" width="136"/>
 						<div style="font-size: small;">StationName</div>
 					</button>
 				</div>
 				<div class="thumbnail" >
-					<button on:click={toggleCodeOneExpanded}>
+					<button on:click={toggleCodeExpanded(338)}>
 						<img src="../line-extract.png" alt="main()" width="213"/>
 						<div style="font-size: small;">extract()</div>
 					</button>
@@ -77,12 +80,7 @@
 		</div>
 	</div>
 </ContentPage>
-<Box expanded={isCodeOneExpanded} width={928} height={394} onClick={toggleCodeOneExpanded}>
-	<img src="../line-extract.png" alt="main()" width="928px" height="394px"/>
-</Box>
-<Box expanded={isCodeTwoExpanded} width={698} height={650} onClick={toggleCodeTwoExpanded} scrollable={true} left="380px">
-	<img src="../name-equals.png" alt="main()" width="698px" height="1200px"/>
-</Box>
+<SolutionCodeBox expanded={isCodeExpanded} javaCode={data.javaCode} {revealedLines}/>
 <Note>
 	So, if we don't use strings, what can we use instead?
 	Byte array of course!

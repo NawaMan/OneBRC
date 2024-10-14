@@ -95,10 +95,10 @@ public class CalculateAverage_nawaman {
         @Override
         public boolean equals(Object obj) {
             // Not needed as we are the only one using this class.
-//            if (this == obj)
-//                return true;
-//            if (!(obj instanceof StationName))
-//                return false;
+            // if (this == obj)
+            //     return true;
+            // if (!(obj instanceof StationName))
+            //     return false;
             
             var other = (StationName) obj;
             if (length != other.length)

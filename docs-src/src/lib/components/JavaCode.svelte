@@ -2,9 +2,10 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
-	export let javaCode    = '';
-	export let width       = '800px';
-	export let height      = '400px';
+	export let javaCode       = '';
+	export let width          = '800px';
+	export let height         = '400px';
+	export let foldAllAtStart = false;
 
 	// @ts-ignore
 	export let revealLines = [];
@@ -16,6 +17,50 @@
 	let editor;
 	// @ts-ignore
 	let editorElement;
+
+	$: {
+		// @ts-ignore
+		revealTheLines(revealLines);
+	}
+
+	// @ts-ignore
+	function revealTheLines(lines = []) {
+		// @ts-ignore
+		if (editor == null)
+			return;
+
+		if (lines.length === 0) {
+			// @ts-ignore
+			lines = revealLines;
+		}
+
+		if (foldAllAtStart) {
+			setTimeout(function () {
+				// @ts-ignore
+				editor.trigger('keyboard', 'editor.foldAll');
+				// @ts-ignore
+				unfoldLines(revealLines);
+			}, 200);
+		} else if (revealLines.length > 0) {
+			// @ts-ignore
+			editor.setScrollTop(editor.getTopForLineNumber(revealLines[0]));
+
+			const highlightedLines = [2, 4, 6];
+
+			const decorations = highlightedLines.map(line => ({
+				// @ts-ignore
+				range: new monaco.Range(line, 1, line, 1),
+				options: {
+					isWholeLine: true,
+					className: 'myLineHighlight',
+					linesDecorationsClassName: 'myGutterDecoration'
+				}
+			}));
+
+			// @ts-ignore
+			editor.deltaDecorations([], decorations);
+		}
+	}
 
 	onMount(() => {
 		const script = document.createElement('script');
@@ -50,6 +95,9 @@
 					theme: "vs-dark",
 					foldingImportsByDefault: true
 				});
+
+				// @ts-ignore
+				monaco.languages.register({ id: 'java' });
 
 				const customFoldingRangeProvider = {
 					// @ts-ignore
@@ -149,12 +197,7 @@
 					});
 				}
 
-				setTimeout(function () {
-					// @ts-ignore
-					editor.trigger('keyboard', 'editor.foldAll');
-					// @ts-ignore
-					unfoldLines(revealLines);
-				}, 200);
+				revealTheLines();
 			});
 		}
 	}

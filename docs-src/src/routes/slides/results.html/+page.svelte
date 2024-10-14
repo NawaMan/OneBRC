@@ -22,16 +22,6 @@
 	}
 </script>
 
-<Box expanded={isI9Expanded} width={453} height={371} onClick={toggleI9Expand}>
-    <img class="result-img" src="../i9-Results.png" alt="i9 Results" width="453px" height="371px"/>
-</Box>
-<Box expanded={isM6Expanded} width={465} height={347} onClick={toggleM6Expand}>
-    <img class="result-img" src="../m6-Results.png" alt="m6 Results" width="465px" height="347px"/>
-</Box>
-<Box expanded={isCodeExpanded} width={1000} height={600} linkText="View on GitHub" linkUrl="https://github.com/NawaMan/OneBRC/blob/main/src/onebrc/CalculateAverage_nawaman.java">
-	<JavaCode javaCode={data.javaCode} revealLines={[[39, [363, 384, 390, [379, [405, [363]]]]]]} width="1000px" height="600px" />
-</Box>
-
 <ContentPage title="Results">
 	<img class="figure" src="../smug-daniel-craig.gif" alt="So pround" />
 	<table class="text">
@@ -59,6 +49,15 @@
 		</tr>
 	</table>
 </ContentPage>
+<Box expanded={isI9Expanded} width={453} height={371} onClick={toggleI9Expand}>
+    <img class="result-img" src="../i9-Results.png" alt="i9 Results" width="453px" height="371px"/>
+</Box>
+<Box expanded={isM6Expanded} width={465} height={347} onClick={toggleM6Expand}>
+    <img class="result-img" src="../m6-Results.png" alt="m6 Results" width="465px" height="347px"/>
+</Box>
+<Box expanded={isCodeExpanded} width={1000} height={600} linkText="View on GitHub" linkUrl="https://github.com/NawaMan/OneBRC/blob/main/src/onebrc/CalculateAverage_nawaman.java">
+	<JavaCode javaCode={data.javaCode} foldAllAtStart={true} revealLines={[[39, [363, 384, 390, [379, [405, [363]]]]]]} width="1000px" height="600px" />
+</Box>
 <Note>
 	<p>The result?</p>
 	<p>Pretty good, actually.</p>

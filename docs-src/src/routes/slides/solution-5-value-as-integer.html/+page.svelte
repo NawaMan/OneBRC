@@ -3,17 +3,23 @@
 <script lang="ts">
 	import Box         from '$lib/components/Box.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
+	import JavaCode    from '$lib/components/JavaCode.svelte';
 	import Note        from '$lib/components/Note.svelte';
 	import WideDiv     from '$lib/components/WideDiv.svelte';
 
 	import { onMount } from 'svelte';
+	import SolutionCodeBox from '$lib/components/SolutionCodeBox.svelte';
+  
+	// @ts-ignore
+	export let data;
 
-	let hint = "scroll to pan";
+	$: revealedLines = [1];
 
-	let isCodeOneExpanded = false;
+	let isCodeExpanded = false;
 
 	function toggleCodeOneExpanded() {
-		isCodeOneExpanded = !isCodeOneExpanded;
+		revealedLines = [166];
+		isCodeExpanded = !isCodeExpanded;
 	}
 
 	let svgContent = '';
@@ -66,9 +72,7 @@
 		</div>
 	</div>
 </ContentPage>
-<Box expanded={isCodeOneExpanded} width={660} height={605} onClick={toggleCodeOneExpanded} left="390px" top="390px" shadowOpacity={0.0}>
-	<img src="../TemperatureBuffer.png" alt="main()" width="660px" height="605px"/>
-</Box>
+<SolutionCodeBox expanded={isCodeExpanded} javaCode={data.javaCode} {revealedLines}/>
 <Note>
 	<p>
 		Next we optimize the extraction of the temperature value from the string.

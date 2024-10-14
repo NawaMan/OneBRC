@@ -5,14 +5,27 @@
 	import WideDiv     from '$lib/components/WideDiv.svelte';
 
 	import { onMount } from 'svelte';
+	import SolutionCodeBox from '$lib/components/SolutionCodeBox.svelte';
 
-	let isCodeOneExpanded = false;
+
+  	// @ts-ignore
+  	export let data;
+
+	$: revealedLines = [1];
+
+	let isCodeExpanded = false;
+
+  	// @ts-ignore
+	function toggleCodeExpanded(revealedLine) {
+		return function() {
+			revealedLines  = [revealedLine];
+			isCodeExpanded = !isCodeExpanded;
+		}
+	}
+
 	let isCodeTwoExpanded = false;
 	let isCodeThreeExpanded = false;
 
-	function toggleCodeOneExpanded() {
-		isCodeOneExpanded = !isCodeOneExpanded;
-	}
 	function toggleCodeTwoExpanded() {
 		isCodeTwoExpanded = !isCodeTwoExpanded;
 	}
@@ -62,7 +75,7 @@
 			</ul>
 			<div id="thumbnails">
 				<div class="thumbnail thumbnail1" >
-					<button on:click={toggleCodeOneExpanded}>
+					<button on:click={toggleCodeExpanded(95)}>
 						<img src="../name-array-equals.png" alt="main()" width="185.63"/>
 						<div style="font-size: small;">StationName.equals()</div>
 					</button>
@@ -83,15 +96,13 @@
 		</div>
 	</div>
 </ContentPage>
-<Box expanded={isCodeOneExpanded} width={675} height={386} onClick={toggleCodeOneExpanded} left="400px">
-	<img src="../name-array-equals.png" alt="StationName.equals()" width="675px" height="386px"/>
-</Box>
 <Box expanded={isCodeTwoExpanded} width={656} height={279} onClick={toggleCodeTwoExpanded} scrollable={true} left="400px">
 	<img src="../arrays-equals.png" alt="Arrays.equals()" width="656px" height="279px"/>
 </Box>
 <Box expanded={isCodeThreeExpanded} width={616} height={539} onClick={toggleCodeThreeExpanded} scrollable={true} left="400px">
 	<img src="../arraysupport-mismatch.png" alt="ArraySupports.mismatch()" width="616px" height="539px"/>
 </Box>
+<SolutionCodeBox expanded={isCodeExpanded} javaCode={data.javaCode} {revealedLines}/>
 <Note>
 	<p>
 		Next trick is more low-level.

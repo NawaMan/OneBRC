@@ -2,10 +2,15 @@
 	import Box         from '$lib/components/Box.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
 	import Hint        from '$lib/components/Hint.svelte';
+	import JavaCode from '$lib/components/JavaCode.svelte';
 	import Note        from '$lib/components/Note.svelte';
 	import WideDiv     from '$lib/components/WideDiv.svelte';
 
 	import { onMount } from 'svelte';
+	import SolutionCodeBox from '$lib/components/SolutionCodeBox.svelte';
+  
+	// @ts-ignore
+	export let data;
 
 	let hint = "scroll to pan";
 
@@ -63,9 +68,7 @@
 	</div>
 </ContentPage>
 <Hint text="{hint}" />
-<Box expanded={isCodeExpanded} width={952} height={664} onClick={toggleCodeExpanded}>
-    <img src="../multithreads.png" alt="main()" width="952px" height="664px"/>
-</Box>
+<SolutionCodeBox expanded={isCodeExpanded} javaCode={data.javaCode} revealedLines={[362]}/>
 <Note>
 	<p>The first trick used to make this fast is to use virtual threads to read and process each chunk in parallel.</p>
 	<p>Virtual threads are also used to combine the statistic maps.</p>

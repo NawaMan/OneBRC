@@ -1,9 +1,15 @@
 <script lang="ts">
 	import Box         from '$lib/components/Box.svelte';
 	import ContentPage from '$lib/templates/ContentPage.svelte';
+	import JavaCode    from '$lib/components/JavaCode.svelte';
 	import Note        from '$lib/components/Note.svelte';
 	import WideDiv     from '$lib/components/WideDiv.svelte';
+
 	import { onMount } from 'svelte';
+	import SolutionCodeBox from '$lib/components/SolutionCodeBox.svelte';
+  
+	// @ts-ignore
+	export let data;
 
 	let hint = "scroll to pan";
 
@@ -89,9 +95,7 @@
 		</div>
 	</div>
 </ContentPage>
-<Box expanded={isCodeExpanded} width={932} height={551} onClick={toggleCodeExpanded}>
-    <img src="../memory-mapped-file.png" alt="main()" width="932px" height="551px"/>
-</Box>
+<SolutionCodeBox expanded={isCodeExpanded} javaCode={data.javaCode} revealedLines={[278]}/>
 <Note>
 	<p>
 		The next trick is due the large size of the file, the read speed is one of the one biggest factor of the overall performce.

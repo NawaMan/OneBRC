@@ -5,20 +5,23 @@
 	import WideDiv     from '$lib/components/WideDiv.svelte';
 
 	import { onMount } from 'svelte';
+	import SolutionCodeBox from '$lib/components/SolutionCodeBox.svelte';
 
-	let isCodeOneExpanded = false;
-	let isCodeTwoExpanded = false;
-	let isCodeThreeExpanded = false;
+  	// @ts-ignore
+  	export let data;
 
-	function toggleCodeOneExpanded() {
-		isCodeOneExpanded = !isCodeOneExpanded;
+	$: revealedLines = [1];
+
+	let isCodeExpanded = false;
+
+  	// @ts-ignore
+	function toggleCodeExpanded(revealedLine) {
+		return function() {
+			revealedLines  = [revealedLine];
+			isCodeExpanded = !isCodeExpanded;
+		}
 	}
-	function toggleCodeTwoExpanded() {
-		isCodeTwoExpanded = !isCodeTwoExpanded;
-	}
-	function toggleCodeThreeExpanded() {
-		isCodeThreeExpanded = !isCodeThreeExpanded;
-	}
+
 
 	let svgContent = '';
 
@@ -65,19 +68,19 @@
 		</div>
 		<div id="thumbnails">
 			<div class="thumbnail thumbnail1" >
-				<button on:click={toggleCodeOneExpanded}>
+				<button on:click={toggleCodeExpanded(338)}>
 					<img src="../add-name-to-queue.png" alt="main()" width="164"/>
 					<div style="font-size: small;">Add name to queue</div>
 				</button>
 			</div>
 			<div class="thumbnail thumbnail2" >
-				<button on:click={toggleCodeTwoExpanded}>
+				<button on:click={toggleCodeExpanded(134)}>
 					<img src="../assign-name-id.png" alt="main()" width="155"/>
 					<div style="font-size: small;">Assign name ID</div>
 				</button>
 			</div>
 			<div class="thumbnail thumbnail3" >
-				<button on:click={toggleCodeThreeExpanded}>
+				<button on:click={toggleCodeExpanded(95)}>
 					<img src="../id-in-name-equals.png" alt="main()" width="124"/>
 					<div style="font-size: small;">ID in name <code>equals()</code></div>
 				</button>
@@ -85,15 +88,7 @@
 		</div>
 	</div>
 </ContentPage>
-<Box expanded={isCodeOneExpanded} width={915} height={399} onClick={toggleCodeOneExpanded}>
-	<img src="../add-name-to-queue.png" alt="main()" width="915px" height="399px"/>
-</Box>
-<Box expanded={isCodeTwoExpanded} width={859} height={548} onClick={toggleCodeTwoExpanded} scrollable={true}>
-	<img src="../assign-name-id.png" alt="main()" width="859px" height="548px"/>
-</Box>
-<Box expanded={isCodeThreeExpanded} width={689} height={681} onClick={toggleCodeThreeExpanded} scrollable={true} top="370px">
-	<img src="../id-in-name-equals.png" alt="main()" width="689px" height="681px"/>
-</Box>
+<SolutionCodeBox expanded={isCodeExpanded} javaCode={data.javaCode} {revealedLines}/>
 <Note>
 	<p>The last trick helps improve the comination speed.</p>
 	<p>
