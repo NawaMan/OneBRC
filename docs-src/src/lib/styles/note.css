@@ -13,8 +13,10 @@
 }
 
 .note *::before {
-    content: " - ";
+    content: " > ";
+    visibility: hidden;
 }
 .note *:hover::before {
     content: " > ";
+    visibility: visible;
 }

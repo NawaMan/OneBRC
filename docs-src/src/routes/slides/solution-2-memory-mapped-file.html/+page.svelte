@@ -84,6 +84,7 @@
 
 			<button class="thumbnail" on:click={toggleCodeExpanded}>
 				<img src="../memory-mapped-file.png" alt="main()" width="350"/>
+				<div style="font-size: small;">StatisticExtractor.create()</div>
 			</button>
 		</div>
 	</div>

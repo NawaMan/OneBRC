@@ -57,6 +57,7 @@
 			</ul>
 			<button class="thumbnail" on:click={toggleCodeExpanded}>
 				<img src="../multithreads.png" alt="main()" width="350"/>
+				<div style="font-size: small;">main()</div>
 			</button>
 		</div>
 	</div>

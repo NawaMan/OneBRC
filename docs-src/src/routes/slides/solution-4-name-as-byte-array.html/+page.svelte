@@ -61,12 +61,18 @@
 			</ul>
 
 			<div id="thumbnails">
-				<button class="thumbnail" on:click={toggleCodeTwoExpanded}>
-					<img src="../name-equals.png" alt="main()" width="136"/>
-				</button>
-				<button class="thumbnail" on:click={toggleCodeOneExpanded}>
-					<img src="../line-extract.png" alt="main()" width="213"/>
-				</button>
+				<div class="thumbnail" >
+					<button on:click={toggleCodeTwoExpanded}>
+						<img src="../name-equals.png" alt="main()" width="136"/>
+						<div style="font-size: small;">StationName</div>
+					</button>
+				</div>
+				<div class="thumbnail" >
+					<button on:click={toggleCodeOneExpanded}>
+						<img src="../line-extract.png" alt="main()" width="213"/>
+						<div style="font-size: small;">extract()</div>
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -111,15 +117,18 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		margin-left: 5px;
+		margin-right: 5px;
 	}
 	.thumbnail:active {
 		transform: translate(2px, 2px);
 		box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 	}
+	.thumbnail button {
+		padding: 0px;
+	}
 	.thumbnail img {
 		padding-top: 0px;
-		padding-left: 10px;
-		padding-right: 10px;
 		max-height: 100%;
 		max-width: 100%;
 		object-fit: contain;

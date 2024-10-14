@@ -56,9 +56,12 @@
 			</ul>
 
 			<div id="thumbnails">
-				<button class="thumbnail" on:click={toggleCodeOneExpanded}>
-					<img src="../TemperatureBuffer.png" alt="main()" width="272"/>
-				</button>
+				<div class="thumbnail" >
+					<button on:click={toggleCodeOneExpanded}>
+						<img src="../TemperatureBuffer.png" alt="main()" width="272"/>
+						<div style="font-size: small;">TemperatureBuffer</div>
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -110,10 +113,11 @@
 		transform: translate(2px, 2px);
 		box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 	}
+	.thumbnail button {
+		padding: 0px;
+	}
 	.thumbnail img {
 		padding-top: 0px;
-		padding-left: 10px;
-		padding-right: 10px;
 		max-height: 100%;
 		max-width: 100%;
 		object-fit: contain;
