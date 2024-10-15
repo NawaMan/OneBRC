@@ -24,6 +24,30 @@
 	}
 
 	// @ts-ignore
+	function unfoldLines(lineNumbers) {
+		// @ts-ignore
+		lineNumbers.forEach(lineNumber => {
+			if(Object.prototype.toString.call(lineNumber) === '[object Array]') {
+				setTimeout(function () {
+					unfoldLines(lineNumber)
+				}, 200);
+				return;
+			}
+			// @ts-ignore
+			editor.setSelection({
+				startLineNumber: lineNumber,
+				startColumn: 0,
+				endLineNumber: lineNumber,
+				endColumn: 1
+			});
+			// @ts-ignore
+			editor.revealLine(cursorLine);
+			// @ts-ignore
+			editor.trigger('keyboard', 'editor.unfold');
+		});
+	}
+
+	// @ts-ignore
 	function revealTheLines(lines = []) {
 		// @ts-ignore
 		if (editor == null)
@@ -172,30 +196,6 @@
 
 				// @ts-ignore
 				monaco.languages.registerFoldingRangeProvider('java', customFoldingRangeProvider);
-
-				// @ts-ignore
-				function unfoldLines(lineNumbers) {
-					// @ts-ignore
-					lineNumbers.forEach(lineNumber => {
-						if(Object.prototype.toString.call(lineNumber) === '[object Array]') {
-							setTimeout(function () {
-								unfoldLines(lineNumber)
-							}, 200);
-							return;
-						}
-						// @ts-ignore
-						editor.setSelection({
-							startLineNumber: lineNumber,
-							startColumn: 0,
-							endLineNumber: lineNumber,
-							endColumn: 1
-						});
-						// @ts-ignore
-						editor.revealLine(cursorLine);
-						// @ts-ignore
-						editor.trigger('keyboard', 'editor.unfold');
-					});
-				}
 
 				revealTheLines();
 			});

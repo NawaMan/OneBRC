@@ -68,19 +68,19 @@
 		</div>
 		<div id="thumbnails">
 			<div class="thumbnail thumbnail1" >
-				<button on:click={toggleCodeExpanded(338)}>
+				<button on:click={toggleCodeExpanded(354)}>
 					<img src="../add-name-to-queue.png" alt="main()" width="164"/>
 					<div style="font-size: small;">Add name to queue</div>
 				</button>
 			</div>
 			<div class="thumbnail thumbnail2" >
-				<button on:click={toggleCodeExpanded(134)}>
+				<button on:click={toggleCodeExpanded(148)}>
 					<img src="../assign-name-id.png" alt="main()" width="155"/>
 					<div style="font-size: small;">Assign name ID</div>
 				</button>
 			</div>
 			<div class="thumbnail thumbnail3" >
-				<button on:click={toggleCodeExpanded(95)}>
+				<button on:click={toggleCodeExpanded(89)}>
 					<img src="../id-in-name-equals.png" alt="main()" width="124"/>
 					<div style="font-size: small;">ID in name <code>equals()</code></div>
 				</button>

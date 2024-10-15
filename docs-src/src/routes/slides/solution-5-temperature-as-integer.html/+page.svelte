@@ -17,7 +17,7 @@
 	let isCodeExpanded = false;
 
 	function toggleCodeOneExpanded() {
-		revealedLines = [166];
+		revealedLines = [172];
 		isCodeExpanded = !isCodeExpanded;
 	}
 
@@ -37,7 +37,7 @@
 	});
 </script>
 
-<ContentPage title="Solution (5): Value as Integer">
+<ContentPage title="Solution (5): Temperature as Integer (times 10)">
 	<WideDiv
 		outerWidth="1190"
 		innerWidth="2000"
@@ -52,21 +52,19 @@
 		</div>
 	</WideDiv>
 	<div id="side">
-		<div id="side-content">
-			<ul>
-				<li>Floating point number is not precise for 1 digit decimal.</li>
-				<li>Convert string to float is expensive.</li>
-				<li>The value can be represent using integer but times 10</li>
-				<li>For example, 14.2 can be represent using int 142.</li>
-			</ul>
+		<ul>
+			<li>Floating point number is not precise for 1 digit decimal.</li>
+			<li>Convert string to float is expensive.</li>
+			<li>The value can be represent using integer but times 10</li>
+			<li>For example, 14.2 can be represent using int 142.</li>
+		</ul>
 
-			<div id="thumbnails">
-				<div class="thumbnail" >
-					<button on:click={toggleCodeOneExpanded}>
-						<img src="../TemperatureBuffer.png" alt="main()" width="272"/>
-						<div style="font-size: small;">TemperatureBuffer</div>
-					</button>
-				</div>
+		<div id="thumbnails">
+			<div class="thumbnail" >
+				<button on:click={toggleCodeOneExpanded}>
+					<img src="../TemperatureBuffer.png" alt="main()" width="272"/>
+					<div style="font-size: small;">TemperatureBuffer</div>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -97,6 +95,9 @@
 		background-color: #181818;
 		border-radius: 10px;
 		box-shadow: 0 0 20px 20px rgba(0, 0, 0, 0.8);
+	}
+	#side ul {
+		width: 380px;
 	}
 	#thumbnails {
 		display: flex;

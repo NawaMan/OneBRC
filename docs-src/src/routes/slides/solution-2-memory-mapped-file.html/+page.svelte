@@ -95,7 +95,7 @@
 	</div>
 </ContentPage>
 <Hint text="scroll to pan" />
-<SolutionCodeBox expanded={isCodeExpanded} javaCode={data.javaCode} revealedLines={[278]}/>
+<SolutionCodeBox expanded={isCodeExpanded} javaCode={data.javaCode} revealedLines={[288]}/>
 <Note>
 	<p>
 		The next trick is due the large size of the file, the read speed is one of the one biggest factor of the overall performce.

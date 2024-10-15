@@ -66,13 +66,13 @@
 
 			<div id="thumbnails">
 				<div class="thumbnail" >
-					<button on:click={toggleCodeExpanded(60)}>
+					<button on:click={toggleCodeExpanded(59)}>
 						<img src="../name-equals.png" alt="main()" width="136"/>
 						<div style="font-size: small;">StationName</div>
 					</button>
 				</div>
 				<div class="thumbnail" >
-					<button on:click={toggleCodeExpanded(338)}>
+					<button on:click={toggleCodeExpanded(357)}>
 						<img src="../line-extract.png" alt="main()" width="213"/>
 						<div style="font-size: small;">extract()</div>
 					</button>

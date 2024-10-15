@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import { browser }            from '$app/environment';
-	import CtrlBtn                from './CtrlBtn.svelte';
+	import CtrlBtn from './CtrlBtn.svelte';
 
-	export let firstLink = './onebrc.html';
+	import { browser }            from '$app/environment';
+	import { onMount, onDestroy } from 'svelte';
+
+	export let firstLink = '';
 	export let prevLink  = '';
 	export let nextLink  = '';
-	export let lastLink  = './conclusion.html';
+	export let lastLink  = '';
 	export let onContinue: (() => void) | null = null;
 
 	$: onFirst = () => firstLink && (window.location.href = firstLink);
