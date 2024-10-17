@@ -8,12 +8,12 @@
 	<div class="left">
 		<ul>
 			<li>One Billion Row Challenge!</li>
-			<li>My solution got quite good results.</li>
-			<li>My solution is also very comprehensible.
+			<li>My solution got quite good results and comprehensible.</li>
+			<li>Here are some of the tricks I use ...
 				<ul>
-					<li>Make use of virtual threads to process the data concurrenly</li>
-					<li>Map file content to memory</li>
-					<li>Delay string conversation</li>
+					<li>Make use of virtual threads to process the data</li>
+					<li>Memory Map file content to memory</li>
+					<li>Delay string conversion</li>
 					<li>Name is byte array</li>
 					<li>Temperature as an <code>int</code></li>
 					<li>Victorize the name comparison</li>

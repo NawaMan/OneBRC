@@ -98,18 +98,13 @@
 <SolutionCodeBox expanded={isCodeExpanded} javaCode={data.javaCode} revealedLines={[288]}/>
 <Note>
 	<p>
-		The next trick is due the large size of the file, the read speed is one of the one biggest factor of the overall performce.
-		Different reading methods not only have different performance characteristics,
-		it also returns different data format with different performance chracteristic of itsown.
-		Another word, we need to consider both reading and processing speed. of each alternative.
-	</p>
-	<p>
-		Before diving into the alternatives, we need to keep in mind that the foundamental data structure is always array of bytes.
-		A string is backed by an array of bytes and since bytes are multable every new string will has itsown array of bytes.
+		The next trick is due the large size of the file, the read speed is a big factor of the overall performce.
+		But the result data structure also performance.
+		They both constribute to the pro-and-con of each alternatives.
 	</p>
 	<ol>
 		<li>
-			With that in mind, the first alternative is read the whole file or the whole chunk into a string
+			The first alternative is read the whole file or the whole chunk into a string
 			but that means double memory and copy time to create array of bytes for each station name as a string.
 		</li>
 		<li>Next alternative is to do it line by line but that suffer similar problem.</li>

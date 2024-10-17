@@ -9,7 +9,7 @@
 </TitlePage>
 <Note>
 	Hi! I am NawaMan.
-	Let's talk about my "One Billion Row Challenge" solution.
+	I would like to show off my solution to the "One Billion Row Challenge".
 </Note>
 
 <style>

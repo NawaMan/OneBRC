@@ -62,12 +62,13 @@
 	<p>The result?</p>
 	<p>Pretty good, actually.</p>
 	<p>
-		The program run in between 1.8 seconds to 3 seconds on these two machines.
-		You can click them to see more details.
+		The program run in 1.8 seconds on one machine and 3 seconds on another - likely due to different disc speed -- still I/O bound.
+		You can click these to see more details.
 	</p>
 	<p>
-		The code achives this without using 'unsafe' and is not using 'GraalVM'.
-		It is very comprehensible -- well partitioned and don't have hard to read bitwise operations.
+		The code achives this without using hard to maintain 'unsafe' and is not using 'GraalVM'.
+		It is very readable -- by that I meant well partitioned and using regular idiomatic Java .. 
+		no clever but hard to read bitwise tricks, for example.
 	</p>
 	<p>
 		The code is just 450 lines.

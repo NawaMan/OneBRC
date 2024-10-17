@@ -38,15 +38,17 @@
 	<p>However, some time in August, I saw these two YouTube VDOs which sparked my interest.</p>
     <p>
 		I then, learned that the benchmark will be run on a machine with large memory ... 
-        which changes the problem to be more CPU bound.
+        which changes the nature of the problem to be CPU bound.
 	</p>
 	<p>
 		Dispite thinking that the clever Mr. Morling might just want someone to solve the problem for him ... 
-		I decided to give it a try.
+		I decided to give it a try - 8 eight-months late.
 	</p>
 	<p>
 		The main work took about 1-2 weeks but more time spent of setting up benchmark on AWS 
-		and making these slides which I had to learn Svelte first to make them -- talk about digression.
+		and making these slides which I had to learn Svelte first to make them..
+		I have many ideas for the slides ... like animation and stuffs ... 
+		but it already took a month so ... here is what you got.
 	<p>
 </Note>
 
