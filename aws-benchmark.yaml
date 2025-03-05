@@ -5,7 +5,7 @@ Resources:
   MyEC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
-      InstanceType: "m6gd.8xlarge"  # Change to your desired instance type
+      InstanceType: "x2gd.2xlarge"  # Change to your desired instance type
       KeyName: "OneBillionRowChallenge"  # Replace with your key pair name
       ImageId: "ami-096ea6a12ea24a797"  # Replace with the AMI ID you want to use
       SecurityGroups:
